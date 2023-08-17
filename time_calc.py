@@ -9,8 +9,8 @@ FRIDAY_MODE = 2
 def display_results(hours):
     return f'Total Hours: {round(hours,2)} \n50%: {round(hours/2, 2)} \n25%: {round(hours/4, 2)}'
 
-def nomral_mode():
 
+def nomral_mode():
     start_strip = datetime.strptime(start_time.get(), "%H:%M")
     end_strip = datetime.strptime(end_time.get(), "%H:%M")
 
@@ -32,8 +32,8 @@ def friday_mode():
 
     Message(frm, text=f"End time {time_out.time()}\n" + display_results(remaining_hours)).grid(column=0, row=4, pady=5)
 
-if __name__ == '__main__':
 
+if __name__ == '__main__':
     root = tk.Tk()
     root.title("Time Tracker")
 
@@ -51,21 +51,5 @@ if __name__ == '__main__':
     ttk.Entry(frm, textvariable=total_hours_worked).grid(column=1, row=2, pady=5)
     ttk.Button(frm, text="Normal", command=nomral_mode).grid(column=0, row=3, pady=5)
     ttk.Button(frm, text="Friday Mode", command=friday_mode).grid(column=1, row=3,pady=5)
-
     Message(frm, text="Out put").grid(column=0, row=4, pady=5)
     root.mainloop()
-
-    # print("----------------------")
-    # print("---- Time Tracker ----")
-    # print("----------------------")
-
-    # print("1 = Normal Mode")
-    # print("2 = Friday Mode")
-    # mode = int(input("Enter in Mode: "))
-
-    # if mode > 2 or mode < 1:
-    #     print("Invalid Mode")
-    # elif mode == NORMAL_MODE:
-    #     nomral_mode()
-    # elif mode == FRIDAY_MODE:
-    #     friday_mode()
