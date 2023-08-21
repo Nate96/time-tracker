@@ -3,14 +3,14 @@ from tkinter import *
 from tkinter import ttk
 import tkinter as tk
 
-def display_results(hours):
+def _display_results(hours):
     """
     Displays hour distributed by charge codes
     """
     return f'Total Hours: {round(hours,2)} \n50%: {round(hours/2, 2)} \n25%: {round(hours/4, 2)}'
 
 
-def nomral_mode():
+def _nomral_mode():
     """Normal Mode
     Calculates total time (hours) by using a start time and an end time. 
     Then, displays the results.
@@ -23,11 +23,11 @@ def nomral_mode():
     sec = delta.total_seconds()
     hours = sec / (60 * 60)
 
-    Message(frm, text=display_results(hours)).grid(column=0, row=4, pady=5)
+    Message(frm, text=_display_results(hours)).grid(column=0, row=4, pady=5)
 
 
 
-def friday_mode():
+def _friday_mode():
     """Friday Mode
     Calculates time to leave and hours need to be worked on Friday. 
     Then, Displays the results
@@ -37,7 +37,7 @@ def friday_mode():
 
     time_out = datetime.strptime(start_time.get(), "%H:%M") + timedelta(hours=remaining_hours)
 
-    Message(frm, text=f"End time {time_out.time()}\n" + display_results(remaining_hours)).grid(column=0, row=4, pady=5)
+    Message(frm, text=f"End time {time_out.time()}\n" + _display_results(remaining_hours)).grid(column=0, row=4, pady=5)
 
 
 if __name__ == '__main__':
@@ -56,7 +56,7 @@ if __name__ == '__main__':
     ttk.Entry(frm, textvariable=end_time).grid(column=1, row=1, pady=5)
     ttk.Label(frm, text="Total Hours:").grid(column=0, row= 2, pady=5)
     ttk.Entry(frm, textvariable=total_hours_worked).grid(column=1, row=2, pady=5)
-    ttk.Button(frm, text="Normal", command=nomral_mode).grid(column=0, row=3, pady=5)
-    ttk.Button(frm, text="Friday Mode", command=friday_mode).grid(column=1, row=3,pady=5)
+    ttk.Button(frm, text="Normal", command=_nomral_mode).grid(column=0, row=3, pady=5)
+    ttk.Button(frm, text="Friday Mode", command=_friday_mode).grid(column=1, row=3,pady=5)
     Message(frm, text="Out put").grid(column=0, row=4, pady=5)
     root.mainloop()
