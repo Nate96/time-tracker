@@ -1,11 +1,11 @@
 from datetime import datetime, timedelta
 
-NORMAL_MODE = 1
-FRIDAY_MODE = 2
+_NORMAL_MODE = 1
+_FRIDAY_MODE = 2
 
 def _display_results(hours):
-    print("Total hours worked today: {}".format(round(hours, 2)))
-    print("%50: {} \n%25: {}".format(round(hours / 2, 2), round(hours/4, 2)))
+    print(f'Total hours worked today: {round(hours, 2)}')
+    print(f'%50: {round(hours / 2, 2)} \n%25: {round(hours/4, 2)}')
 
 
 def _normal_mode():
@@ -39,11 +39,13 @@ def _friday_mode():
 
     time_out = datetime.strptime(start_time, "%H:%M:%S") + timedelta(hours=remaining_hours)
 
-    print("You get to work until: {}".format(time_out.time()))
+    print(f'You get to work until: {time_out.time()}')
     _display_results(remaining_hours)
 
 
 if __name__ == '__main__':
+    # TODO: Add while true loop
+    # TODO: Add Parser 
     print("----------------------")
     print("---- Time Tracker ----")
     print("----------------------")
@@ -52,9 +54,9 @@ if __name__ == '__main__':
     print("2 = Friday Mode")
     mode = int(input("Enter in Mode: "))
 
-    if mode > FRIDAY_MODE or mode < NORMAL_MODE:
+    if mode > _FRIDAY_MODE or mode < _NORMAL_MODE:
         print("Invalid Mode")
-    elif mode == NORMAL_MODE:
+    elif mode == _NORMAL_MODE:
         _normal_mode()
-    elif mode == FRIDAY_MODE:
+    elif mode == _FRIDAY_MODE:
         _friday_mode()
