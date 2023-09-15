@@ -46,6 +46,7 @@ def _friday_mode():
 if __name__ == '__main__':
     # TODO: Add while true loop
     # TODO: Add Parser 
+    # TODO: Add SQLight DB
     print("----------------------")
     print("---- Time Tracker ----")
     print("----------------------")
