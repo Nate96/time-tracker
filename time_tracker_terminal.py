@@ -1,63 +1,70 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, time
+import click
 
-_NORMAL_MODE = 1
-_FRIDAY_MODE = 2
 
 def _display_results(hours):
     print(f'Total hours worked today: {round(hours, 2)}')
     print(f'%50: {round(hours / 2, 2)} \n%25: {round(hours/4, 2)}')
 
 
-def _normal_mode():
+def _normal_mode(intime, outtime):
     """Normal Mode
-    Calculates total time (hours) by using a start time and an end time. 
+    Calculates total time (hours) by using a start time and an end time.
     Then, displays the results.
     """
-    start_time = str(input('Enter in Start time: ') + ":00")
-    end_time = str(input('Enter in End time: ') + ":00")
-
-    start_strip = datetime.strptime(start_time, "%H:%M:%S")
-    end_strip = datetime.strptime(end_time, "%H:%M:%S")
+    start_strip = datetime.strptime(intime, "%H:%M")
+    end_strip = datetime.strptime(outtime, "%H:%M")
 
     delta = end_strip - start_strip
 
     sec = delta.total_seconds()
     hours = sec / (60 * 60)
-    
-    _display_results(hours)   
+    _display_results(hours)
 
 
-def _friday_mode():
+def _friday_mode(intime, totaltime):
     """Friday Mode
-    Calculates time to leave and hours need to be worked on Friday. 
+    Calculates time to leave and hours need to be worked on Friday.
     Then, Displays the results
     """
-    total_time = float(input("Enter in total time worked for the week: "))
-    start_time = str(input("Enter in time started: ") + ":00")
+    remaining_hours = 40.0 - totaltime
 
-    remaining_hours = 40.0 - total_time
+    delta_time = datetime.strptime(intime, "%H:%M") + timedelta(hours=remaining_hours)
 
-    time_out = datetime.strptime(start_time, "%H:%M:%S") + timedelta(hours=remaining_hours)
+    delta_hour = delta_time.time().hour % 12
 
-    print(f'You get to work until: {time_out.time()}')
+    print(f'You get to work until: {time(delta_hour, delta_time.time().minute)}')
     _display_results(remaining_hours)
 
 
+@click.command()
+@click.option('-mode', '-m',
+              type=str,
+              default='n',
+              required=False,
+              help='Mode: n = normal, f = friday')
+@click.option('-intime', '-i',
+              type=str,
+              required=False,
+              help='In Time: HH:MM')
+@click.option('-outtime', '-o',
+              type=str,
+              required=False,
+              help='In Time: HH:MM')
+@click.option('-totaltime', '-tl',
+              type=float,
+              help='In Time: HH:MM')
+@click.option('-comment', '-c',
+              type=str,
+              required=False,
+              help='Comment for entry')
+def time_tracker(mode, intime, outtime, totaltime, comment):
+    if mode == 'n':
+        _normal_mode(intime, outtime)
+    elif mode == 'f':
+        _friday_mode(intime, totaltime)
+
+
 if __name__ == '__main__':
-    # TODO: Add while true loop
-    # TODO: Add Parser 
+    time_tracker()
     # TODO: Add SQLight DB for messages
-    print("----------------------")
-    print("---- Time Tracker ----")
-    print("----------------------")
-
-    print("1 = Normal Mode")
-    print("2 = Friday Mode")
-    mode = int(input("Enter in Mode: "))
-
-    if mode > _FRIDAY_MODE or mode < _NORMAL_MODE:
-        print("Invalid Mode")
-    elif mode == _NORMAL_MODE:
-        _normal_mode()
-    elif mode == _FRIDAY_MODE:
-        _friday_mode()
