@@ -66,6 +66,5 @@ def time_tracker(mode, in_time, out_time, total_time, comment):
 
 
 if __name__ == '__main__':
-    print("tt")
     time_tracker()
     # TODO: Add SQLight DB for messages
