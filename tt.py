@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta, time
+from repository import create_entry, execute_query, get_todays_entries
 import click
 
 
@@ -21,6 +22,8 @@ def _normal_mode(in_time, out_time):
     hours = sec / (60 * 60)
     _display_results(hours)
 
+    return hours
+
 
 def _friday_mode(in_time, total_time):
     """Friday Mode
@@ -36,13 +39,15 @@ def _friday_mode(in_time, total_time):
     print(f'You get to work until: {time(delta_hour, delta_time.time().minute)}')
     _display_results(remaining_hours)
 
+    return delta_hour
+
 
 @click.command()
 @click.option('-m', '--mode',
               type=str,
               default='n',
               required=True,
-              help='Mode: n = normal, f = friday')
+              help='Mode: n = normal, f = friday, q = querying mode, d = today entry(s)')
 @click.option('-i', '--in-time',
               type=str,
               required=False,
@@ -51,18 +56,28 @@ def _friday_mode(in_time, total_time):
               type=str,
               required=False,
               help='In Time: HH:MM')
-@click.option('-tl', '--total_time',
+@click.option('-hw', '--hours-worked',
               type=float,
               help='In Time: HH:MM')
 @click.option('-c', '--comment',
               type=str,
               required=False,
               help='Comment for entry')
-def time_tracker(mode, in_time, out_time, total_time, comment):
+@click.option('-q', '--query',
+              type=str,
+              required=False,
+              help='SQLite query')
+def time_tracker(mode, in_time, out_time, hours_worked, comment, query):
     if mode == 'n':
-        _normal_mode(in_time, out_time)
+        total_time = _normal_mode(in_time, out_time)
+        create_entry(in_time, out_time, comment, total_time)
     elif mode == 'f':
-        _friday_mode(in_time, total_time)
+        total_time = _friday_mode(in_time, hours_worked)
+        create_entry(in_time, out_time, comment, total_time)
+    elif mode == 'q':
+        execute_query(query)
+    elif mode == 'd':
+        get_todays_entries()
 
 
 if __name__ == '__main__':
