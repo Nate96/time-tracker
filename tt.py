@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta, time
-from repository import create_entry, execute_query, get_todays_entries
+from repository import create_entry, execute_query, get_todays_entries, get_hours_worked_today
 import click
 
 
@@ -78,8 +78,9 @@ def time_tracker(mode, in_time, out_time, hours_worked, comment, query):
         execute_query(query)
     elif mode == 'd':
         get_todays_entries()
+    elif mode == 'tt':
+        get_hours_worked_today()
 
 
 if __name__ == '__main__':
     time_tracker()
-    # TODO: Add SQLight DB for messages
