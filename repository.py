@@ -8,15 +8,20 @@ def create_entry(time_in, time_out, comment, total_time):
     Adds an Entry to the entry table
     '''
     _create_entry_table()
-    CUR.execute('SELECT Date()')
+    CUR.execute('''SELECT Date('now', 'localtime')''')
     todays_date = CUR.fetchone()[0]
 
-    CUR.execute('INSERT INTO entry(date, timeIn, timeOut, TotalTime, comment) values(?, ?, ?, ?, ?)', (todays_date, time_in, time_out, total_time, comment))
+    CUR.execute('''
+                INSERT INTO entry
+                    (date, timeIn, timeOut, TotalTime, comment)
+                    values(?, ?, ?, ?, ?)
+                ''',
+                (todays_date, time_in, time_out, total_time, comment))
     CON.commit()
 
 
 def execute_query(query):
-    '''Execute Query
+    '''Execute Query:w
     Executes the given query
     '''
     print('executing query')
@@ -30,7 +35,7 @@ def get_todays_entries():
     '''
     res = CUR.execute('''
                       SELECT * FROM entry
-                      WHERE date = (SELECT Date())
+                      WHERE date = (SELECT Date('now', 'localtime')
                       ''')
     for row in res:
         print(row)
@@ -38,8 +43,8 @@ def get_todays_entries():
 
 def get_hours_worked_today():
     CUR.execute('''
-                    SELECT SUM(TotalTime) FROM entry
-                    WHERE date = (SELECT Date())
+                SELECT SUM(TotalTime) FROM entry
+                WHERE date = (SELECT Date('now', 'localtime'))
                 ''')
     print("Total hours worked today:", CUR.fetchone())
 
