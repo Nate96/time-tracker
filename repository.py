@@ -2,12 +2,12 @@ import sqlite3
 CON = sqlite3.connect('Log.db')
 CUR = CON.cursor()
 
-class Repository:
 
-    def create_entry(time_in, time_out, comment, total_time):
-        '''Create Entry
+def create_entry(time_in, time_out, comment, total_time):
+    '''Create Entry
     Adds an Entry to the entry table
     '''
+
     _create_entry_table()
     CUR.execute('''SELECT Date('now', 'localtime')''')
     todays_date = CUR.fetchone()[0]
@@ -36,26 +36,28 @@ def get_todays_entries():
     '''
     res = CUR.execute('''
                       SELECT * FROM entry
-                      WHERE date = (SELECT Date('now', 'localtime')
-                                    ''')
-                      for row in res:
-                      print(row)
+                      WHERE date == (SELECT Date('now', 'localtime'))
+                      ''')
+    for row in res:
+        print(row)
 
 
-                      def get_hours_worked_today():
-                      CUR.execute('''
-                                  SELECT SUM(TotalTime) FROM entry
-                                  WHERE date = (SELECT Date('now', 'localtime'))
-                                  ''')
-                      print("Total hours worked today:", CUR.fetchone())
+def get_hours_worked_today():
+    CUR.execute('''
+                SELECT SUM(TotalTime) FROM entry
+                WHERE date = (SELECT Date('now', 'localtime'))
+                ''')
+    print("Total hours worked today:", CUR.fetchone())
 
 
-                      def _create_entry_table():
-                      '''Create Table
-                      Checks if the entry table has been created.
-                      If the entry table has not been created, create the table
-                      NOTE: checks if only 1 table is in the database
-                      '''
-                      res = CUR.execute('SELECT name FROM sqlite_master')
-                      if res.fetchone() is None:
-                      CUR.execute('CREATE TABLE entry(date, timeIn, timeOut, TotalTime, comment)')
+def _create_entry_table():
+    '''Create Table
+    Checks if the entry table has been created.
+    If the entry table has not been created, create the table
+
+    NOTE: checks if only 1 table is in the database
+    '''
+
+    res = CUR.execute('SELECT name FROM sqlite_master')
+    if res.fetchone() is None:
+        CUR.execute('CREATE TABLE entry(date, timeIn, timeOut, TotalTime, comment)')
