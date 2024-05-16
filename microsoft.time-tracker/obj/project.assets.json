@@ -13,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\nbraukhoff\\jade\\time-tracker\\CSharp\\microsoft.botsay\\microsoft.botsay.csproj",
-      "projectName": "microsoft.botsay",
-      "projectPath": "C:\\Users\\nbraukhoff\\jade\\time-tracker\\CSharp\\microsoft.botsay\\microsoft.botsay.csproj",
+      "projectUniqueName": "C:\\Users\\nbraukhoff\\jade\\time-tracker\\CSharp\\microsoft.time-tracker\\microsoft.time-tracker.csproj",
+      "projectName": "microsoft.time-tracker",
+      "projectPath": "C:\\Users\\nbraukhoff\\jade\\time-tracker\\CSharp\\microsoft.time-tracker\\microsoft.time-tracker.csproj",
       "packagesPath": "C:\\Users\\nbraukhoff\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\nbraukhoff\\jade\\time-tracker\\CSharp\\microsoft.botsay\\obj\\",
+      "outputPath": "C:\\Users\\nbraukhoff\\jade\\time-tracker\\CSharp\\microsoft.time-tracker\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\nbraukhoff\\AppData\\Roaming\\NuGet\\NuGet.Config"
