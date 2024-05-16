@@ -3,8 +3,9 @@ from repository import create_entry, execute_query, get_todays_entries, get_hour
 import click
 
 # TODO: Turn repository into class
-# TODO: Implement "cli" class in tt.py file. 
+# TODO: Implement "cli" class in tt.py file.
 # TODO: test
+
 
 def _display_results(hours):
     print(f'Total hours worked today: {round(hours, 2)}')
