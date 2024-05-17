@@ -1,5 +1,4 @@
-﻿using System;
-using System.Globalization;
+﻿using RepositoryNameSpace;
 
 class Program
 {
@@ -26,5 +25,7 @@ class Program
     //DatabaseHelper.SaveTimeLog(inTime, outTime, message);
 
     Console.WriteLine("Time log saved successfully.");
+
+    Repository repository = new Repository();
   }
 }
