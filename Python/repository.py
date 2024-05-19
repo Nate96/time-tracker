@@ -60,4 +60,11 @@ def _create_entry_table():
 
     res = CUR.execute('SELECT name FROM sqlite_master')
     if res.fetchone() is None:
-        CUR.execute('CREATE TABLE entry(date, timeIn, timeOut, TotalTime, comment)')
+        CUR.execute('''
+                    CREATE TABLE entry(
+                        date,
+                        timeIn,
+                        timeOut,
+                        TotalTime,
+                        comment)
+                    ''')

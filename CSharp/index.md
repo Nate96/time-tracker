@@ -6,10 +6,14 @@
 2. Install SQLite3: dotnet add package Microsoft.Data.Sqlite
 
 # How to use
-dotnot run i *punch in*
+dotnot run i "Comment" *punch in*
 dotnot run o "Comment" *punch in*
 
 [Main](Program.cs)
+
+# TODOs 
+- Logging
+
 
 # Notes
 Create Project: dotnet new console -n microsoft.time-tracker -f net6.0

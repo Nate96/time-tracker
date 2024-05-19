@@ -2,29 +2,31 @@
 
 class Program
 {
-  static void Main(string[] args)
-  {
-    if (args.Length <= 3) {
-      Console.WriteLine("Usage: TimeLogger <InTime> <OutTime> <Message>");
-      return;
-    }
+   const string INVALID_INPUT = "In-vaild input. Refer to index.md in the 'How to Use' section";
 
-    string InTime = args[0];
-    string OutTime = args[1];
-    string Comment = args[2];
+      static void Main(string[] args)
+      {
+         if (args.Length == 2) {
+            Console.WriteLine(INVALID_INPUT);
+            return;
+         }
 
-    Console.WriteLine(InTime);
-    Console.WriteLine(OutTime);
-    Console.WriteLine(Comment);
+         string mode = args[0];
+         string comment = args[1];
 
-    // Initialize database
-    //DatabaseHelper.InitializeDatabase();
+         Repository repository = new Repository();
 
-    // Save the log
-    //DatabaseHelper.SaveTimeLog(inTime, outTime, message);
-
-    Console.WriteLine("Time log saved successfully.");
-
-    Repository repository = new Repository();
-  }
+         switch (mode) {
+            case "i":
+               repository.PunchIn(comment);
+               break;
+            case "o":
+               repository.PunchOut(comment);
+               break;
+            default:
+               Console.WriteLine(INVALID_INPUT);
+               break;
+         }
+         return;
+      }
 }

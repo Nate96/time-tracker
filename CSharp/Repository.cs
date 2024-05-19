@@ -39,5 +39,30 @@ namespace RepositoryNameSpace {
       command.ExecuteNonQuery();
       connection.Close();
     }
+
+    public String PunchIn(string comment) {
+       //open a connetion
+       //check if most recent punch is "out"
+
+       // get current day
+       // get current time
+
+       // open connection to database
+       // add [currentdate, time, type, comment] 
+       return "";
+    }
+
+    public String PunchOut(string comment) {
+       //open a connetion
+       //check if most recent punch is "in"
+
+       // get current day
+       // get current time
+
+       // open connection to database
+       // add [currentdate, time, type, comment]
+       // close db connection
+       return "";
+    }
   }
 }
