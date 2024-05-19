@@ -43,41 +43,33 @@ namespace RepositoryNameSpace {
 
     public String PunchIn(string comment) {
        SqliteConnection connection = this.ConnectToDatabase();
-       var command = connection.CreateCommand();
 
-       command.CommandText = @"
-          INSERT INTO punch (type, punch_date, punch_time, comment)
-          VALUES($type, $currentDate, $currentTime, $comment)";
+       if (this.isValidState("in")) {
+          var command = connection.CreateCommand();
 
-       command.Parameters.AddWithValue("type", "in");
-       command.Parameters.AddWithValue("$currentDate", currentDate);
-       command.Parameters.AddWithValue("$currentTime", currentTime);
-       command.Parameters.AddWithValue("$comment", comment);
+          (string currentDate, string currentTime) = this.GetDateAndTime();
+
+          command.CommandText = @"
+             INSERT INTO punch (type, punch_date, punch_time, comment)
+             VALUES($type, $currentDate, $currentTime, $comment)";
+
+          command.Parameters.AddWithValue("type", "in");
+          command.Parameters.AddWithValue("$currentDate", currentDate);
+          command.Parameters.AddWithValue("$currentTime", currentTime);
+          command.Parameters.AddWithValue("$comment", comment);
+
+          if (command.ExecuteNonQuery() == 1) {
+             connection.Close();
+             return "Punched in successfully";
+          } else {
+             connection.Close();
+             return "A Error has accurded, punch was not added";
+          }
+       }
 
        connection.Close();
+       return "ERROR message for db state not valid, cannot punch in";
 
-       if (command.ExecuteNonQuery() == 1) {
-          Console.WriteLine("Punched in successfully");
-       } else {
-          Console.WriteLine("A Error has accurded, punch was not added");
-       }
-
-       command.CommandText = 
-          @"SELECT * 
-            FROM punch
-            ORDER BY Id DESC
-            LIMIT 1";
-
-       var reader = command.ExecuteReader();
-
-       // table is empty
-       if (!reader.Read()) {
-          connection.Close();
-          connection = this.ConnectToDatabase();
-          command = connection.CreateCommand();
-
-          Console.WriteLine("Have not punched in yet");
-       }
 
        //last punch in an out
        // get current day
@@ -85,10 +77,41 @@ namespace RepositoryNameSpace {
 
        // open connection to database
        // add [currentdate, time, type, comment] 
-       return "";
     }
 
     public String PunchOut(string comment) {
+       SqliteConnection connection = this.ConnectToDatabase();
+
+       if (this.isValidState("out")) {
+          var command = connection.CreateCommand();
+
+          (string currentDate, string currentTime) = this.GetDateAndTime();
+
+          command.CommandText = @"
+             INSERT INTO punch (type, punch_date, punch_time, comment)
+             VALUES($type, $currentDate, $currentTime, $comment)";
+
+          command.Parameters.AddWithValue("$type", "out");
+          command.Parameters.AddWithValue("$currentDate", currentDate);
+          command.Parameters.AddWithValue("$currentTime", currentTime);
+          command.Parameters.AddWithValue("$comment", comment);
+
+          if (command.ExecuteNonQuery() == 1) {
+             connection.Close();
+          } else {
+             connection.Close();
+             return "A Error has accurded, punch was not added";
+          }
+
+          connection = this.ConnectToDatabase();
+          command = connection.CreateCommand();
+
+          command.CommandText = @"
+             INSERT INTO punch (type, punch_date, punch_time, comment)
+             VALUES($type, $currentDate, $currentTime, $comment)";
+
+          
+       }
        //open a connetion
        //check if table is empty or check if most recent punch is "in"
 
@@ -108,9 +131,36 @@ namespace RepositoryNameSpace {
        return connection;
     }
 
-    // RESEARCH can return multiple values in c#
-    private object GetDataAndTime() {
-       return null;
+    // NOTE: Unsure to seperate time and date, going to seperate
+    private (string, string) GetDateAndTime() {
+       DateTime now = DateTime.Now;
+
+       string currentDate = now.ToString("yyyy-MM-dd-DDD");
+       string currentTime = now.ToShortTimeString();
+
+       return (currentDate, currentDate);
+    }
+
+    private Boolean isValidState(string type) {
+       SqliteConnection connection = this.ConnectToDatabase();
+       var command = connection.CreateCommand();
+
+ //       command.CommandText = 
+ //          @"SELECT * 
+ //          FROM punch
+ //          ORDER BY Id DESC
+ //          LIMIT 1";
+ //
+ //       var reader = command.ExecuteReader();
+ //
+ //       // table is empty
+ //       if (type == "out" && !reader.Read()) {
+ //          connection.Close();
+ //
+ //          return false;
+ //       }
+ //
+       return true;
     }
 
   }
