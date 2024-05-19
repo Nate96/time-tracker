@@ -2,7 +2,7 @@
 1. install dotnet
     Windows: winget install Microsoft.DotNet.SDK.8
     Ubuntu:  sudo snap install dotnet-sdk --classic
-    MAC:     brew install --cask dotnet
+    MAC:     brew install --cask dotnet-sdk 
 2. Install SQLite3: dotnet add package Microsoft.Data.Sqlite
 
 # How to use

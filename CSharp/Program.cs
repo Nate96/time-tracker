@@ -6,7 +6,7 @@ class Program
 
       static void Main(string[] args)
       {
-         if (args.Length == 2) {
+         if (args.Length != 2) {
             Console.WriteLine(INVALID_INPUT);
             return;
          }
