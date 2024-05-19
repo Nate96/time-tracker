@@ -4,8 +4,7 @@ class Program
 {
   static void Main(string[] args)
   {
-    if (args.Length != 3)
-    {
+    if (args.Length <= 3) {
       Console.WriteLine("Usage: TimeLogger <InTime> <OutTime> <Message>");
       return;
     }
