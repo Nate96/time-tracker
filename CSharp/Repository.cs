@@ -1,4 +1,5 @@
 using Microsoft.Data.Sqlite;
+using System.Globalization;
 
 namespace RepositoryNameSpace {
   class Repository {
@@ -35,7 +36,7 @@ namespace RepositoryNameSpace {
             type TEXT NOT NULL,
             punch_date DATE NOT NULL,
             punch_time TIME NOT NULL,
-            comment TEXT NOT NULL,)";
+            comment TEXT NOT NULL)";
 
       command.ExecuteNonQuery();
       connection.Close();
@@ -69,14 +70,6 @@ namespace RepositoryNameSpace {
 
        connection.Close();
        return "ERROR message for db state not valid, cannot punch in";
-
-
-       //last punch in an out
-       // get current day
-       // get current time
-
-       // open connection to database
-       // add [currentdate, time, type, comment] 
     }
 
     public String PunchOut(string comment) {
@@ -103,24 +96,32 @@ namespace RepositoryNameSpace {
              return "A Error has accurded, punch was not added";
           }
 
+          // Add entry 
           connection = this.ConnectToDatabase();
           command = connection.CreateCommand();
 
           command.CommandText = @"
-             INSERT INTO punch (type, punch_date, punch_time, comment)
-             VALUES($type, $currentDate, $currentTime, $comment)";
+             INSERT INTO  entry (entry_date, timeIn, timeOut, totalTime, comment)
+             VALUES($date, $timeIn, $timeOut, $totalTime, $comment)";
 
-          
+          (string type, string inDate, string inTime, string inComment) = this.getLastPunch();
+          Console.WriteLine("Type: " + type + " Date: " + inDate + " Time: " + inTime + " comment: " + inComment);
+
+          command.Parameters.AddWithValue("$date", currentDate);
+          command.Parameters.AddWithValue("$timeIn", inTime);
+          command.Parameters.AddWithValue("$timeOut", currentTime);
+          command.Parameters.AddWithValue("$totalTime", this.getTotalTime(inTime, currentTime));
+          command.Parameters.AddWithValue("$comment", inComment + "/n" + comment);
+
+          if (command.ExecuteNonQuery() == 1) {
+            connection.Close();
+            return "Punched in successfully";
+          } else {
+            connection.Close();
+            return "A Error has accurded, punch was not added";
+          }
        }
-       //open a connetion
-       //check if table is empty or check if most recent punch is "in"
 
-       // get current day
-       // get current time
-
-       // open connection to database
-       // add [currentdate, time, type, comment]
-       // close db connection
        return "";
     }
 
@@ -135,33 +136,63 @@ namespace RepositoryNameSpace {
     private (string, string) GetDateAndTime() {
        DateTime now = DateTime.Now;
 
-       string currentDate = now.ToString("yyyy-MM-dd-DDD");
+       string currentDate = now.ToString("yyyy-MM-dd");
        string currentTime = now.ToShortTimeString();
 
-       return (currentDate, currentDate);
+       return (currentDate, currentTime);
     }
 
+    // TODO: implement
     private Boolean isValidState(string type) {
        SqliteConnection connection = this.ConnectToDatabase();
        var command = connection.CreateCommand();
 
- //       command.CommandText = 
- //          @"SELECT * 
- //          FROM punch
- //          ORDER BY Id DESC
- //          LIMIT 1";
- //
- //       var reader = command.ExecuteReader();
- //
- //       // table is empty
- //       if (type == "out" && !reader.Read()) {
- //          connection.Close();
- //
- //          return false;
- //       }
- //
        return true;
     }
 
+    private (string, string, string, string) getLastPunch() {
+      SqliteConnection connection = this.ConnectToDatabase();
+      var command = connection.CreateCommand();
+
+      command.CommandText = 
+        @"SELECT type, punch_date, punch_time, comment
+        FROM punch
+        ORDER BY Id DESC
+        LIMIT 1";
+
+      var reader = command.ExecuteReader();
+
+      // table is empty
+      if (!reader.Read()) {
+        connection.Close();
+        return ("", "", "", "");
+
+      } else {
+        Console.WriteLine("Last Entry:" + reader.ToString());
+        string type = reader.GetString(0);
+        string punchDate = reader.GetString(1);
+        string punchTime = reader.GetString(2);
+        string comment = reader.GetString(3);
+
+        connection.Close();
+        Console.WriteLine("Last Entry - Type: " +  type + " punch date: " + punchDate + " Punch Time: " + punchTime + " commnet: " + comment);
+        return (type, punchDate, punchTime, comment);
+      }
+    }
+
+    private int getTotalTime(string inTime, string outTime) {
+      Console.WriteLine("Toal Time: " + inTime);
+
+      DateTime t1 = DateTime.ParseExact(inTime, "h:mm tt", CultureInfo.InvariantCulture);
+      DateTime t2 = DateTime.ParseExact(inTime, "h:mm tt", CultureInfo.InvariantCulture);
+
+
+//      TimeSpan t1 = TimeSpan.Parse(inTime);
+//      TimeSpan t2 = TimeSpan.Parse(outTime);
+
+      TimeSpan totalTime = t2 - t1;
+
+      return (int)totalTime.TotalHours;
+    }
   }
 }
