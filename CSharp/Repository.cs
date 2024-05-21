@@ -46,6 +46,7 @@ namespace RepositoryNameSpace {
        SqliteConnection connection = this.ConnectToDatabase();
 
        if (this.isValidState("in")) {
+          Console.WriteLine(this.isValidState("in"));
           var command = connection.CreateCommand();
 
           (string currentDate, string currentTime) = this.GetDateAndTime();
@@ -69,12 +70,14 @@ namespace RepositoryNameSpace {
        }
 
        connection.Close();
+       Console.WriteLine("ERROR message for db state not valid, cannot punch in");
        return "ERROR message for db state not valid, cannot punch in";
     }
 
     public String PunchOut(string comment) {
        SqliteConnection connection = this.ConnectToDatabase();
 
+       Console.WriteLine(this.isValidState("out"));
        if (this.isValidState("out")) {
           var command = connection.CreateCommand();
 
@@ -105,7 +108,6 @@ namespace RepositoryNameSpace {
              VALUES($date, $timeIn, $timeOut, $totalTime, $comment)";
 
           (string type, string inDate, string inTime, string inComment) = this.getLastPunch();
-          Console.WriteLine("Type: " + type + " Date: " + inDate + " Time: " + inTime + " comment: " + inComment);
 
           command.Parameters.AddWithValue("$date", currentDate);
           command.Parameters.AddWithValue("$timeIn", inTime);
@@ -121,8 +123,10 @@ namespace RepositoryNameSpace {
             return "A Error has accurded, punch was not added";
           }
        }
-
-       return "";
+       else {
+          Console.WriteLine("Data base is in an invalid state to punch out");
+          return "Data base is in an invalid state to punch out";
+       }
     }
 
     private SqliteConnection ConnectToDatabase() {
@@ -144,9 +148,14 @@ namespace RepositoryNameSpace {
 
     // TODO: implement
     private Boolean isValidState(string type) {
-       SqliteConnection connection = this.ConnectToDatabase();
-       var command = connection.CreateCommand();
+      (string lastType, string punchDate, string punchTime, string comment) = getLastPunch();
+      Console.WriteLine("lastType: " + lastType + " current type: " + type);
 
+      if (type == "out" && lastType == "" && punchDate == "" && punchTime == "" && comment == "")
+         return false;
+      else if (type == lastType)
+         return false;
+      else 
        return true;
     }
 
@@ -168,20 +177,17 @@ namespace RepositoryNameSpace {
         return ("", "", "", "");
 
       } else {
-        Console.WriteLine("Last Entry:" + reader.ToString());
         string type = reader.GetString(0);
         string punchDate = reader.GetString(1);
         string punchTime = reader.GetString(2);
         string comment = reader.GetString(3);
 
         connection.Close();
-        Console.WriteLine("Last Entry - Type: " +  type + " punch date: " + punchDate + " Punch Time: " + punchTime + " commnet: " + comment);
         return (type, punchDate, punchTime, comment);
       }
     }
 
     private int getTotalTime(string inTime, string outTime) {
-      Console.WriteLine("Toal Time: " + inTime);
 
       DateTime t1 = DateTime.ParseExact(inTime, "h:mm tt", CultureInfo.InvariantCulture);
       DateTime t2 = DateTime.ParseExact(inTime, "h:mm tt", CultureInfo.InvariantCulture);
