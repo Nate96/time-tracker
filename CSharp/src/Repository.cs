@@ -91,8 +91,8 @@ namespace TimeTrackerRepository
             var command = connection.CreateCommand();
 
             command.CommandText = @"
-        INSERT INTO punch (type, punch_date, punch_time, comment)
-        VALUES($type, $currentDate, $currentTime, $comment)";
+              INSERT INTO punch (type, punch_date, punch_time, comment)
+              VALUES($type, $currentDate, $currentTime, $comment)";
 
             command.Parameters.AddWithValue("type", punch.type);
             command.Parameters.AddWithValue("$currentDate", punch.date);
@@ -118,8 +118,8 @@ namespace TimeTrackerRepository
             var command = connection.CreateCommand();
 
             command.CommandText = @"
-        INSERT INTO  entry (entry_date, timeIn, timeOut, totalTime, comment)
-        VALUES($date, $timeIn, $timeOut, $totalTime, $comment)";
+              INSERT INTO  entry (entry_date, timeIn, timeOut, totalTime, comment)
+              VALUES($date, $timeIn, $timeOut, $totalTime, $comment)";
 
             command.Parameters.AddWithValue("$date", entry.date);
             command.Parameters.AddWithValue("$timeIn", entry.timeIn);
@@ -139,6 +139,36 @@ namespace TimeTrackerRepository
             }
         }
 
-        public Entry[] getEntries(string duration) { return []; }
+        public List<Entry> GetEntries(string duration) {
+          SqliteConnection connection = this.ConnectToDatabase();
+          var command = connection.CreateCommand();
+
+          switch(duration) {
+            case "day":
+              command.CommandText = @"
+                SELECT *
+                FROM entry
+                WHERE entry_date = DATE('now')";
+              break;
+            default:
+              return null;
+          }
+
+          List<Entry> entries = new List<Entry>();
+          var reader = command.ExecuteReader();
+          while (reader.Read()) {
+            entries.Add(new Entry(reader.GetInt32(0),
+                  reader.GetString(1),
+                  reader.GetString(2),
+                  reader.GetString(3),
+                  reader.GetInt32(4),
+                  reader.GetString(5)));
+          }
+
+          connection.Close();
+          return entries;
+        }
+
+        public List<Punch> GetPunches(string duration) { return []; }
     }
 }

@@ -1,7 +1,4 @@
-﻿// TODO: Seperate functionality of the Repository Class to another class
-//  Link: https://learn.microsoft.com/en-us/dotnet/architecture/microservices/microservice-ddd-cqrs-patterns/infrastructure-persistence-layer-design
-// TODO: Create Object with all error messages
-//
+﻿// TODO: Fix null ref warnings
 using TimeTrackerApp;
 
 class Program
@@ -24,6 +21,9 @@ class Program
                break;
             case "o":
                Console.WriteLine(timeTracker.PunchOut(comment));
+               break;
+            case "show":
+               Console.WriteLine(timeTracker.ShowEntries(comment));
                break;
             default:
                Console.WriteLine(TimeTrackerErrors.ErrorMessages.INVALID_INPUT);

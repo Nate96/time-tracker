@@ -14,6 +14,5 @@ dotnot run o "Comment" *punch in*
 # TODOs 
 - Logging
 
-
 # Notes
 Create Project: dotnet new console -n microsoft.time-tracker -f net6.0

@@ -10,5 +10,7 @@ namespace TimeTrackerErrors
     public const string INVALID_INPUT = "In-vaild input. Refer to index.md in the 'How to Use' section";
     public const string EntrySucess = "Entry has been added Seccessfully";
     public const string EntryFail = "Entry has NOT been added Seccessfully";
+    public const string INVALID_DURATION = "In-valid duration please referr to index.md";
+    public const string NO_ENTRIES = "No Entries for today";
   }
 }
