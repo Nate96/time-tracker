@@ -23,7 +23,7 @@ namespace TimeTrackerRepository
             entry_date DATE NOT NULL,
             timeIn TIME NOT NULL,
             timeOut TIME NOT NULL,
-            totalTime INTEGER NOT NULL,
+            totalTime FLOAT NOT NULL,
             comment TEXT NOT NULL)";
 
             command.ExecuteNonQuery();
@@ -45,6 +45,8 @@ namespace TimeTrackerRepository
             connection.Close();
         }
 
+        /// <summary>connects to the given database</summary>
+        /// <returns>SqliteConnection</return>
         private SqliteConnection ConnectToDatabase()
         {
             SqliteConnection connection = new SqliteConnection(DatabaseLocation);
@@ -54,7 +56,9 @@ namespace TimeTrackerRepository
         }
 
 
-        public Punch getLastPunch()
+        /// <summary>Returns the most recent row in the Punch Table</summary>
+        /// <returns>Punch</returns>
+        public Punch? GetLastPunch()
         {
             SqliteConnection connection = this.ConnectToDatabase();
             var command = connection.CreateCommand();
@@ -84,8 +88,13 @@ namespace TimeTrackerRepository
             }
         }
 
-
-        public Boolean addPunch(Punch punch)
+        /// <summary>adds to the punch table</summary>
+        /// <param name="punch">Punch</param>
+        /// <returns>
+        /// true when the row is added successfully and false when the row is
+        /// not added successfully
+        /// </returns>
+        public Boolean AddPunch(Punch punch)
         {
             SqliteConnection connection = this.ConnectToDatabase();
             var command = connection.CreateCommand();
@@ -111,7 +120,13 @@ namespace TimeTrackerRepository
             }
         }
 
-        public Boolean addEntry(Entry entry)
+        /// <summary>Adds a row to the entry table</summary>
+        /// <param name="entry">Entry</param>
+        /// <returns>
+        /// true when the row is added successfully and false when the row is
+        /// not added successfully
+        /// </returns>
+        public Boolean AddEntry(Entry entry)
         {
             SqliteConnection connection = this.ConnectToDatabase();
             connection = this.ConnectToDatabase();
@@ -139,7 +154,11 @@ namespace TimeTrackerRepository
             }
         }
 
-        public List<Entry> GetEntries(string duration) {
+        /// <summary>Get entries with the given duration</summary>
+        /// <param name="duration">the time span of the entries</param>
+        /// <returns>A list of Entries object<returns>
+        // TODO:
+        public List<Entry>? GetEntries(string duration) {
           SqliteConnection connection = this.ConnectToDatabase();
           var command = connection.CreateCommand();
 
@@ -169,6 +188,10 @@ namespace TimeTrackerRepository
           return entries;
         }
 
+        /// <summary>Get punches with the given duration</summary>
+        /// <param name="duration">the time span of the entries</param>
+        /// <returns>A list of punch objects<returns>
+        // TODO:
         public List<Punch> GetPunches(string duration) { return []; }
     }
 }

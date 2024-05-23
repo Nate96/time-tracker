@@ -5,9 +5,9 @@ namespace TimeTrackerModels {
     public string timeIn { get; }
     public string timeOut { get; }
     public string comment { get; }
-    public int totalTime { get; }
+    public float totalTime { get; }
 
-    public Entry(int id, string date, string timeIn, string timeOut, int totalTime, string comment) {
+    public Entry(int id, string date, string timeIn, string timeOut, float totalTime, string comment) {
       this.id = id;
       this.date = date;
       this.timeIn = timeIn;

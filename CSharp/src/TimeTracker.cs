@@ -2,8 +2,9 @@ using TimeTrackerModels;
 using TimeTrackerRepository;
 using TimeTrackerErrors;
 using System.Globalization;
+
 // ADD and ENUM of valid inputs
-// BUG: system is not calculating time correctly
+
 namespace TimeTrackerApp {
    class TimeTracker {
      private Repository repo;
@@ -16,9 +17,11 @@ namespace TimeTrackerApp {
       /// <param name="comment">A string that will be asosiated with the punch</param>
       /// <returns> a succuess message or a error message </returns>
       public string PunchIn(string comment) {
-        if (this.isValidState("in")) {
-          (string currentDate, string currentTime) = this.getDateAndTime();
-          repo.addPunch(new Punch(0, "in", currentDate, currentTime, comment));
+        (Boolean isValidState, Punch? lastPunch) = this.IsValidState("out");
+
+        if (isValidState) {
+          (string currentDate, string currentTime) = this.GetDateAndTime();
+          repo.AddPunch(new Punch(0, "in", currentDate, currentTime, comment));
 
           return ErrorMessages.PunchInSuccess;
         }
@@ -33,21 +36,21 @@ namespace TimeTrackerApp {
       /// If the punch fails returns error message
       /// </returns>
       public string PunchOut(string comment) {
-        if (this.isValidState("out")) {
-          (string currentDate, string currentTime) = this.getDateAndTime();
-          Punch lastPunch = repo.getLastPunch();  
+        (Boolean isValidSate, Punch? lastPunch) = this.IsValidState("out");
 
-          repo.addPunch(new Punch(0, "out", currentDate, currentTime, comment));
+        if (isValidSate && lastPunch != null) {
+          (string currentDate, string currentTime) = this.GetDateAndTime();
+          
+          repo.AddPunch(new Punch(0, "out", currentDate, currentTime, comment));
 
-          Console.WriteLine(this.getTotalTime(lastPunch.time, currentTime));
           Entry entry = new Entry(0,
               currentDate,
               lastPunch.time,
               currentTime,
-              this.getTotalTime(lastPunch.time, currentTime),
+              this.GetTotalTime(lastPunch.time, currentTime),
               lastPunch.comment + "\n" + comment);
 
-          repo.addEntry(entry);
+          repo.AddEntry(entry);
 
           return @$"
             Log: --------------------------------------------------------------
@@ -56,6 +59,7 @@ namespace TimeTrackerApp {
 
             Entry: ------------------------------------------------------------
             Date: {entry.date}, {entry.timeIn} - {entry.timeOut}
+            Time Worked: {entry.totalTime}
             {entry.comment}"; 
         }
         return ErrorMessages.PunchOutInvalid;
@@ -69,7 +73,8 @@ namespace TimeTrackerApp {
       /// if no entries for the to returns "none"
       /// </returns>
       public string ShowEntries(string duration) {
-        List<Entry> entries = repo.GetEntries(duration);
+        List<Entry>? entries = repo.GetEntries(duration);
+        float workedHours = 0;
 
         if (entries == null) {
           return ErrorMessages.INVALID_DURATION;
@@ -84,8 +89,10 @@ namespace TimeTrackerApp {
             output += $"Total Time: {entry.totalTime}\n";
             output += $"Comment: \n{entry.comment}\n";
             output += "\n";
+
+            workedHours += entry.totalTime;
           }
-          return output; 
+          return output + "\n" + "Hours Worked today:" + workedHours; 
         }
       }
 
@@ -96,7 +103,7 @@ namespace TimeTrackerApp {
       /// if and invalid duration is given returns error message
       /// if no punches for the to returns "none"
       /// </returns>
-      public string showPunches(string duration) {
+      public string ShowPunches(string duration) {
         List<Punch> punches = repo.GetPunches(duration);
         string output = "";
 
@@ -110,12 +117,22 @@ namespace TimeTrackerApp {
         return output;
       }
 
-      public void entriesToTextFile(string duration) {}
+      /// <summary>writes the resutls of show Entries to a markdown file</summary>
+      /// <param name="duration">refer to index.md for valid duration</param>
+      // TODO:
+      public void EntriesToTextFile(string duration) {}
 
-      public void punchesToTextFile(string duration) {}
+      /// <summary>writes the resutls of show Entries to a markdown file</summary>
+      /// <param name="duration">refer to index.md for valid duration</param>
+      // TODO:
+      public void PunchesToTextFile(string duration) {}
 
+      /// <summary>Gets the current date and the current time</summary>
+      /// <returns>
+      /// string: the current date in yyyy-MM-dd format
+      /// string: the current time in hh:mm PM/AM format
       // NOTE: Unsure to seperate time and date, going to seperate
-      private (string, string) getDateAndTime() {
+      private (string, string) GetDateAndTime() {
         DateTime now = DateTime.Now;
 
         string currentDate = now.ToString("yyyy-MM-dd");
@@ -124,26 +141,37 @@ namespace TimeTrackerApp {
         return (currentDate, currentTime);
       }
 
-      private Boolean isValidState(string type) {
-        Repository r = new Repository();
-        Punch lastPunch  = r.getLastPunch();
+      /// <summary>
+      /// verifies the data is in the correct state for the action the user 
+      /// wants to perform.
+      /// </summary>
+      /// <param name="type">the action the user wants to perform</param>
+      /// <returns>Boolean and a Punch Object</returns>
+      private (Boolean, Punch?) IsValidState(string type) {
+        Punch? lastPunch = repo.GetLastPunch();
 
-        if (lastPunch == null)
-          return false;
-        else if (type == lastPunch.type)
-          return false;
+        if (lastPunch == null && type == "out")
+          return (false, lastPunch);
+        else if (type == lastPunch?.type)
+          return (false, lastPunch);
         else 
-          return true;
+          return (true, lastPunch);
       }
 
-      private int getTotalTime(string inTime, string outTime) {
-
+      /// <summary>calcauated the total time worked during a session</summary>
+      /// <param name="inTime">string: the clock in time</param>
+      /// <param name="outTime">string: the clock out time</param>
+      /// <returns>float: hours worked</returns>
+      private float GetTotalTime(string inTime, string outTime) {
         DateTime t1 = DateTime.ParseExact(inTime, "h:mm tt", CultureInfo.InvariantCulture);
-        DateTime t2 = DateTime.ParseExact(inTime, "h:mm tt", CultureInfo.InvariantCulture);
+        DateTime t2 = DateTime.ParseExact(outTime, "h:mm tt", CultureInfo.InvariantCulture);
 
         TimeSpan totalTime = t2 - t1;
+        Console.WriteLine($"in: {inTime}");
+        Console.WriteLine($"out: {outTime}");
+        Console.WriteLine($"Total Time: {(float)totalTime.TotalMinutes / 60}");
 
-        return (int)totalTime.TotalHours;
+        return (float)Math.Round(((float)totalTime.TotalMinutes / 60), 2);
       }
    }
 }
