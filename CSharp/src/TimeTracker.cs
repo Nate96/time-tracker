@@ -117,10 +117,10 @@ namespace TimeTrackerApp {
         return output;
       }
 
-      /// <summary>writes the resutls of show Entries to a markdown file</summary>
+      /// <summary>writes the resutls of show Entries results.md</summary>
       /// <param name="duration">refer to index.md for valid duration</param>
       // TODO:
-      public void EntriesToTextFile(string duration) {}
+      public string WriteEntries(string duration) {return "";}
 
       /// <summary>writes the resutls of show Entries to a markdown file</summary>
       /// <param name="duration">refer to index.md for valid duration</param>

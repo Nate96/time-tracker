@@ -157,7 +157,6 @@ namespace TimeTrackerRepository
         /// <summary>Get entries with the given duration</summary>
         /// <param name="duration">the time span of the entries</param>
         /// <returns>A list of Entries object<returns>
-        // TODO:
         public List<Entry>? GetEntries(string duration) {
           SqliteConnection connection = this.ConnectToDatabase();
           var command = connection.CreateCommand();
@@ -168,6 +167,18 @@ namespace TimeTrackerRepository
                 SELECT *
                 FROM entry
                 WHERE entry_date = DATE('now')";
+              break;
+            case "week":
+              command.CommandText = @"
+                 SELECT * 
+                 FROM entry
+                 WHERE (SELECT date('now')) > (SELECT date('now', '-7 days'))";
+              break;
+            case "month":
+              command.CommandText = @"
+                 SELECT * 
+                 FROM entry
+                 WHERE (SELECT date('now')) > (SELECT date('now', '-30 days'))";
               break;
             default:
               return null;
@@ -188,10 +199,5 @@ namespace TimeTrackerRepository
           return entries;
         }
 
-        /// <summary>Get punches with the given duration</summary>
-        /// <param name="duration">the time span of the entries</param>
-        /// <returns>A list of punch objects<returns>
-        // TODO:
-        public List<Punch> GetPunches(string duration) { return []; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿// TODO: Fix null ref warnings
+
 using TimeTrackerApp;
 
 class Program
@@ -24,6 +25,9 @@ class Program
                break;
             case "show":
                Console.WriteLine(timeTracker.ShowEntries(comment));
+               break;
+            case "write":
+               Console.WriteLine(timeTracker.WriteEntries(comment));
                break;
             default:
                Console.WriteLine(TimeTrackerErrors.ErrorMessages.INVALID_INPUT);
