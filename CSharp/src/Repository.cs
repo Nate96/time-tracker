@@ -1,6 +1,8 @@
 using Microsoft.Data.Sqlite;
 using TimeTrackerModels;
 
+//NOTE: DateTime.Now is in localtime
+
 namespace TimeTrackerRepository
 {
     class Repository
@@ -172,13 +174,17 @@ namespace TimeTrackerRepository
               command.CommandText = @"
                  SELECT * 
                  FROM entry
-                 WHERE (SELECT date('now')) > (SELECT date('now', 'localtime', '-7 days'))";
+                 WHERE entry_date > (SELECT date('now', 'localtime', $move))";
+              Console.WriteLine((int)DateTime.Now.DayOfWeek);
+              command.Parameters.AddWithValue("$move", $"{-(int)DateTime.Now.DayOfWeek} days");
               break;
             case "month":
               command.CommandText = @"
                  SELECT * 
                  FROM entry
-                 WHERE (SELECT date('now')) > (SELECT date('now', 'localtime', '-30 days'))";
+                 WHERE entry_date > (SELECT date('now', 'localtime', $move))";
+              Console.WriteLine((int)DateTime.Now.Day-1);
+              command.Parameters.AddWithValue("$move", $"{-(int)DateTime.Now.Day} days");
               break;
             case "last":
               command.CommandText = @"
@@ -205,6 +211,5 @@ namespace TimeTrackerRepository
           connection.Close();
           return entries;
         }
-
     }
 }

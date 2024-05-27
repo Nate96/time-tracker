@@ -82,7 +82,7 @@ namespace TimeTrackerApp {
              workedHours += entry.totalTime;
           }
           
-          return output + "\n" + "Hours Worked in Duration " + workedHours; 
+          return output  + "Hours Worked in Duration " + workedHours; 
         }
       }
 
@@ -108,7 +108,6 @@ namespace TimeTrackerApp {
             else 
                return "ERROR: No Entries";
          }
-
          return "Default";
       }
 
@@ -117,6 +116,7 @@ namespace TimeTrackerApp {
       /// <returns>Error or success message</returns>
       public string WriteEntries(string duration) {
          List<Entry>? entries = repo.GetEntries(duration);
+         float totalHours = 0;
 
          using (StreamWriter writer = new StreamWriter("results.md")) {
             if (entries == null || entries.Count == 0)
@@ -124,7 +124,9 @@ namespace TimeTrackerApp {
             else {
                foreach (Entry entry in entries) {
                   writer.WriteLine(entry.MarkdownFormat() + "\n\n");
+                  totalHours += entry.totalTime;
                }
+               writer.WriteLine($"Total Hours Worked: {totalHours}");
                return "SUCCESS: wrote file";
             }
          }
