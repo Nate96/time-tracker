@@ -166,19 +166,26 @@ namespace TimeTrackerRepository
               command.CommandText = @"
                 SELECT *
                 FROM entry
-                WHERE entry_date = DATE('now')";
+                WHERE entry_date == (SELECT date('now', 'localtime'))";
               break;
             case "week":
               command.CommandText = @"
                  SELECT * 
                  FROM entry
-                 WHERE (SELECT date('now')) > (SELECT date('now', '-7 days'))";
+                 WHERE (SELECT date('now')) > (SELECT date('now', 'localtime', '-7 days'))";
               break;
             case "month":
               command.CommandText = @"
                  SELECT * 
                  FROM entry
-                 WHERE (SELECT date('now')) > (SELECT date('now', '-30 days'))";
+                 WHERE (SELECT date('now')) > (SELECT date('now', 'localtime', '-30 days'))";
+              break;
+            case "last":
+              command.CommandText = @"
+                 SELECT *
+                 FROM entry
+                 ORDER BY Id DESC
+                 LIMIT 1";
               break;
             default:
               return null;
@@ -191,7 +198,7 @@ namespace TimeTrackerRepository
                   reader.GetString(1),
                   reader.GetString(2),
                   reader.GetString(3),
-                  reader.GetInt32(4),
+                  reader.GetFloat(4),
                   reader.GetString(5)));
           }
 

@@ -17,7 +17,7 @@ namespace TimeTrackerApp {
       /// <param name="comment">A string that will be asosiated with the punch</param>
       /// <returns> a succuess message or a error message </returns>
       public string PunchIn(string comment) {
-        (Boolean isValidState, Punch? lastPunch) = this.IsValidState("out");
+        (Boolean isValidState, Punch? lastPunch) = this.IsValidState("in");
 
         if (isValidState) {
           (string currentDate, string currentTime) = this.GetDateAndTime();
@@ -38,29 +38,23 @@ namespace TimeTrackerApp {
       public string PunchOut(string comment) {
         (Boolean isValidSate, Punch? lastPunch) = this.IsValidState("out");
 
-        if (isValidSate && lastPunch != null) {
+        if (isValidSate) {
           (string currentDate, string currentTime) = this.GetDateAndTime();
           
           repo.AddPunch(new Punch(0, "out", currentDate, currentTime, comment));
 
-          Entry entry = new Entry(0,
-              currentDate,
-              lastPunch.time,
-              currentTime,
-              this.GetTotalTime(lastPunch.time, currentTime),
-              lastPunch.comment + "\n" + comment);
+          if (lastPunch != null) {
+             Entry entry = new Entry(0,
+                   currentDate,
+                   lastPunch.time,
+                   currentTime,
+                   this.GetTotalTime(lastPunch.time, currentTime),
+                   lastPunch.comment + "\n" + comment);
 
-          repo.AddEntry(entry);
+             repo.AddEntry(entry);
 
-          return @$"
-            Log: --------------------------------------------------------------
-            {ErrorMessages.PunchOutSuccess}
-            {ErrorMessages.EntrySucess}
-
-            Entry: ------------------------------------------------------------
-            Date: {entry.date}, {entry.timeIn} - {entry.timeOut}
-            Time Worked: {entry.totalTime}
-            {entry.comment}"; 
+             return ErrorMessages.PunchInSuccess + "\n" + ErrorMessages.EntrySucess + "\n" + entry.ToString();
+          }
         }
         return ErrorMessages.PunchOutInvalid;
       }
@@ -84,48 +78,57 @@ namespace TimeTrackerApp {
           string output = "";
 
           foreach (Entry entry in entries) {
-            output += $"Date: {entry.date}\n";
-            output += $"Punch time: In-{entry.timeIn} Out-{entry.timeOut}\n";
-            output += $"Total Time: {entry.totalTime}\n";
-            output += $"Comment: \n{entry.comment}\n";
-            output += "\n";
-
-            workedHours += entry.totalTime;
+             output += entry.ToString() + "\n\n";
+             workedHours += entry.totalTime;
           }
-          return output + "\n" + "Hours Worked today:" + workedHours; 
+          
+          return output + "\n" + "Hours Worked in Duration " + workedHours; 
         }
       }
 
-      /// <summary>Shows punches for the given duration</summary>
-      /// <param name="duration">refer to index.md for valid duration</param>
+      /// <summary>Returns status of System</summary>
       /// <returns>
-      /// list of punches in as a string
-      /// if and invalid duration is given returns error message
-      /// if no punches for the to returns "none"
+      /// When the last punch type was out returns most recent entry string
+      /// when the last punch type was in returns most recent punch string
       /// </returns>
-      public string ShowPunches(string duration) {
-        List<Punch> punches = repo.GetPunches(duration);
-        string output = "";
+      public string Stats() {
+         Punch? lastPunch = repo.GetLastPunch();
 
-        foreach (Punch punch in punches) {
-          output += $"Type: {punch.type}\n";
-          output += $"Date: {punch.date}\n";
-          output += $"Time: {punch.time}\n";
-          output += $"Comment: \n{punch.comment}\n";
-          output += "\n";
-        }
-        return output;
+         if (lastPunch == null)
+            return "No Punches";
+         else if (lastPunch?.type == "in") {
+            (string currentDate, string currentTime) = this.GetDateAndTime();
+            return $"Punch in for {this.GetTotalTime(lastPunch.time, currentTime)}\n{lastPunch.ToString()}";
+         }
+         else if (lastPunch?.type == "out") {
+            List<Entry>? lastEntry = repo.GetEntries("last");
+
+            if(lastEntry != null && lastEntry.Count != 0)
+               return "You are currently Punched out\n" + lastEntry[0].ToString() + "\n";
+            else 
+               return "ERROR: No Entries";
+         }
+
+         return "Default";
       }
 
       /// <summary>writes the resutls of show Entries results.md</summary>
       /// <param name="duration">refer to index.md for valid duration</param>
-      // TODO:
-      public string WriteEntries(string duration) {return "";}
+      /// <returns>Error or success message</returns>
+      public string WriteEntries(string duration) {
+         List<Entry>? entries = repo.GetEntries(duration);
 
-      /// <summary>writes the resutls of show Entries to a markdown file</summary>
-      /// <param name="duration">refer to index.md for valid duration</param>
-      // TODO:
-      public void PunchesToTextFile(string duration) {}
+         using (StreamWriter writer = new StreamWriter("results.md")) {
+            if (entries == null || entries.Count == 0)
+               return "WARNING: no entries";
+            else {
+               foreach (Entry entry in entries) {
+                  writer.WriteLine(entry.MarkdownFormat() + "\n\n");
+               }
+               return "SUCCESS: wrote file";
+            }
+         }
+      }
 
       /// <summary>Gets the current date and the current time</summary>
       /// <returns>
@@ -144,6 +147,19 @@ namespace TimeTrackerApp {
       /// <summary>
       /// verifies the data is in the correct state for the action the user 
       /// wants to perform.
+      /// VALID:
+      /// IN - 
+      /// 1. no table
+      /// 2. last type = "out"
+      /// OUT -
+      /// 1. last type = "in"
+      ///
+      /// INVALID:
+      /// IN - 
+      /// 1. last type = "in"
+      /// OUT -
+      /// 1. no table
+      /// 2. last type = "out"
       /// </summary>
       /// <param name="type">the action the user wants to perform</param>
       /// <returns>Boolean and a Punch Object</returns>
@@ -151,11 +167,13 @@ namespace TimeTrackerApp {
         Punch? lastPunch = repo.GetLastPunch();
 
         if (lastPunch == null && type == "out")
-          return (false, lastPunch);
-        else if (type == lastPunch?.type)
-          return (false, lastPunch);
+           return (false, null);
+        else if (lastPunch == null && type == "in")
+           return (true, null);
+        else if(lastPunch?.type != type)
+           return (true, lastPunch);
         else 
-          return (true, lastPunch);
+           return (false, lastPunch);
       }
 
       /// <summary>calcauated the total time worked during a session</summary>
@@ -167,9 +185,6 @@ namespace TimeTrackerApp {
         DateTime t2 = DateTime.ParseExact(outTime, "h:mm tt", CultureInfo.InvariantCulture);
 
         TimeSpan totalTime = t2 - t1;
-        Console.WriteLine($"in: {inTime}");
-        Console.WriteLine($"out: {outTime}");
-        Console.WriteLine($"Total Time: {(float)totalTime.TotalMinutes / 60}");
 
         return (float)Math.Round(((float)totalTime.TotalMinutes / 60), 2);
       }

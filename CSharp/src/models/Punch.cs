@@ -13,5 +13,21 @@ namespace TimeTrackerModels {
       this.time = time;
       this.comment = comment;
     }
+
+    ///<summary>Punch in string format</summary>
+    ///<returns>
+    ///Punch in the following format
+    ///"Date: {} Time: {} type comment: {}
+    public override string ToString()
+    {
+       return $"DATE: {this.GetDayOfWeek(this.date)} {this.date} {this.time} {this.type} COMMENT: {this.comment}";
+    }
+
+    ///<summary>Get name of the day</summary>
+    ///<returns>day of the week</returns>
+    private string GetDayOfWeek(string date) {
+       DayOfWeek day = DateTime.Parse(date).DayOfWeek;
+       return $"{day}";
+    }
   }
 }

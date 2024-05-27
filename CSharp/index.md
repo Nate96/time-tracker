@@ -14,12 +14,13 @@ dotnet run show "month"     *prints entires to the console for the current month
 dotnet run write "day"      *writes entires to the result.md file for the current day*
 dotnet run write "week"     *writes entires to the result.md file for the current week*
 dotnet run write "month"    *writes entires to the result.md file for the current month*
+dotnet run status ""        *get the last punch*
 
 [main](program.cs)
 
 # todos 
 - logging
-- writing to file
+- Storing Dates
 
 # notes
 create project: dotnet new console -n microsoft.time-tracker -f net6.0
