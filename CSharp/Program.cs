@@ -4,15 +4,10 @@ using TimeTrackerApp;
 
 class Program
 {
-      static void Main(string[] args)
-      {
-         if (args.Length != 2) {
-           Console.WriteLine(TimeTrackerErrors.ErrorMessages.INVALID_INPUT);
-           return;
-         }
-
+      static void Main(string[] args) {
+         string comment = "";
          string mode = args[0];
-         string comment = args[1];
+         if (args.Length == 2) { comment = args[1]; }
 
          TimeTracker timeTracker = new TimeTracker();
 
