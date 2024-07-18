@@ -1,0 +1,17 @@
+CREATE TABLE IF NOT EXISTS entry(
+   id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT
+   , entry_date DATE NOT NULL
+   , timeIn TIME NOT NULL
+   , timeOut TIME NOT NULL
+   , totalTime FLOAT NOT NULL
+   , comment TEXT NOT NULL
+);
+
+
+CREATE TABLE IF NOT EXISTS  punch(
+   id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT
+   , type TEXT NOT NULL
+   , punch_date DATE NOT NULL
+   , punch_time TIME NOT NULL
+   , comment TEXT NOT NULL
+);
