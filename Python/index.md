@@ -1,8 +1,8 @@
-## Tools
+# Tools
 - SQLite 
 - [Click](https://click.palletsprojects.com/en/8.1.x/)
 
-## How To Use
+# How To Use
 Usage: tt.py [OPTIONS]
 
 Options:
@@ -14,3 +14,6 @@ Options:
   -c, --comment TEXT         : Comment for entry  
   -q, --query TEXT           : SQLite query  
   --help                     : Show this message and exit.  
+
+#TODO update to match README.md  
+#TODO logging System  
