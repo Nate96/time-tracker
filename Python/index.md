@@ -6,8 +6,8 @@
 Usage: tt.py [OPTIONS]
 
 Options:
-  -m, --mode TEXT            : Mode: n = normal, f = friday, q = querying mode,  
-                             : d = today entry(s)  [required]  
+  -m, --mode TEXT            : Mode: n = normal, f = friday, q = querying mode,
+                             d = today entry(s)  [required]  
   -i, --in-time TEXT         : Time: HH:MM  
   -o, --out-time TEXT        : Time: HH:MM  
   -hw, --hours-worked FLOAT  : Time: HH:MM  
