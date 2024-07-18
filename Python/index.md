@@ -10,7 +10,7 @@ Options:
                              d = today entry(s)  [required]  
   -i, --in-time TEXT         : Time: HH:MM  
   -o, --out-time TEXT        : Time: HH:MM  
-  -hw, --hours-worked FLOAT  : Time: HH:MM  
+  -hw, --hours-worked FLOAT  : in hours (ex 1.5)  
   -c, --comment TEXT         : Comment for entry  
   -q, --query TEXT           : SQLite query  
   --help                     : Show this message and exit.  
