@@ -2,19 +2,19 @@ namespace TimeTrackerModels
 {
     class Punch
     {
-        public int id         { get; }
-        public string type    { get; }
-        public string date    { get; }
-        public string time    { get; }
-        public string comment { get; }
+        public int id             { get; }
+        public string type        { get; }
+        public DateTime punchDate { get; }
+        public string comment     { get; }
 
-        public Punch(int id, string type, string date, string time, string comment)
+        private const string DATE_TIME_FORMAT = "dddd dd-MM-yyyy hh:mm tt";
+
+        public Punch(int id, string type,  DateTime punchDate, string comment)
         {
-            this.id      = id;
-            this.type    = type;
-            this.date    = date;
-            this.time    = time;
-            this.comment = comment;
+            this.id        = id;
+            this.type      = type;
+            this.punchDate = punchDate;
+            this.comment   = comment;
         }
 
         ///<summary>Punch in string format</summary>
@@ -23,7 +23,7 @@ namespace TimeTrackerModels
         ///"Date: {} Time: {} type comment: {}
         public override string ToString()
         {
-            return $"DATE: {this.GetDayOfWeek(this.date)} {this.date} {this.time} {this.type} COMMENT: {this.comment}";
+            return $"PUNCH: {this.punchDate.ToString(DATE_TIME_FORMAT)} {this.type} COMMENT: {this.comment}";
         }
 
         ///<summary>Get name of the day</summary>

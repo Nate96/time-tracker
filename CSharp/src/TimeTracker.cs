@@ -20,9 +20,7 @@ namespace TimeTrackerApp
 
             if (isValidState)
             {
-                (string currentDate, string currentTime) = this.GetDateAndTime();
-                repo.AddPunch(new Punch(0, "in", currentDate, currentTime, comment));
-
+                repo.AddPunch("in", comment);
                 return ErrorMessages.PUNCHIN_SUCCESS;
             }
             return ErrorMessages.PUNCHIN_VALID;
@@ -41,22 +39,12 @@ namespace TimeTrackerApp
 
             if (isValidSate)
             {
-                (string currentDate, string currentTime) = this.GetDateAndTime();
+                repo.AddPunch("out", comment);
 
-                repo.AddPunch(new Punch(0, "out", currentDate, currentTime, comment));
-
-                if (lastPunch != null)
+                if (repo.AddEntry())
                 {
-                    Entry entry = new Entry(0,
-                          currentDate,
-                          lastPunch.time,
-                          currentTime,
-                          this.GetTotalTime(lastPunch.time, currentTime),
-                          lastPunch.comment + "\n" + comment);
-
-                    repo.AddEntry(entry);
-
-                    return $"{ErrorMessages.PUNCHOUT_SUCCESS}\n{ErrorMessages.ENTRY_SUCCESS}\n{entry.ToString()}";
+                   List<Entry>? lastEntry = repo.GetEntries("last");
+                   return $"{ErrorMessages.PUNCHOUT_SUCCESS}\n{ErrorMessages.ENTRY_SUCCESS}\n{lastEntry?[0].ToString()}";
                 }
             }
             return ErrorMessages.PUNCHOUT_INVALID;
@@ -110,8 +98,8 @@ namespace TimeTrackerApp
                 return "No Punches";
             else if (lastPunch?.type == "in")
             {
-                (string currentDate, string currentTime) = this.GetDateAndTime();
-                return $"Punch in for {this.GetTotalTime(lastPunch.time, currentTime)} hours\n{lastPunch.ToString()}";
+               TimeSpan totalTime = DateTime.Now - lastPunch.punchDate;
+               return $"Punch in for {(float)Math.Round(((float)totalTime.TotalMinutes / 60), 2)} hours\n{lastPunch.ToString()}";
             }
             else if (lastPunch?.type == "out")
             {
@@ -198,18 +186,5 @@ namespace TimeTrackerApp
                 return (false, lastPunch);
         }
 
-        /// <summary>calcauated the total time worked during a session</summary>
-        /// <param name="inTime">string: the clock in time</param>
-        /// <param name="outTime">string: the clock out time</param>
-        /// <returns>float: hours worked</returns>
-        private float GetTotalTime(string inTime, string outTime)
-        {
-            DateTime t1 = DateTime.ParseExact(inTime, "h:mm tt", CultureInfo.InvariantCulture);
-            DateTime t2 = DateTime.ParseExact(outTime, "h:mm tt", CultureInfo.InvariantCulture);
-
-            TimeSpan totalTime = t2 - t1;
-
-            return (float)Math.Round(((float)totalTime.TotalMinutes / 60), 2);
-        }
     }
 }

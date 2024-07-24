@@ -2,24 +2,26 @@ namespace TimeTrackerModels
 {
     class Entry
     {
-        public int id          { get; }
-        public string date     { get; }
-        public string timeIn   { get; }
-        public string timeOut  { get; }
-        public string comment  { get; }
-        public float totalTime { get; }
+        public int       id          { get; }
+        public DateTime  inPunch     { get; }
+        public DateTime  outPunch    { get; }
+        public float     totalTime   { get; }
+        public  string   taskName    { get; }
+        public  string   taskComment { get; }
 
         private const string TOP    = "---Entry---\n";
         private const string BOTTOM = "\n---End---\n";
+        private const string DATE_TIME_FORMAT = "dddd dd-MM-yyyy hh:mm tt";
+        private const string TIME_FORMAT = "hh:mm tt";
 
-        public Entry(int id, string date, string timeIn, string timeOut, float totalTime, string comment)
+        public Entry(int id, DateTime inPunch, DateTime outPunch, float totalTime, string taskName, string taskComment)
         {
-            this.id = id;
-            this.date = date;
-            this.timeIn = timeIn;
-            this.timeOut = timeOut;
-            this.comment = comment;
-            this.totalTime = totalTime;
+            this.id          = id;
+            this.inPunch     = inPunch;
+            this.outPunch    = outPunch;
+            this.totalTime   = totalTime;
+            this.taskName    = taskName;
+            this.taskComment = taskComment;
         }
 
         /// <summary>Entry Object to String</summary>
@@ -33,7 +35,7 @@ namespace TimeTrackerModels
         /// </returns>
         public override string ToString()
         {
-            return $"{TOP}{this.GetDayOfWeek(this.date)} {this.date}, {this.timeIn} - {this.timeOut}, {this.totalTime} HOURS\nCOMMENT:\n{this.comment}{BOTTOM}";
+            return $"{TOP}{this.inPunch.DayOfWeek} {this.inPunch.ToString(DATE_TIME_FORMAT)} - {this.outPunch.ToString(TIME_FORMAT)}, {Math.Round(this.totalTime, 2)} HOURS\nCOMMENT:\n{this.taskName}\n{this.taskComment}{BOTTOM}";
         }
 
         ///<summary>Formats Entry to Markdown Format</summary>
@@ -45,15 +47,8 @@ namespace TimeTrackerModels
         ///</returns>
         public string MarkdownFormat()
         {
-            return $"{TOP}{this.GetDayOfWeek(this.date)} {this.date}, {this.timeIn} - {this.timeOut}, {this.totalTime} **HOURS:** \n**COMMENT:**\n{this.comment}{BOTTOM}";
-        }
-
-        ///<summary>Get name of the day</summary>
-        ///<returns>day of the week</returns>
-        private string GetDayOfWeek(string date)
-        {
-            DayOfWeek day = DateTime.Parse(date).DayOfWeek;
-            return $"{day}";
+            //return $"{TOP}{this.GetDayOfWeek(this.date)} {this.date}, {this.timeIn} - {this.timeOut}, {this.totalTime} **HOURS:** \n**COMMENT:**\n{this.comment}{BOTTOM}";
+            return "not implemented yet";
         }
     }
 }

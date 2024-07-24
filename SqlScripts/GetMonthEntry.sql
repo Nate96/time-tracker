@@ -1,3 +1,3 @@
 SELECT * 
 FROM entry
-WHERE entry_date > (SELECT date('now', 'localtime', $move));
+WHERE DATE(in_punch) >= DATE('now', 'localtime', '-' || strftime('%d', 'now') || ' days');

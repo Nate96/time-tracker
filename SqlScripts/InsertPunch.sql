@@ -1,2 +1,2 @@
-INSERT INTO punch(type, punch_date, punch_time, comment)
-VALUES($type, $currentDate, $currentTime, $comment);
+INSERT INTO punch(type, punch_date, comment)
+VALUES($type, DATETIME('now', 'localtime'), $comment);

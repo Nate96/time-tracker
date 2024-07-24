@@ -1,11 +1,26 @@
+.mode column
 --SELECT * 
 --FROM entry
 --WHERE entry_date == (SELECT date("now", "localtime"));
 
-SELECT * 
-FROM entry
-WHERE entry_date > (SELECT date('now', 'localtime', '-1 days'));
+--SELECT * 
+--FROM entry
+--WHERE entry_date > (SELECT date('now', 'localtime', '-1 days'));
+--
+--SELECT '-' || strftime('%w', 'now')
 
+--SELECT '-' || strftime('%w', 'now') || ' days';
+
+--SELECT * 
+--FROM entry
+--WHERE entry_date > (SELECT date('now', 'localtime', (SELECT '-' || strftime('%w', 'now') || ' days')));
+--
+SELECT *
+FROM entry
+WHERE entry_date >= DATE('now', 'localtime', '-' || strftime('%w', 'now') || ' days');
+select DATETIME('now')
+--SELECT * FROM entry
+--WHERE entry_date > DATE('now', 'localtime', '-2 days');
 --SELECT date("now");
 --
 --SELECT '2024-05-18 ', date('2024-05-18', 'localtime', 'weekday 1', "-7 days");

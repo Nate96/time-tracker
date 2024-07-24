@@ -61,12 +61,11 @@ namespace TimeTrackerRepository
             {
                 int id = reader.GetInt32(0);
                 string type = reader.GetString(1);
-                string punchDate = reader.GetString(2);
-                string punchTime = reader.GetString(3);
-                string comment = reader.GetString(4);
+                DateTime punchDate = reader.GetDateTime(2);
+                string comment = reader.GetString(3);
 
                 connection.Close();
-                return new Punch(id, type, punchDate, punchTime, comment);
+                return new Punch(id, type, punchDate, comment);
             }
         }
 
@@ -76,16 +75,14 @@ namespace TimeTrackerRepository
         /// true when the row is added successfully and false when the row is
         /// not added successfully
         /// </returns>
-        public Boolean AddPunch(Punch punch)
+        public Boolean AddPunch(string type, string comment)
         {
             SqliteConnection connection = this.ConnectToDatabase();
             var command = connection.CreateCommand();
 
             command.CommandText = File.ReadAllText(INSERT_PUNCH);
-            command.Parameters.AddWithValue("type", punch.type);
-            command.Parameters.AddWithValue("$currentDate", punch.date);
-            command.Parameters.AddWithValue("$currentTime", punch.time);
-            command.Parameters.AddWithValue("$comment", punch.comment);
+            command.Parameters.AddWithValue("type", type);
+            command.Parameters.AddWithValue("$comment", comment);
 
             if (command.ExecuteNonQuery() == 1)
             {
@@ -105,19 +102,13 @@ namespace TimeTrackerRepository
         /// true when the row is added successfully and false when the row is
         /// not added successfully
         /// </returns>
-        public Boolean AddEntry(Entry entry)
+        public Boolean AddEntry()
         {
             SqliteConnection connection = this.ConnectToDatabase();
             connection = this.ConnectToDatabase();
             var command = connection.CreateCommand();
 
             command.CommandText = File.ReadAllText(INSERT_ENTRY);
-
-            command.Parameters.AddWithValue("$date", entry.date);
-            command.Parameters.AddWithValue("$timeIn", entry.timeIn);
-            command.Parameters.AddWithValue("$timeOut", entry.timeOut);
-            command.Parameters.AddWithValue("$totalTime", entry.totalTime);
-            command.Parameters.AddWithValue("$comment", entry.comment);
 
             if (command.ExecuteNonQuery() == 1)
             {
@@ -146,11 +137,9 @@ namespace TimeTrackerRepository
                     break;
                 case "week":
                     command.CommandText = File.ReadAllText(WEEK);
-                    command.Parameters.AddWithValue("$move", $"{-(int)DateTime.Now.DayOfWeek} days");
                     break;
                 case "month":
                     command.CommandText = File.ReadAllText(MONTH);
-                    command.Parameters.AddWithValue("$move", $"{-(int)DateTime.Now.Day} days");
                     break;
                 case "last":
                     command.CommandText = File.ReadAllText(LAST_ENTRY);
@@ -164,10 +153,10 @@ namespace TimeTrackerRepository
             while (reader.Read())
             {
                 entries.Add(new Entry(reader.GetInt32(0),
-                      reader.GetString(1),
-                      reader.GetString(2),
-                      reader.GetString(3),
-                      reader.GetFloat(4),
+                      reader.GetDateTime(1),
+                      reader.GetDateTime(2),
+                      reader.GetFloat(3),
+                      reader.GetString(4),
                       reader.GetString(5)));
             }
 
