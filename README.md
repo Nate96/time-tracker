@@ -27,3 +27,6 @@ status -- show weather the user is punched in or out
 - Version 2.0
     - specify location of database
     - show hours for week, and day
+- Update
+    - update {duration} > writes query results to md file
+    - update > reads md file and update proper objects
