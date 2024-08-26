@@ -42,7 +42,7 @@ namespace TimeTrackerRepository
 
         /// <summary>Returns the most recent row in the Punch Table</summary>
         /// <returns>Punch</returns>
-        public Punch? GetLastPunch()
+        public Punch GetLastPunch()
         {
             SqliteConnection connection = this.ConnectToDatabase();
             var command = connection.CreateCommand();
@@ -55,7 +55,7 @@ namespace TimeTrackerRepository
             if (!reader.Read())
             {
                 connection.Close();
-                return null;
+                return new Punch(-1, "x", DateTime.Now, "");
             }
             else
             {
@@ -125,7 +125,7 @@ namespace TimeTrackerRepository
         /// <summary>Get entries with the given duration</summary>
         /// <param name="duration">the time span of the entries</param>
         /// <returns>A list of Entries object<returns>
-        public List<Entry>? GetEntries(string duration)
+        public List<Entry> GetEntries(string duration)
         {
             SqliteConnection connection = this.ConnectToDatabase();
             var command = connection.CreateCommand();
@@ -145,11 +145,12 @@ namespace TimeTrackerRepository
                     command.CommandText = File.ReadAllText(LAST_ENTRY);
                     break;
                 default:
-                    return null;
+                    return new List<Entry>();
             }
 
             List<Entry> entries = new List<Entry>();
             var reader = command.ExecuteReader();
+
             while (reader.Read())
             {
                 entries.Add(new Entry(reader.GetInt32(0),

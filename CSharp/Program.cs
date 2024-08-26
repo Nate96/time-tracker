@@ -25,7 +25,7 @@ class Program
                Console.WriteLine(timeTracker.WriteEntries(comment));
                break;
             case "status":
-               Console.WriteLine(timeTracker.Stats());
+               Console.WriteLine(timeTracker.Status());
                break;
             default:
                Console.WriteLine(TimeTrackerErrors.ErrorMessages.INVALID_INPUT);

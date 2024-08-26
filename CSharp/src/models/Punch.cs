@@ -31,7 +31,7 @@ namespace TimeTrackerModels
         private string GetDayOfWeek(string date)
         {
             DayOfWeek day = DateTime.Parse(date).DayOfWeek;
-            return $"{day}";
+            return day.ToString();
         }
     }
 }
