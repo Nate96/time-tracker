@@ -1,10 +1,41 @@
 from datetime import datetime, timedelta, time
-from repository import create_entry, execute_query, get_todays_entries, get_hours_worked_today
-import click
+from repository import Repository
+import os
 
 # TODO: Turn repository into class
 # TODO: Implement "cli" class in tt.py file.
 # TODO: test
+REPO = Repository
+
+
+def punch_in(comment):
+    def _valid_state():
+        last_punch = REPO.get_last_punch()[0]
+        if last_punch.punch_type == "out":
+            return True
+        return False
+
+    if _valid_state():
+        REPO.add_punch("in", os.time(), comment)
+
+
+def punch_out(comment):
+    def _valid_state():
+        last_punch = REPO.get_last_punch()[0]
+        if last_punch.punch_type == "in":
+            return True
+        return False
+
+    if _valid_state():
+        REPO.add_punch("out", os.time(), comment)
+        REPO.add_entry()
+
+
+
+
+
+
+
 
 
 def _display_results(hours):

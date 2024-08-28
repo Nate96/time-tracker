@@ -1,70 +1,55 @@
 import sqlite3
-CON = sqlite3.connect('Log.db')
-CUR = CON.cursor()
+import os
 
 
-def create_entry(time_in, time_out, comment, total_time):
-    '''Create Entry
-    Adds an Entry to the entry table
-    '''
+class Repository:
+    scripts = {
+            'DATABASE_LOCATION':  "Data Source=../Test/Log.db",
+            'CREATE_TABLE     ':  "../SqlScripts/CreateTables.sql",
+            'LAST_PUNCH       ':  "../SqlScripts/GetLastPunch.sql",
+            'INSERT_PUNCH     ':  "../SqlScripts/InsertPunch.sql",
+            'INSERT_ENTRY     ':  "../SqlScripts/InsertEntry.sql",
+            'TODAY            ':  "../SqlScripts/GetTodayEntry.sql",
+            'WEEK             ':  "../SqlScripts/GetWeekEntry.sql",
+            'MONTH            ':  "../SqlScripts/GetMonthEntry.sql",
+            'LAST_ENTRY       ':  "../SqlScripts/GetLastEntry.sql",
+            }
 
-    _create_entry_table()
-    CUR.execute('''SELECT Date('now', 'localtime')''')
-    todays_date = CUR.fetchone()[0]
+    def __init__(self):
+        CON = sqlite3.connect(self.scripts['DATABASE_LOCATION'])
+        CUR = CON.cursor()
+        CUR.execute(os.read(self.scripts['CREATE_TABLE']))
 
-    CUR.execute('''
-                INSERT INTO entry
-                (date, timeIn, timeOut, TotalTime, comment)
-                values(?, ?, ?, ?, ?)
-                ''',
-                (todays_date, time_in, time_out, total_time, comment))
-    CON.commit()
+    def add_punch(self, punch_type, punch_datetime, comment):
+        CON = sqlite3.connect(self.scripts['DATABASE_LOCATION'])
+        CUR = CON.cursor()
 
+        CUR.execute(self.scripts['INSERT_PUNCH'],
+                    {
+                        punch_type,
+                        punch_datetime,
+                        comment
+                     })
+        CON.commit()
 
-def execute_query(query):
-    '''Execute Query:w
-    Executes the given query
-    '''
-    print('executing query')
-    for row in CUR.execute(query):
-        print(row)
+    def add_entry(self):
+        CON = sqlite3.connect(self.scripts['DATABASE_LOCATION'])
+        CUR = CON.cursor()
+        CUR.execute(self.scripts['INSERT_ENTRY'])
+        CON.commit()
 
+    def get_entries(self, duration):
+        CON = sqlite3.connect(self.scripts['DATABASE_LOCATION'])
+        CUR = CON.cursor()
 
-def get_todays_entries():
-    '''Get Todays Entires
-    Prints rows where the date is equal to the current date
-    '''
-    res = CUR.execute('''
-                      SELECT * FROM entry
-                      WHERE date == (SELECT Date('now', 'localtime'))
-                      ''')
-    for row in res:
-        print(row)
+        if duration == "day":
+            return CUR.execute(self.scripts['TODAY'])
+        elif duration == "week":
+            return CUR.execute(self.scripts['WEEK'])
+        elif duration == "month":
+            return CUR.execute(self.scripts['MONTH'])
 
-
-def get_hours_worked_today():
-    CUR.execute('''
-                SELECT SUM(TotalTime) FROM entry
-                WHERE date = (SELECT Date('now', 'localtime'))
-                ''')
-    print("Total hours worked today:", CUR.fetchone())
-
-
-def _create_entry_table():
-    '''Create Table
-    Checks if the entry table has been created.
-    If the entry table has not been created, create the table
-
-    NOTE: checks if only 1 table is in the database
-    '''
-
-    res = CUR.execute('SELECT name FROM sqlite_master')
-    if res.fetchone() is None:
-        CUR.execute('''
-                    CREATE TABLE entry(
-                        date,
-                        timeIn,
-                        timeOut,
-                        TotalTime,
-                        comment)
-                    ''')
+    def get_last_punch(self):
+        CON = sqlite3.connect(self.scripts['DATABASE_LOCATION'])
+        CUR = CON.cursor()
+        return CUR.execute(self.scripts['LAST_PUNCH'])
