@@ -31,11 +31,49 @@ def punch_out(comment):
         REPO.add_entry()
 
 
+def status():
+    last_punch = REPO.get_last_punch()[0]
+    day_entries = REPO.get_entries("day")
+    week_entries = REPO.get_entries("week")
+    punch_in_time = datetime.time('now') - last_punch.punch_time
+
+    if last_punch.punch_type == "in":
+        print(f'Punched in for: {round(punch_in_time, 2)} hours\n')
+        print(last_punch)
+        print(f'Day:  {day_entries} hours')
+        print(f'Week: {week_entries} hours')
+    elif last_punch.punch_type == "out":
+        print(REPO.get_entries("last"))
+        print(f'Day:  {day_entries} hours')
+        print(f'Week: {week_entries} hours')
 
 
+def show_entrie(duration):
+    '''Show Entires:
+    Show Entries for the given Duration in the following format
+    Entry{}
+
+    Total Hours: {}
+    '''
+    entries = REPO.get_entries(duration)
+
+    # print Entry
+    # print toal time
 
 
-
+def report(duration):
+    '''Report
+    Show stats of the given week in the following format
+    Monday:     {} hours
+    Tuesday:    {} hours
+    Wednesday:  {} hours
+    Thursday:   {} hours
+    Friday:     {} hours
+    Saturday:   {} hours
+    Sunday:     {} hours
+    ---------------------
+    Total:      {} hours
+    '''
 
 
 def _display_results(hours):

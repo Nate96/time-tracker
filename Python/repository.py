@@ -48,6 +48,8 @@ class Repository:
             return CUR.execute(self.scripts['WEEK'])
         elif duration == "month":
             return CUR.execute(self.scripts['MONTH'])
+        elif duration == "last":
+            return CUR.execute(self.scripts['LAST_ENTRY'])
 
     def get_last_punch(self):
         CON = sqlite3.connect(self.scripts['DATABASE_LOCATION'])
