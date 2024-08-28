@@ -90,27 +90,32 @@ namespace TimeTrackerApp
         /// When the last punch type was out returns most recent entry string
         /// when the last punch type was in returns most recent punch string
         /// </returns>
-        public string Stats()
+        /// NOTE: Duplicate Data with day and week lists
+        public string Status()
         {
-            Punch? lastPunch = repo.GetLastPunch();
+            Punch lastPunch = repo.GetLastPunch();
+            List<Entry> dayEntries = repo.GetEntries("day");
+            List<Entry> weekEntries = repo.GetEntries("week");
 
-            if (lastPunch == null)
-                return "No Punches";
-            else if (lastPunch?.type == "in")
+            switch (lastPunch.type)
             {
-               TimeSpan totalTime = DateTime.Now - lastPunch.punchDate;
-               return $"Punch in for {(float)Math.Round(((float)totalTime.TotalMinutes / 60), 2)} hours\n{lastPunch.ToString()}";
-            }
-            else if (lastPunch?.type == "out")
-            {
-                List<Entry>? lastEntry = repo.GetEntries("last");
+               case "in":
+                  TimeSpan totalTime = DateTime.Now - lastPunch.punchDate;
+                  return $"Punch in for {(float)Math.Round(((float)totalTime.TotalMinutes / 60), 2)} hours\n"
+                     + lastPunch.ToString()
+                     + $"Day:  {dayEntries.Sum(e => e.totalTime)} hours\n"
+                     + $"Week: {weekEntries.Sum(e => e.totalTime)} hours\n";
+               case "out":
+                  List<Entry> lastEntry = repo.GetEntries("last");
+                  if (lastEntry == null) return "ERROR: punches out of synce.";
 
-                if (lastEntry != null && lastEntry.Count != 0)
-                    return $"You are currently Punched out\n{lastEntry[0].ToString()}\n";
-                else
-                    return "ERROR: No Entries";
+                  return "Punched Out\n" 
+                     + lastEntry[0].ToString()
+                     + $"Day:  {dayEntries.Sum(e => e.totalTime)} hours\n"
+                     + $"Week: {weekEntries.Sum(e => e.totalTime)} hours\n";
+               default:
+                  return ErrorMessages.NO_ENTRIES;
             }
-            return "Default";
         }
 
         /// <summary>writes the resutls of show Entries results.md</summary>

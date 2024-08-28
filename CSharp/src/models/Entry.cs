@@ -10,7 +10,7 @@ namespace TimeTrackerModels
         public  string   taskComment { get; }
 
         private const string TOP    = "---Entry---\n";
-        private const string BOTTOM = "\n---End---\n";
+        private const string BOTTOM = "\n---End---\n\n";
         private const string DATE_TIME_FORMAT = "dddd dd-MM-yyyy hh:mm tt";
         private const string TIME_FORMAT = "hh:mm tt";
 
@@ -35,7 +35,7 @@ namespace TimeTrackerModels
         /// </returns>
         public override string ToString()
         {
-            return $"{TOP}{this.inPunch.DayOfWeek} {this.inPunch.ToString(DATE_TIME_FORMAT)} - {this.outPunch.ToString(TIME_FORMAT)}, {Math.Round(this.totalTime, 2)} HOURS\nCOMMENT:\n{this.taskName}\n{this.taskComment}{BOTTOM}";
+            return $"{TOP}{this.inPunch.ToString(DATE_TIME_FORMAT)} - {this.outPunch.ToString(TIME_FORMAT)}, {Math.Round(this.totalTime, 2)} HOURS\nCOMMENT:\n{this.taskName}\n{this.taskComment}{BOTTOM}";
         }
 
         ///<summary>Formats Entry to Markdown Format</summary>
