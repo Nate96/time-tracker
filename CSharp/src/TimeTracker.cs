@@ -1,7 +1,6 @@
 using TimeTrackerModels;
 using TimeTrackerRepository;
 using TimeTrackerErrors;
-using System.Globalization;
 
 namespace TimeTrackerApp
 {
