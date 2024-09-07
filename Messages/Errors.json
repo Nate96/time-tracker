@@ -5,8 +5,11 @@
    , "INVALID_DURATION": "In-valid duration please referr to index.md"
    , "PUNCHIN_SUCCESS":  "Seccessfully punched in"
    , "PUNCHOUT_SUCCESS": "Seccessfully punched out"
-   , "PUNCHIN_VALID":    "Already Punched in"
+   , "PUNCHIN_INVALID":  "Already Punched in"
    , "PUNCHOUT_INVALID": "Already Punched out"
    , "NO_ENTRIES":       "There is no entries"
    , "INVALID_STATE":    "Database is NOT in the correct state to perfome action"
+   , "NO_PUNCHES":       "There are no punches"
+   , "PUNCH_FAIL":       "Punch was not added correctly"
+   , "REFER_LOG":       "An Error as accourd, please refer to tt.log"
 }

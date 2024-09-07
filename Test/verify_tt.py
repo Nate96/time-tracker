@@ -6,7 +6,7 @@ PREFIX = "python3 ../Python/tt.py"
 
 COMMENT = "test comment"
 
-f = open("../ErrorMessages.json")
+f = open("../Messages/Errors.json")
 ERROR_MESSAGES = json.load(f)
 
 # TODO: punch in at 11:59 pm and pucnh out 12:01 am next day
