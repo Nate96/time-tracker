@@ -1,68 +1,58 @@
-from datetime import datetime, timedelta, time
+import datetime
 import repository
 import json
-import os
 import logging
 
-# TODO: Turn repository into class
-# TODO: Implement "cli" class in tt.py file.
-# TODO: test
 REPO = repository
-MESSAGES = json.load(open("../Messages/CommandErrors.json"))
+MESSAGES = json.load(open("../Messages/Errors.json"))
 logger = logging.getLogger(__name__)
 
 
 def punch_in(comment):
-    def _valid_state():
-        last_punch = REPO.get_last_punch()
-        if last_punch is None:
-            logger.error(MESSAGES['NO_PUNCHES'])
-            return False
-        elif last_punch[1] == "out":
-            return True
-        elif last_punch:
-            logger.error(MESSAGES['PUNCHIN_INVALID'])
-            return False
+    """punch in
+    punches the user in
 
-    if _valid_state():
-        timestamp = os.time()
-        REPO.add_punch("in", timestamp, comment)
+    Parameters:
+    comment: comment linked to the punch
 
-        if timestamp == REPO.get_last_punch()[2]:
-            return MESSAGES['PUNCHIN_SUCCESS']
-        else:
-            logger.error(MESSAGES['PUNCH_FAIL'])
-            return MESSAGES['REFER_LOG']
+    Returns:
+    str: a messages of the results of the process
+    """
+    last_punch = REPO.get_last_punch()
+
+    if last_punch is None:
+        return MESSAGES['NO_PUNCHES']
+    elif last_punch[1] == "in":
+        return MESSAGES['PUNCHIN_INVALID']
+    elif last_punch[1] == "out":
+        REPO.add_punch("in", comment)
+        return MESSAGES['PUNCHIN_SUCCESS']
+    else:
+        return MESSAGES['REFER_LOG']
 
 
 def punch_out(comment):
-    def _valid_state():
-        last_punch = REPO.get_last_punch()
-        if last_punch is None:
-            logger.error(MESSAGES['NO_PUNCHES'])
-            return False
-        elif last_punch[1] == "in":
-            return True
-        elif last_punch:
-            logger.error(MESSAGES['PUNCHOUT_INVALID'])
-            return False
+    """punch out
+    punches the user out
 
-    if _valid_state():
-        timestamp = os.time()
-        REPO.add_punch("out", timestamp, comment)
+    Parameters:
+    comment: comment linked to the punch
 
-        if timestamp == REPO.get_last_punch()[2]:
-            logger.info(MESSAGES['PUNCHOUT_SUCCESS'])
-            REPO.add_entry()
-            logger.info(MESSAGES['PUNCHOUT_SUCCESS'])
+    Returns:
+    Response of the process
+    """
+    last_punch = REPO.get_last_punch()
 
-        else:
-            logger.error(MESSAGES['PUNCH_FAIL'])
-            return MESSAGES['REFER_LOG']
-
-    if _valid_state():
-        REPO.add_punch("out", os.time(), comment)
+    if last_punch is None:
+        return MESSAGES['NO_PUNCHES']
+    elif last_punch[1] == "out":
+        return MESSAGES['PUNCHOUT_INVALID']
+    elif last_punch[1] == "in":
+        REPO.add_punch("out", comment)
         REPO.add_entry()
+        return MESSAGES['ENTRY_SUCCESS']
+    else:
+        return MESSAGES['ENTRY_FAIL']
 
 
 def status():

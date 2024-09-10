@@ -1,0 +1,25 @@
+INFO:repository:connected to ../Test/Log.db
+INFO:repository:created punch table if it doesn't exsist already
+INFO:repository:created entry table if it doesn't exsist already
+INFO:repository:fetched last punch: (6, 'in', '2024-09-09 20:47:03', 'o')
+INFO:repository:closed connection
+INFO:repository:connected to ../Test/Log.db
+INFO:repository:created punch table if it doesn't exsist already
+INFO:repository:created entry table if it doesn't exsist already
+INFO:repository:fetched last punch: (6, 'in', '2024-09-09 20:47:03', 'o')
+INFO:repository:closed connection
+INFO:repository:connected to ../Test/Log.db
+INFO:repository:created punch table if it doesn't exsist already
+INFO:repository:created entry table if it doesn't exsist already
+INFO:repository:created new punch
+INFO:repository:connected to ../Test/Log.db
+INFO:repository:created punch table if it doesn't exsist already
+INFO:repository:created entry table if it doesn't exsist already
+INFO:repository:fetched last punch: (6, 'in', '2024-09-09 20:47:03', 'o')
+INFO:repository:closed connection
+INFO:repository:commit and close
+INFO:repository:connected to ../Test/Log.db
+INFO:repository:created punch table if it doesn't exsist already
+INFO:repository:created entry table if it doesn't exsist already
+INFO:repository:created new entry
+INFO:repository:commit and close

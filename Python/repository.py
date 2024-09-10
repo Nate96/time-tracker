@@ -3,54 +3,86 @@
 #        does not support this.
 from typing import Tuple
 import sqlite3
-import os
 import logging
+import datetime
 
 logger = logging.getLogger(__name__)
 
 scripts = {
         'DATABASE_LOCATION':  "../Test/Log.db",
-        'CREATE_TABLE':       "../SqlScripts/CreateTables.sql",
-        'LAST_PUNCH       ':  "../SqlScripts/GetLastPunch.sql",
-        'INSERT_PUNCH     ':  "../SqlScripts/InsertPunch.sql",
-        'INSERT_ENTRY     ':  "../SqlScripts/InsertEntry.sql",
-        'TODAY            ':  "../SqlScripts/GetTodayEntry.sql",
-        'WEEK             ':  "../SqlScripts/GetWeekEntry.sql",
-        'MONTH            ':  "../SqlScripts/GetMonthEntry.sql",
-        'LAST_ENTRY       ':  "../SqlScripts/GetLastEntry.sql",
+        'create_punch_table': "../SqlScripts/CreatePunchTable.sql",
+        'create_entry_table': "../SqlScripts/CreateEntryTable.sql",
+        'LAST_PUNCH':         "../SqlScripts/GetLastPunch.sql",
+        'INSERT_PUNCH':  "../SqlScripts/InsertPunch.sql",
+        'INSERT_ENTRY':  "../SqlScripts/InsertEntry.sql",
+        'TODAY':  "../SqlScripts/GetTodayEntry.sql",
+        'WEEK':  "../SqlScripts/GetWeekEntry.sql",
+        'MONTH':  "../SqlScripts/GetMonthEntry.sql",
+        'LAST_ENTRY':  "../SqlScripts/GetLastEntry.sql",
 }
 
 
-def add_punch(punch_type, punch_datetime, comment):
-    _connect_to_data_base()
+def add_punch(punch_type, comment) -> Tuple[str, str, str, str]:
+    """add punch
+    Inserts a new punch into the table.
 
-    CUR.execute(os.read(scripts['INSERT_PUNCH']),
-                {
-                    punch_type,
-                    punch_datetime,
-                    comment
-                 })
-    CON.commit()
+    Parameters:
+    punch_type: "in" or "out"
+    comment: comment for the punch
+
+    Returns:
+    Boolean
+    """
+    datetime.datetime.now()
+    con = _connect_to_data_base()
+    con.cursor().execute(_sql_script(scripts['INSERT_PUNCH']),
+                         (
+                              punch_type,
+                              comment
+                          ))
+    logger.info("created new punch")
+    punch = get_last_punch()
+
+    con.commit()
+    con.close()
+    logger.info("commit and close")
+
+    return punch
 
 
-def add_entry():
-    CON = sqlite3.connect(scripts['DATABASE_LOCATION'])
-    CUR = CON.cursor()
-    CUR.execute(scripts['INSERT_ENTRY']).commit()
+def add_entry() -> Tuple[int, str, str, float, str, str]:
+    """
+    Inserts a new entry into table
+
+    Returns:
+    Tuple[id, in_punch, out_punch, total_time, task_name, task_comment]
+    """
+    con = _connect_to_data_base()
+    con.cursor().execute(_sql_script(scripts['INSERT_ENTRY']))
+    logger.info("created new entry")
+
+    con.commit()
+    entry = con.cursor().execute(_sql_script(scripts['LAST_ENTRY'])).fetchone()
+    con.close()
+    logger.info("commit and close")
+
+    return entry
 
 
-def get_entries(self, duration):
-    CON = sqlite3.connect(self.scripts['DATABASE_LOCATION'])
-    CUR = CON.cursor()
+def get_entries(duration):
+    con = _connect_to_data_base()
+    cur = con.cursor()
 
     if duration == "day":
-        return CUR.execute(self.scripts['TODAY'])
+        res = cur.execute(_sql_script(scripts['TODAY'])).fetchall()
     elif duration == "week":
-        return CUR.execute(self.scripts['WEEK'])
+        res = cur.execute(_sql_script(scripts['WEEK'])).fetchall()
     elif duration == "month":
-        return CUR.execute(self.scripts['MONTH'])
-    elif duration == "last":
-        return CUR.execute(self.scripts['LAST_ENTRY'])
+        cur = cur.execute(_sql_script(scripts['MONTH'])).fetchall()
+    con.close()
+    logger.info("closed connection")
+
+    return res
 
 
 def get_last_punch() -> Tuple[int, str, str, str]:
@@ -60,8 +92,26 @@ def get_last_punch() -> Tuple[int, str, str, str]:
     Returns:
     Tuple[id, type, punch_datetime, comment]
     """
-    cursor = _connect_to_data_base()
-    return cursor.execute(scripts['LAST_PUNCH']).fetchone()
+    con = _connect_to_data_base()
+    cur = con.cursor()
+    res = cur.execute(_sql_script(scripts['LAST_PUNCH'])).fetchone()
+    logger.info(f"fetched last punch: {res}")
+
+    con.close()
+    logger.info("closed connection")
+
+    return res
+
+
+def get_last_entry():
+    con = _connect_to_data_base()
+    res = con.cursor().execute(_sql_script(scripts['LAST_ENTRY'])).fetchone()
+    logger.info(f"Fetched last entry: {res}")
+
+    con.close()
+    logger.info("closed connection")
+
+    return res
 
 
 def _sql_script(file_path) -> str:
@@ -84,9 +134,16 @@ def _connect_to_data_base():
     connects to database and creates tables for punches and entries.
 
     Returns:
-    the Cursor for the connections
+    the connection for the datbase
     """
     CON = sqlite3.connect(scripts['DATABASE_LOCATION'])
+    logger.info(f"connected to {scripts['DATABASE_LOCATION']}")
+
     CUR = CON.cursor()
-    CUR.execute(_sql_script(scripts['CREATE_TABLE']))
-    return CON.cursor()
+    CUR.execute(_sql_script(scripts['create_punch_table']))
+    logger.info("created punch table if it doesn't exsist already")
+
+    CUR.execute(_sql_script(scripts['create_entry_table']))
+    logger.info("created entry table if it doesn't exsist already")
+
+    return CON
