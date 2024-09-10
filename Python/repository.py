@@ -1,7 +1,8 @@
 # NOTE: typing is not inforced but acts more like a hint
 # ISSUE: Create Table sql scirpt has two commands and python
 #        does not support this.
-from typing import Tuple
+
+from typing import Tuple, List
 import sqlite3
 import logging
 import datetime
@@ -59,17 +60,26 @@ def add_entry() -> Tuple[int, str, str, float, str, str]:
     """
     con = _connect_to_data_base()
     con.cursor().execute(_sql_script(scripts['INSERT_ENTRY']))
+    con.commit()
     logger.info("created new entry")
 
-    con.commit()
-    entry = con.cursor().execute(_sql_script(scripts['LAST_ENTRY'])).fetchone()
+    entry = get_last_entry()
     con.close()
     logger.info("commit and close")
 
     return entry
 
 
-def get_entries(duration):
+def get_entries(duration) -> List[Tuple[str, str, str, str, str, str]]:
+    """get entries
+    Get entries from the data base for the given duration
+
+    Parameters:
+    duration: the range of entry of entries
+
+    Returns:
+    list[Tuple[id, in_punch, out_punch, total_time, task_name, task_comment]]
+    """
     con = _connect_to_data_base()
     cur = con.cursor()
 
@@ -78,7 +88,8 @@ def get_entries(duration):
     elif duration == "week":
         res = cur.execute(_sql_script(scripts['WEEK'])).fetchall()
     elif duration == "month":
-        cur = cur.execute(_sql_script(scripts['MONTH'])).fetchall()
+        res = cur.execute(_sql_script(scripts['MONTH'])).fetchall()
+
     con.close()
     logger.info("closed connection")
 
@@ -103,7 +114,13 @@ def get_last_punch() -> Tuple[int, str, str, str]:
     return res
 
 
-def get_last_entry():
+def get_last_entry() -> Tuple[str, str, str, str, str, str]:
+    """get last entry
+    Gets the most recent entry in the database
+
+    Returns:
+    Tuple[id, in_punch, out_punch, total_time, task_name, task_comment]
+    """
     con = _connect_to_data_base()
     res = con.cursor().execute(_sql_script(scripts['LAST_ENTRY'])).fetchone()
     logger.info(f"Fetched last entry: {res}")

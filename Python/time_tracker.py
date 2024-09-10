@@ -1,7 +1,8 @@
-import datetime
+from datetime import datetime
 import repository
 import json
 import logging
+import presenter
 
 REPO = repository
 MESSAGES = json.load(open("../Messages/Errors.json"))
@@ -56,20 +57,32 @@ def punch_out(comment):
 
 
 def status():
-    last_punch = REPO.get_last_punch()[0]
+    last_punch = REPO.get_last_punch()
     day_entries = REPO.get_entries("day")
     week_entries = REPO.get_entries("week")
-    punch_in_time = datetime.time('now') - last_punch.punch_time
+    punch_in_time = datetime.strptime(last_punch[1])
+    last_entry = REPO.get_last_entry()
 
-    if last_punch.punch_type == "in":
-        print(f'Punched in for: {round(punch_in_time, 2)} hours\n')
-        print(last_punch)
-        print(f'Day:  {day_entries} hours')
-        print(f'Week: {week_entries} hours')
-    elif last_punch.punch_type == "out":
-        print(REPO.get_entries("last"))
-        print(f'Day:  {day_entries} hours')
-        print(f'Week: {week_entries} hours')
+    if last_punch[1] == "in":
+        delta_time = datetime.now() - punch_in_time
+        output = f'Punched in for: {round(delta_time.total_hours(), 2)} hours\n '
+        output += presenter.format_punch(last_punch)
+    elif last_punch[1] == "out":
+        output = presenter.format_entry(last_entry)
+
+    total_week_hours = 0
+    for entry in week_entries:
+        total_week_hours += float(entry[3])
+
+    output += f'Week: {total_week_hours} hours'
+
+    total_day_hours = 0
+    for enty in day_entries:
+        total_day_hours += float(entry[3])
+
+    output += f'Day: {total_day_hours} hours'
+
+    return output
 
 
 def show_entrie(duration):

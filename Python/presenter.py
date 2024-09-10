@@ -1,17 +1,25 @@
+from datetime import datetime
 TOP = "---Entry---\n"
 BOTTOM = "\n---End---\n\n"
 DATE_TIME_FORMAT = "dddd dd-MM-yyyy hh:mm tt"
 TIME_FORMAT = "hh:mm tt"
 
 
-def present_punch(punch):
-    print(f"{punch["DateTime"]}, {punch["type"]}, COMMENT: {punch["comment"]}")
+def format_punch(punch):
+    print(f"{datetime.strptime(punch[2], DATE_TIME_FORMAT)}, COMMENT: {punch[3]}")
 
 
-def present_punches(punches):
-    for punch in punches:
-        print(f"{punch["DateTime"]}, {punch["type"]}, COMMENT: {punch["comment"]}")
+def format_entry(entry):
+    return f"{TOP}{datetime.strptime(entry[1], DATE_TIME_FORMAT)} -"
+    + f" {datetime.strptime(entry[2], TIME_FORMAT)}"
+    + f" {round(entry[3], 2)} Hours\n{entry[4]}{entry[5]}{BOTTOM}"
 
 
-def present_entry(entry):
-    print(f"{TOP}{entry["inDateTime"]} - {entry["outDateTime"]} {round(entry["totalTime"], 2)} Hours\n{entry["title"]} {entry["comment"]}{BOTTUM}")
+def format_entries(entries):
+    output = ''
+    for entry in entries:
+        output += f"{TOP}{datetime.strptime(entry[1], DATE_TIME_FORMAT)} -"
+        + f"{datetime.strptime(entry[2], TIME_FORMAT)} {round(entry[3], 2)} Hours\n"
+        + f"{entry[4]} {entry[5]}{BOTTOM}"
+
+    return output
