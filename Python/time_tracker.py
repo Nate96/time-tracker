@@ -21,13 +21,10 @@ def punch_in(comment):
     """
     last_punch = REPO.get_last_punch()
 
-    if last_punch is None:
-        return MESSAGES['NO_PUNCHES']
+    if last_punch is None or last_punch[1] == "out":
+        return presenter.format_punch(REPO.add_punch("in", comment))
     elif last_punch[1] == "in":
         return MESSAGES['PUNCHIN_INVALID']
-    elif last_punch[1] == "out":
-        REPO.add_punch("in", comment)
-        return MESSAGES['PUNCHIN_SUCCESS']
     else:
         return MESSAGES['REFER_LOG']
 
@@ -50,39 +47,41 @@ def punch_out(comment):
         return MESSAGES['PUNCHOUT_INVALID']
     elif last_punch[1] == "in":
         REPO.add_punch("out", comment)
-        REPO.add_entry()
-        return MESSAGES['ENTRY_SUCCESS']
+        # TODO: Add more to the output
+        output = presenter.format_entry(REPO.add_entry())
+        return output
     else:
         return MESSAGES['ENTRY_FAIL']
 
 
 def status():
+    '''
+    Presents the current status of the given databse in the following format
+
+    Status of Database
+
+    Day:  {}
+    Week: {}
+    '''
     last_punch = REPO.get_last_punch()
-    day_entries = REPO.get_entries("day")
-    week_entries = REPO.get_entries("week")
-    punch_in_time = datetime.strptime(last_punch[1])
-    last_entry = REPO.get_last_entry()
+    if last_punch is None:
+        return MESSAGES['NO_PUNCHES']
 
     if last_punch[1] == "in":
-        delta_time = datetime.now() - punch_in_time
-        output = f'Punched in for: {round(delta_time.total_hours(), 2)} hours\n '
-        output += presenter.format_punch(last_punch)
+        last_punch_time = datetime.fromisoformat(last_punch[2])
+        delta_time = datetime.now() - last_punch_time
+        delta_time = delta_time.total_seconds() / 3600
+        return f'''Punched in for: {round(delta_time, 2)} hours
+{presenter.format_punch(last_punch)}
+
+Day:  {_get_day_total()} Hours
+Week: {_get_week_total()} Hours
+'''
     elif last_punch[1] == "out":
-        output = presenter.format_entry(last_entry)
-
-    total_week_hours = 0
-    for entry in week_entries:
-        total_week_hours += float(entry[3])
-
-    output += f'Week: {total_week_hours} hours'
-
-    total_day_hours = 0
-    for enty in day_entries:
-        total_day_hours += float(entry[3])
-
-    output += f'Day: {total_day_hours} hours'
-
-    return output
+        return f'''currenlty clocked out
+Day:  {_get_day_total()}
+Week: {_get_week_total()}
+'''
 
 
 def show_entrie(duration):
@@ -92,10 +91,7 @@ def show_entrie(duration):
 
     Total Hours: {}
     '''
-    entries = REPO.get_entries(duration)
-
-    # print Entry
-    # print toal time
+    return presenter.format_entries(REPO.get_entries(duration))
 
 
 def report(duration):
@@ -111,3 +107,44 @@ def report(duration):
     ---------------------
     Total:      {} hours
     '''
+    entries = REPO.get_entries("week")
+    week_hours = [0] * 7
+    total_hours = 0
+
+    for entry in entries:
+        dt = datetime.fromisoformat(entry[2])
+        day_of_week = dt.weekday()
+        week_hours[day_of_week] += float(entry[3])
+        total_hours += float(entry[3])
+
+    return f'''---------------------
+Monday:     {week_hours[1]} hours
+Tuesday:    {week_hours[1]} hours
+Wednesday:  {week_hours[2]} hours
+Thursday:   {week_hours[3]} hours
+Friday:     {week_hours[4]} hours
+Saturday:   {week_hours[5]} hours
+Sunday:     {week_hours[6]} hours
+---------------------
+Total:      {total_hours} hours
+'''
+
+
+def _get_day_total():
+    day_entries = REPO.get_entries("day")
+
+    total_day_hours = 0
+    for entry in day_entries:
+        total_day_hours += float(entry[3])
+
+    return round(total_day_hours, 2)
+
+
+def _get_week_total():
+    week_entries = REPO.get_entries("week")
+
+    total_week_hours = 0
+    for entry in week_entries:
+        total_week_hours += float(entry[3])
+
+    return round(total_week_hours, 2)

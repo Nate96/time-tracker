@@ -1,6 +1,6 @@
 .mode column
---SELECT * 
---FROM entry
+SELECT * 
+FROM entry
 --WHERE entry_date == (SELECT date("now", "localtime"));
 
 --SELECT * 
@@ -15,10 +15,10 @@
 --FROM entry
 --WHERE entry_date > (SELECT date('now', 'localtime', (SELECT '-' || strftime('%w', 'now') || ' days')));
 --
-SELECT *
-FROM entry
-WHERE entry_date >= DATE('now', 'localtime', '-' || strftime('%w', 'now') || ' days');
-select DATETIME('now')
+--SELECT *
+--FROM entry
+--WHERE entry_date >= DATE('now', 'localtime', '-' || strftime('%w', 'now') || ' days');
+--select DATETIME('now')
 --SELECT * FROM entry
 --WHERE entry_date > DATE('now', 'localtime', '-2 days');
 --SELECT date("now");

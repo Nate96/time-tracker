@@ -41,14 +41,10 @@ def add_punch(punch_type, comment) -> Tuple[str, str, str, str]:
                               punch_type,
                               comment
                           ))
-    logger.info("created new punch")
-    punch = get_last_punch()
-
     con.commit()
     con.close()
-    logger.info("commit and close")
 
-    return punch
+    return get_last_punch()
 
 
 def add_entry() -> Tuple[int, str, str, float, str, str]:
@@ -61,13 +57,9 @@ def add_entry() -> Tuple[int, str, str, float, str, str]:
     con = _connect_to_data_base()
     con.cursor().execute(_sql_script(scripts['INSERT_ENTRY']))
     con.commit()
-    logger.info("created new entry")
-
-    entry = get_last_entry()
     con.close()
-    logger.info("commit and close")
 
-    return entry
+    return get_last_entry()
 
 
 def get_entries(duration) -> List[Tuple[str, str, str, str, str, str]]:
@@ -89,9 +81,10 @@ def get_entries(duration) -> List[Tuple[str, str, str, str, str, str]]:
         res = cur.execute(_sql_script(scripts['WEEK'])).fetchall()
     elif duration == "month":
         res = cur.execute(_sql_script(scripts['MONTH'])).fetchall()
+    else:
+        return "invalid duration"
 
     con.close()
-    logger.info("closed connection")
 
     return res
 

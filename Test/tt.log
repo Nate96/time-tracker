@@ -1,0 +1,205 @@
+INFO:repository:connected to ../Test/Log.db
+INFO:repository:created punch table if it doesn't exsist already
+INFO:repository:created entry table if it doesn't exsist already
+INFO:repository:fetched last punch: (7, 'out', '2024-09-09 20:47:53', 'blaa')
+INFO:repository:closed connection
+INFO:repository:connected to ../Test/Log.db
+INFO:repository:created punch table if it doesn't exsist already
+INFO:repository:created entry table if it doesn't exsist already
+INFO:repository:closed connection
+INFO:repository:connected to ../Test/Log.db
+INFO:repository:created punch table if it doesn't exsist already
+INFO:repository:created entry table if it doesn't exsist already
+INFO:repository:closed connection
+INFO:repository:connected to ../Test/Log.db
+INFO:repository:created punch table if it doesn't exsist already
+INFO:repository:created entry table if it doesn't exsist already
+INFO:repository:closed connection
+INFO:repository:connected to ../Test/Log.db
+INFO:repository:created punch table if it doesn't exsist already
+INFO:repository:created entry table if it doesn't exsist already
+INFO:repository:fetched last punch: (7, 'out', '2024-09-09 20:47:53', 'blaa')
+INFO:repository:closed connection
+INFO:repository:connected to ../Test/Log.db
+INFO:repository:created punch table if it doesn't exsist already
+INFO:repository:created entry table if it doesn't exsist already
+INFO:repository:closed connection
+INFO:repository:connected to ../Test/Log.db
+INFO:repository:created punch table if it doesn't exsist already
+INFO:repository:created entry table if it doesn't exsist already
+INFO:repository:closed connection
+INFO:repository:connected to ../Test/Log.db
+INFO:repository:created punch table if it doesn't exsist already
+INFO:repository:created entry table if it doesn't exsist already
+INFO:repository:closed connection
+INFO:repository:connected to ../Test/Log.db
+INFO:repository:created punch table if it doesn't exsist already
+INFO:repository:created entry table if it doesn't exsist already
+INFO:repository:fetched last punch: (7, 'out', '2024-09-09 20:47:53', 'blaa')
+INFO:repository:closed connection
+INFO:repository:connected to ../Test/Log.db
+INFO:repository:created punch table if it doesn't exsist already
+INFO:repository:created entry table if it doesn't exsist already
+INFO:repository:closed connection
+INFO:repository:connected to ../Test/Log.db
+INFO:repository:created punch table if it doesn't exsist already
+INFO:repository:created entry table if it doesn't exsist already
+INFO:repository:closed connection
+INFO:repository:connected to ../Test/Log.db
+INFO:repository:created punch table if it doesn't exsist already
+INFO:repository:created entry table if it doesn't exsist already
+INFO:repository:closed connection
+INFO:repository:connected to ../Test/Log.db
+INFO:repository:created punch table if it doesn't exsist already
+INFO:repository:created entry table if it doesn't exsist already
+INFO:repository:fetched last punch: (7, 'out', '2024-09-09 20:47:53', 'blaa')
+INFO:repository:closed connection
+INFO:repository:connected to ../Test/Log.db
+INFO:repository:created punch table if it doesn't exsist already
+INFO:repository:created entry table if it doesn't exsist already
+INFO:repository:closed connection
+INFO:repository:connected to ../Test/Log.db
+INFO:repository:created punch table if it doesn't exsist already
+INFO:repository:created entry table if it doesn't exsist already
+INFO:repository:closed connection
+INFO:repository:connected to ../Test/Log.db
+INFO:repository:created punch table if it doesn't exsist already
+INFO:repository:created entry table if it doesn't exsist already
+INFO:repository:Fetched last entry: (7, '2024-09-09 20:47:03', '2024-09-09 20:47:53', 0.83, 'o', 'blaa')
+INFO:repository:closed connection
+INFO:repository:connected to ../Test/Log.db
+INFO:repository:created punch table if it doesn't exsist already
+INFO:repository:created entry table if it doesn't exsist already
+INFO:repository:closed connection
+INFO:repository:connected to ../Test/Log.db
+INFO:repository:created punch table if it doesn't exsist already
+INFO:repository:created entry table if it doesn't exsist already
+INFO:repository:fetched last punch: (7, 'out', '2024-09-09 20:47:53', 'blaa')
+INFO:repository:closed connection
+INFO:repository:connected to ../Test/Log.db
+INFO:repository:created punch table if it doesn't exsist already
+INFO:repository:created entry table if it doesn't exsist already
+INFO:repository:closed connection
+INFO:repository:connected to ../Test/Log.db
+INFO:repository:created punch table if it doesn't exsist already
+INFO:repository:created entry table if it doesn't exsist already
+INFO:repository:closed connection
+INFO:repository:connected to ../Test/Log.db
+INFO:repository:created punch table if it doesn't exsist already
+INFO:repository:created entry table if it doesn't exsist already
+INFO:repository:Fetched last entry: (7, '2024-09-09 20:47:03', '2024-09-09 20:47:53', 0.83, 'o', 'blaa')
+INFO:repository:closed connection
+INFO:repository:connected to ../Test/Log.db
+INFO:repository:created punch table if it doesn't exsist already
+INFO:repository:created entry table if it doesn't exsist already
+INFO:repository:closed connection
+INFO:repository:connected to ../Test/Log.db
+INFO:repository:created punch table if it doesn't exsist already
+INFO:repository:created entry table if it doesn't exsist already
+INFO:repository:fetched last punch: (7, 'out', '2024-09-09 20:47:53', 'blaa')
+INFO:repository:closed connection
+INFO:repository:connected to ../Test/Log.db
+INFO:repository:created punch table if it doesn't exsist already
+INFO:repository:created entry table if it doesn't exsist already
+INFO:repository:closed connection
+INFO:repository:connected to ../Test/Log.db
+INFO:repository:created punch table if it doesn't exsist already
+INFO:repository:created entry table if it doesn't exsist already
+INFO:repository:closed connection
+INFO:repository:connected to ../Test/Log.db
+INFO:repository:created punch table if it doesn't exsist already
+INFO:repository:created entry table if it doesn't exsist already
+INFO:repository:Fetched last entry: (7, '2024-09-09 20:47:03', '2024-09-09 20:47:53', 0.83, 'o', 'blaa')
+INFO:repository:closed connection
+INFO:repository:connected to ../Test/Log.db
+INFO:repository:created punch table if it doesn't exsist already
+INFO:repository:created entry table if it doesn't exsist already
+INFO:repository:closed connection
+INFO:repository:connected to ../Test/Log.db
+INFO:repository:created punch table if it doesn't exsist already
+INFO:repository:created entry table if it doesn't exsist already
+INFO:repository:fetched last punch: (7, 'out', '2024-09-09 20:47:53', 'blaa')
+INFO:repository:closed connection
+INFO:repository:connected to ../Test/Log.db
+INFO:repository:created punch table if it doesn't exsist already
+INFO:repository:created entry table if it doesn't exsist already
+INFO:repository:closed connection
+INFO:repository:connected to ../Test/Log.db
+INFO:repository:created punch table if it doesn't exsist already
+INFO:repository:created entry table if it doesn't exsist already
+INFO:repository:closed connection
+INFO:repository:connected to ../Test/Log.db
+INFO:repository:created punch table if it doesn't exsist already
+INFO:repository:created entry table if it doesn't exsist already
+INFO:repository:Fetched last entry: (7, '2024-09-09 20:47:03', '2024-09-09 20:47:53', 0.83, 'o', 'blaa')
+INFO:repository:closed connection
+INFO:repository:connected to ../Test/Log.db
+INFO:repository:created punch table if it doesn't exsist already
+INFO:repository:created entry table if it doesn't exsist already
+INFO:repository:closed connection
+INFO:repository:connected to ../Test/Log.db
+INFO:repository:created punch table if it doesn't exsist already
+INFO:repository:created entry table if it doesn't exsist already
+INFO:repository:fetched last punch: (7, 'out', '2024-09-09 20:47:53', 'blaa')
+INFO:repository:closed connection
+INFO:repository:connected to ../Test/Log.db
+INFO:repository:created punch table if it doesn't exsist already
+INFO:repository:created entry table if it doesn't exsist already
+INFO:repository:closed connection
+INFO:repository:connected to ../Test/Log.db
+INFO:repository:created punch table if it doesn't exsist already
+INFO:repository:created entry table if it doesn't exsist already
+INFO:repository:closed connection
+INFO:repository:connected to ../Test/Log.db
+INFO:repository:created punch table if it doesn't exsist already
+INFO:repository:created entry table if it doesn't exsist already
+INFO:repository:Fetched last entry: (7, '2024-09-09 20:47:03', '2024-09-09 20:47:53', 0.83, 'o', 'blaa')
+INFO:repository:closed connection
+INFO:repository:connected to ../Test/Log.db
+INFO:repository:created punch table if it doesn't exsist already
+INFO:repository:created entry table if it doesn't exsist already
+INFO:repository:closed connection
+INFO:repository:connected to ../Test/Log.db
+INFO:repository:created punch table if it doesn't exsist already
+INFO:repository:created entry table if it doesn't exsist already
+INFO:repository:fetched last punch: (7, 'out', '2024-09-09 20:47:53', 'blaa')
+INFO:repository:closed connection
+INFO:repository:connected to ../Test/Log.db
+INFO:repository:created punch table if it doesn't exsist already
+INFO:repository:created entry table if it doesn't exsist already
+INFO:repository:closed connection
+INFO:repository:connected to ../Test/Log.db
+INFO:repository:created punch table if it doesn't exsist already
+INFO:repository:created entry table if it doesn't exsist already
+INFO:repository:closed connection
+INFO:repository:connected to ../Test/Log.db
+INFO:repository:created punch table if it doesn't exsist already
+INFO:repository:created entry table if it doesn't exsist already
+INFO:repository:Fetched last entry: (7, '2024-09-09 20:47:03', '2024-09-09 20:47:53', 0.83, 'o', 'blaa')
+INFO:repository:closed connection
+INFO:repository:connected to ../Test/Log.db
+INFO:repository:created punch table if it doesn't exsist already
+INFO:repository:created entry table if it doesn't exsist already
+INFO:repository:closed connection
+INFO:repository:connected to ../Test/Log.db
+INFO:repository:created punch table if it doesn't exsist already
+INFO:repository:created entry table if it doesn't exsist already
+INFO:repository:fetched last punch: (7, 'out', '2024-09-09 20:47:53', 'blaa')
+INFO:repository:closed connection
+INFO:repository:connected to ../Test/Log.db
+INFO:repository:created punch table if it doesn't exsist already
+INFO:repository:created entry table if it doesn't exsist already
+INFO:repository:closed connection
+INFO:repository:connected to ../Test/Log.db
+INFO:repository:created punch table if it doesn't exsist already
+INFO:repository:created entry table if it doesn't exsist already
+INFO:repository:closed connection
+INFO:repository:connected to ../Test/Log.db
+INFO:repository:created punch table if it doesn't exsist already
+INFO:repository:created entry table if it doesn't exsist already
+INFO:repository:Fetched last entry: (7, '2024-09-09 20:47:03', '2024-09-09 20:47:53', 0.83, 'o', 'blaa')
+INFO:repository:closed connection
+INFO:repository:connected to ../Test/Log.db
+INFO:repository:created punch table if it doesn't exsist already
+INFO:repository:created entry table if it doesn't exsist already
+INFO:repository:closed connection

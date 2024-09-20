@@ -1,9 +1,8 @@
 from datetime import datetime
 TOP = "---Entry---\n"
 BOTTOM = "\n---End---\n\n"
-DATE_TIME_FORMAT = "%A %Y-%m-%d %I:%M %p"
-input_format = "%Y-%m-%d %H:%M:%S"
-TIME_FORMAT = "%I:%M %p"
+DATE_TIME_FORMAT = "%Y-%m-%d %H:%M:%S.%f"
+TIME_FORMAT = "hh:mm tt"
 
 
 def format_punch(punch):
@@ -16,10 +15,8 @@ def format_punch(punch):
     Returns:
     string - {datetime}, {type} COMMENT: {comment}
     """
-    in_time = datetime.strptime(punch[2], input_format)
-    format_in_time = in_time.strftime(DATE_TIME_FORMAT)
-
-    return f"{format_in_time}, {punch[1]} COMMENT: {punch[3]}"
+    return f"{datetime.strptime(punch[2], DATE_TIME_FORMAT)}, "
+    + f"{punch[1]} COMMENT: {punch[3]}"
 
 
 def format_entry(entry):
@@ -35,14 +32,12 @@ def format_entry(entry):
     {task_name}
     {task_comment}
     --End--
+
+
     """
-    in_time = datetime.strptime(entry[1], input_format)
-    format_in_time = in_time.strftime(DATE_TIME_FORMAT)
-
-    out_time = datetime.strptime(entry[2], input_format)
-    format_out_time = out_time.strftime(TIME_FORMAT)
-
-    return f"{TOP}{format_in_time} - {format_out_time}, {round(entry[3], 2)} Hours\n{entry[4]}\n{entry[5]}{BOTTOM}"
+    return f"{TOP}{datetime.strptime(entry[1], DATE_TIME_FORMAT)} -"
+    + f" {datetime.strptime(entry[2], TIME_FORMAT)}"
+    + f" {round(entry[3], 2)} Hours\n{entry[4]}{entry[5]}{BOTTOM}"
 
 
 def format_entries(entries):
@@ -58,15 +53,13 @@ def format_entries(entries):
     {task_name}
     {task_comment}
     --End--
+
+
     """
     output = ''
     for entry in entries:
-        in_time = datetime.strptime(entry[1], input_format)
-        format_in_time = in_time.strftime(DATE_TIME_FORMAT)
-
-        out_time = datetime.strptime(entry[2], input_format)
-        format_out_time = out_time.strftime(TIME_FORMAT)
-
-        output += f"{TOP}{format_in_time} - {format_out_time} {round(entry[3], 2)} Hours\n{entry[4]}\n{entry[5]}{BOTTOM}"
+        output += f"{TOP}{datetime.strptime(entry[1], DATE_TIME_FORMAT)} -"
+        + f"{datetime.strptime(entry[2], TIME_FORMAT)} {round(entry[3], 2)} Hours\n"
+        + f"{entry[4]} {entry[5]}{BOTTOM}"
 
     return output
