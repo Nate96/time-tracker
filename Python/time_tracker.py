@@ -37,7 +37,7 @@ def punch_out(comment):
     comment: comment linked to the punch
 
     Returns:
-    Response of the process
+    The most recent punch
     """
     last_punch = REPO.get_last_punch()
 
@@ -47,8 +47,8 @@ def punch_out(comment):
         return MESSAGES['PUNCHOUT_INVALID']
     elif last_punch[1] == "in":
         REPO.add_punch("out", comment)
-        # TODO: Add more to the output
-        output = presenter.format_entry(REPO.add_entry())
+        output = MESSAGES['PUNCHIN_SUCCESS'] + \n
+        output += presenter.format_entry(REPO.add_entry())
         return output
     else:
         return MESSAGES['ENTRY_FAIL']
