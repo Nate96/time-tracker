@@ -2,7 +2,7 @@
 When {i "some text"} is inputted and [[reqs#can_punch_in]] = true. The System
 will;
 1. create a punch
-2. print " Sucessfully punched in"
+2. print "Successfully punched in"
 3. print the most recent punch in the database
 
 
@@ -16,7 +16,7 @@ When { o "some text"} is inputted and [[reqs#can_punch_out]] = true. The System
 will;
 1. create new punch
 2. create a new entry
-3. print "Seccessfully punched out"
+3. print "Successfully punched out"
 4. print the most recent entry in the database
 
 
@@ -31,11 +31,11 @@ will;
 
 # Req5:
 When { status } is inputted. The system will;
-1. print "No Punches" if there is not punches in the database
+1. print "No Punches" if there are no punches in the database
 2. print most recent [[reqs#Punch]] from the database if the type is "in"
 3. print the most recent [[reqs#Entry]] from the database when the most recent
    Currently clocked out
-4. Caluclates the total hours work for the current day and the current week per
+4. Calculates the total hours work for the current day and the current week per
    [[reqs#Req12:]]
 5. prints the results in the following format
    Day:  {} hours
@@ -43,9 +43,9 @@ When { status } is inputted. The system will;
 
 
 # Req6:
-When { report } is inputted. The system shall calulate total hours for each day 
+When { report } is inputted. The system shall calculate total hours for each day 
 of the week and the total hours worked for the week. The system shall print the
-results in the following formate.
+results in the following format.
 v---------------------
 Monday:     {} hours
 Tuesday:    {} hours
@@ -61,12 +61,12 @@ NOTE: Ignore v it is for formatting
 
 
 # Req7:
-The system will print a [[reqs#Punch]] in the following formate
+The system will print a [[reqs#Punch]] in the following format
 {day of week} {date}{time AM/PM} {type}: {comment}
 
 
 # Req8:
-The system will print a [[reqs#Entry]] in the following formate
+The system will print a [[reqs#Entry]] in the following format
 --Entry-- 
 {day of week} {date}{in time AM/PM} - {out time AM/PM} Hours
 {title}
@@ -75,8 +75,8 @@ The system will print a [[reqs#Entry]] in the following formate
 
 
 # Req9:
-When { report "task name" } is inputted, The system will will calculate the
-total house spent on the "task name"
+When { report "task name" } is inputted, The system will calculate the total
+house spent on the "task name"
 
 
 # Req10:
@@ -89,9 +89,27 @@ The first day of the week is Monday
 
 # Req12:
 When the system calculates the total week hours. The system will show if the 
-user is behind or ahead hours by adding it to the end of the calulated total. 
-The system will use 8 hours day for 5 days a week as the the standard rate of 
-work
+user is [[reqs#Behind]] or [[reqs#Ahead]] by adding it to the end of the
+calculated total.
+
+
+# Behind
+When the user's week hours total is less than [[reqs#Ideal hour rate]]
+
+
+# Ahead
+When the user's week hours total is greater than [[reqs#Ideal hour rate]]
+
+
+# Ideal hour rate
+total hours = work day hours * day of the week
+workd day hours = 8
+
+40 = 8 * 5 Friday
+32 = 8 * 4 Thursday
+24 = 8 * 3 Wednesday
+16 = 8 * 2 Tuesday
+ 8 = 8 * 1 Monday 
 
 
 # can_punch_in
@@ -102,7 +120,7 @@ work
 # can_punch_out
 - true when the most recent [[reqs#Punch]].type = "in"
 - false when the most recent [[reqs#Punch]].type = "out"
-- flase when there are no punches in the databse
+- false when there are no punches in the database
 
 
 # Punch
