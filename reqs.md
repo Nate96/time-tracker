@@ -35,13 +35,14 @@ When { status } is inputted. The system will;
 2. print most recent [[reqs#Punch]] from the database if the type is "in"
 3. print the most recent [[reqs#Entry]] from the database when the most recent
    Currently clocked out
-4. caluclates the total hours work for the current day and the current week. 
-   prints the results in the following format
-   Day:  {}
-   Week: {}
+4. Caluclates the total hours work for the current day and the current week per
+   [[reqs#Req12:]]
+5. prints the results in the following format
+   Day:  {} hours
+   Week: {} hours "-/+"{} hours 
 
 
-# Req6
+# Req6:
 When { report } is inputted. The system shall calulate total hours for each day 
 of the week and the total hours worked for the week. The system shall print the
 results in the following formate.
@@ -59,7 +60,7 @@ Total:      {} hours
 NOTE: Ignore v it is for formatting
 
 
-# Req7
+# Req7:
 The system will print a [[reqs#Punch]] in the following formate
 {day of week} {date}{time AM/PM} {type}: {comment}
 
@@ -72,25 +73,44 @@ The system will print a [[reqs#Entry]] in the following formate
 {comment}
 ---End---
 
+
 # Req9:
 When { report "task name" } is inputted, The system will will calculate the
-total house spend on the "task name"
+total house spent on the "task name"
+
+
+# Req10:
+All datetime will be the user's local time
+
+
+# Req11:
+The first day of the week is Monday
+
+
+# Req12:
+When the system calculates the total week hours. The system will show if the 
+user is behind or ahead hours by adding it to the end of the calulated total. 
+The system will use 8 hours day for 5 days a week as the the standard rate of 
+work
 
 
 # can_punch_in
-- true when the most recent [[[reqs#Punch]].type = "out"
-- false when the most recent punch type is "in"
+- true when the most recent [[reqs#Punch]].type = "out"
+- false when the most recent [[reqs#Punch]].type = "in"
+
 
 # can_punch_out
-- true when the most recent punch is "in"
-- false when the most recent punch is "out"
+- true when the most recent [[reqs#Punch]].type = "in"
+- false when the most recent [[reqs#Punch]].type = "out"
 - flase when there are no punches in the databse
+
 
 # Punch
 int:      id
 string:   type "in" or "out"
 datetime: punch datetime
 string:   comment
+
 
 # Entry
 int:      id
