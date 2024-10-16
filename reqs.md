@@ -76,7 +76,7 @@ The system will print a [[reqs#Entry]] in the following format
 
 # Req9:
 When { report "task name" } is inputted, The system will calculate the total
-house spent on the "task name"
+hours spent on the "task name"
 
 
 # Req10:
@@ -137,4 +137,3 @@ datetime: out punch
 float:    total time
 string:   task name
 string:   task comment
-

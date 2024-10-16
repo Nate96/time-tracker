@@ -47,7 +47,7 @@ def punch_out(comment):
         return MESSAGES['PUNCHOUT_INVALID']
     elif last_punch[1] == "in":
         REPO.add_punch("out", comment)
-        output = MESSAGES['PUNCHIN_SUCCESS'] + \n
+        output = MESSAGES['PUNCHIN_SUCCESS'] + '\n'
         output += presenter.format_entry(REPO.add_entry())
         return output
     else:
@@ -64,6 +64,8 @@ def status():
     Week: {}
     '''
     last_punch = REPO.get_last_punch()
+    week_hours = _get_week_total()
+
     if last_punch is None:
         return MESSAGES['NO_PUNCHES']
 
@@ -71,16 +73,19 @@ def status():
         last_punch_time = datetime.fromisoformat(last_punch[2])
         delta_time = datetime.now() - last_punch_time
         delta_time = delta_time.total_seconds() / 3600
-        return f'''Punched in for: {round(delta_time, 2)} hours
+        return f'''---------------------
+Punched in for: {round(delta_time, 2)} hours
 {presenter.format_punch(last_punch)}
 
 Day:  {_get_day_total()} Hours
-Week: {_get_week_total()} Hours
+Week: {week_hours} Hours {_over_under(week_hours)}
 '''
     elif last_punch[1] == "out":
-        return f'''currenlty clocked out
-Day:  {_get_day_total()}
-Week: {_get_week_total()}
+        return f'''---------------------
+currenlty clocked out
+
+Day:  {_get_day_total()} Hours
+Week: {week_hours} Hours {_over_under(week_hours)}
 '''
 
 
@@ -126,7 +131,7 @@ Friday:     {week_hours[4]} hours
 Saturday:   {week_hours[5]} hours
 Sunday:     {week_hours[6]} hours
 ---------------------
-Total:      {total_hours} hours
+Total:      {total_hours} hours {_over_under(total_hours)}
 '''
 
 
@@ -148,3 +153,26 @@ def _get_week_total():
         total_week_hours += float(entry[3])
 
     return round(total_week_hours, 2)
+
+
+def _over_under(hours):
+    """over under
+    Calculates the hourse the user is head or behead for the current week
+
+    Paramaters:
+    hours: hours worked for the current week
+
+    Return:
+    int: positive if the user is ahead and negative when the user is behind
+    """
+    MAX_WORK_WEEK_HOURS = 40
+    MAX_WORK_WEEK_DAYS = 5
+    HOURS_PER_DAY = 8
+    day_of_week = datetime.today().weekday()
+
+    if day_of_week <= MAX_WORK_WEEK_DAYS:
+        projected_hours = day_of_week * HOURS_PER_DAY
+    else:
+        projected_hours = MAX_WORK_WEEK_HOURS
+
+    return hours - projected_hours
