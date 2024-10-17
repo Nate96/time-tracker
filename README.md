@@ -18,14 +18,11 @@ Requirments: [[reqs]]
 - CSharp: [/CSharp/index.md]
 - Rust:   [/Rust/index.md] comming soon
 
-# Notes
-- Python version is not up to date. 
-
 # TODO
 - Build Test Sweet
 - Version 2.0
     - specify location of database
     - show hours for week, and day
-- Update
-    - update {duration} > writes query results to md file
-    - update > reads md file and update proper objects
+    - Update
+        - update {duration} > writes query results to md file
+        - update > reads md file and update proper objects
