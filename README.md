@@ -1,3 +1,10 @@
+<!--toc:start-->
+- [Time Tracker](#time-tracker)
+- [how to use](#how-to-use)
+- [Versions](#versions)
+- [TODO](#todo)
+<!--toc:end-->
+
 # Time Tracker
 A simple CLI tool that track time while completing tasks. 
 
@@ -11,7 +18,7 @@ show month -- prints entires to the console for the current month
 status -- show weather the user is punched in or out  
 report -- show the hourse worked each day of the current week
 
-Requirments: [[reqs]]
+Requirments: [[requirements]]
 
 # Versions
 - Python: [/Python/index.md]
