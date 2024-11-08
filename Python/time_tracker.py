@@ -1,13 +1,10 @@
 from datetime import datetime
 import repository
 import json
-import logging
 import presenter
 
 REPO = repository
-MESSAGES = json.load(open("../Messages/Errors.json"))
-logger = logging.getLogger(__name__)
-
+MESSAGES = json.load(open("../Dialogue/Errors.json"))
 
 def punch_in(comment):
     """punch in
@@ -60,8 +57,8 @@ def status():
 
     Status of Database
 
-    Day:  {}
-    Week: {}
+    Day:  {} hours
+    Week: {} hours "-/+"{}
     '''
     last_punch = REPO.get_last_punch()
     week_hours = _get_week_total()

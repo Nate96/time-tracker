@@ -6,8 +6,7 @@ import logging
 
 if __name__ == '__main__':
     args = None
-    MESSAGES = json.load(open("../Messages/CommandErrors.json"))
-    logging.basicConfig(filename='tt.log', level=logging.INFO)
+    MESSAGES = json.load(open("../Dialogue/CommandErrors.json"))
 
     parser = argparse.ArgumentParser(
                         prog='Time Tracker',

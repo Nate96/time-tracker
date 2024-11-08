@@ -4,10 +4,8 @@
 
 from typing import Tuple, List
 import sqlite3
-import logging
 import datetime
 
-logger = logging.getLogger(__name__)
 
 scripts = {
         'DATABASE_LOCATION':  "../Test/Log.db",
@@ -99,10 +97,8 @@ def get_last_punch() -> Tuple[int, str, str, str]:
     con = _connect_to_data_base()
     cur = con.cursor()
     res = cur.execute(_sql_script(scripts['LAST_PUNCH'])).fetchone()
-    logger.info(f"fetched last punch: {res}")
 
     con.close()
-    logger.info("closed connection")
 
     return res
 
@@ -116,10 +112,8 @@ def get_last_entry() -> Tuple[str, str, str, str, str, str]:
     """
     con = _connect_to_data_base()
     res = con.cursor().execute(_sql_script(scripts['LAST_ENTRY'])).fetchone()
-    logger.info(f"Fetched last entry: {res}")
 
     con.close()
-    logger.info("closed connection")
 
     return res
 
@@ -147,13 +141,8 @@ def _connect_to_data_base():
     the connection for the datbase
     """
     CON = sqlite3.connect(scripts['DATABASE_LOCATION'])
-    logger.info(f"connected to {scripts['DATABASE_LOCATION']}")
-
     CUR = CON.cursor()
     CUR.execute(_sql_script(scripts['create_punch_table']))
-    logger.info("created punch table if it doesn't exsist already")
-
     CUR.execute(_sql_script(scripts['create_entry_table']))
-    logger.info("created entry table if it doesn't exsist already")
 
     return CON

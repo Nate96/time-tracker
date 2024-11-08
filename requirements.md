@@ -1,11 +1,11 @@
 # Glossary
 
 ## Behind
-When the user's week hours total is less than [[#Ideal hour rate]]
+When the current week's total hours is less than [[#Ideal hour rate]]
 
 
 ## Ahead
-When the user's week hours total is greater than [[#Ideal hour rate]]
+When the current week's total hours is greater than [[#Ideal hour rate]]
 
 
 ## Ideal hour rate
@@ -45,11 +45,19 @@ float:    total time
 string:   task name  
 string:   task comment  
 
+## datetime:
+All datetime will be local time  
+
+
+## fist day of the week:
+The first day of the week is Monday  
+
+
 # Requirements
 
 ## Req1:
 When {i "some text"} is inputted and [[#can_punch_in]] = true. The System will;  
-1. create a punch  
+1. create a [[#Punch]] in the database
 2. print "Successfully punched in"  
 3. print the most recent punch in the database    
 
@@ -61,18 +69,16 @@ print "Already Punched In"
 
 ## Req3: 
 When {o "some text"} is inputted and [[#can_punch_out]] = true. The System will;  
-1. create new punch  
-2. create a new entry  
+1. create new punch in the database  
+2. create a new entry in the database  
 3. print "Successfully punched out"  
 4. print the most recent entry in the database  
 
 
 ## Req4: 
 When {o "some text"} is inputted and [[#can_punch_out]] = false. The System will;  
-1. NOT create a new punch  
-2. NOT create a new entry   
-3. print "Already Punched out" if the last [[#Punch]] type is "out"  
-4. print "There are no Entries" if the Entry table is empty  
+1. if the last [[#Punch]] type is "out" print "Already Punched out"   
+2. if the Entry table is empty print "There are no Entries"   
 
 
 ## Req5:
@@ -85,13 +91,15 @@ When {status} is inputted. The system will;
    [[#Req12:]]  
 5. prints the results in the following format  
    Day:  {} hours  
-   Week: {} hours "-/+"{} hours   
+   Week: {} hours "-/+"{}  
 
 
 ## Req6:
-When {report} is inputted. The system shall calculate total hours for each day   
-of the week and the total hours worked for the week. The system shall print the  
-results in the following format.  
+When {report} is inputted. The system shall calculate;
+1. Total hours for each day the week
+2. The total hours worked for the week.
+
+The system shall print the  results in the following format.  
 v---------------------  
 Monday:     {} hours  
 Tuesday:    {} hours  
@@ -101,18 +109,18 @@ Friday:     {} hours
 Saturday:   {} hours  
 Sunday:     {} hours  
 v---------------------   
-Total:      {} hours  
+Total:      {} hours "-/+"{}
 
 NOTE: Ignore v it is for formatting  
 
 
 ## Req7:
-The system will print a [[#Punch]] in the following format  
+The system shall print a [[#Punch]] in the following format;  
 {day of week} {date}{time AM/PM} {type}: {comment}  
 
 
 ## Req8:
-The system will print a [[#Entry]] in the following format  
+The system will print a [[#Entry]] in the following format;  
 --Entry--   
 {day of week} {date}{in time AM/PM} - {out time AM/PM} Hours  
 {title}  
@@ -120,17 +128,10 @@ The system will print a [[#Entry]] in the following format
 ---End---  
 
 
+#TODO: Research, Implement, test
 ## Req9:
 When {report "task name"} is inputted, The system will calculate the total  
 hours spent on the "task name"  
-
-
-## Req10:
-All datetime will be the user's local time  
-
-
-## Req11:
-The first day of the week is Monday  
 
 
 ## Req12:
