@@ -1,4 +1,3 @@
-// TODO: rename vars to all caps 
 namespace TimeTrackerErrors 
 {
   public static class ErrorMessages

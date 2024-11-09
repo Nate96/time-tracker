@@ -1,10 +1,3 @@
-<!--toc:start-->
-- [Time Tracker](#time-tracker)
-- [how to use](#how-to-use)
-- [Versions](#versions)
-- [TODO](#todo)
-<!--toc:end-->
-
 # Time Tracker
 A simple CLI tool that track time while completing tasks. 
 
@@ -21,15 +14,6 @@ report -- show the hourse worked each day of the current week
 Requirments: [[requirements]]
 
 # Versions
-- Python: [/Python/index.md]
+- Python: []
 - CSharp: [/CSharp/index.md]
 - Rust:   [/Rust/index.md] comming soon
-
-# TODO
-- Build Test Sweet
-- Version 2.0
-    - specify location of database
-    - show hours for week, and day
-    - Update
-        - update {duration} > writes query results to md file
-        - update > reads md file and update proper objects

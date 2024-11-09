@@ -1,4 +1,3 @@
-# TODO: punch in at 11:59 pm and pucnh out 12:01 am next day
 import os
 import json
 from datetime import datetime
