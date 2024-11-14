@@ -11,7 +11,8 @@ class Program
 
          TimeTracker timeTracker = new TimeTracker();
 
-         switch (mode) {
+         switch (mode)
+         {
             case "i":
                Console.WriteLine(timeTracker.PunchIn(comment));
                break;
