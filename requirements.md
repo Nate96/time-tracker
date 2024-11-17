@@ -127,29 +127,6 @@ The system will print a [[#Entry]] in the following format;
 {comment}  
 ---End---  
 
-
-#TODO: Research, Implement, test
 ## Req9:
-When {report "task name"} is inputted, The system will calculate the total  
-hours spent on the "task name"  
-
-
-## Req12:
 When the system calculates the total week hours. The system will show if the   
 user is [[#Behind]] or [[#Ahead]] by adding it to the end of the calculated total.  
-
-#TODO Research, Implement, test
-# Req13:
-The system shall create a [[#Entry]] with adjusted time for daylight savings  
-
-#TODO Research, Implement, test  
-# Req14:
-When a [[#Punch]] with type in is start 1/1/1 11:59 pm   
-[[#Punch]] with a type out is and with time 1/1/2 12:00 am  
-
-Create [[#Entry]] that is has a total time of 1 min  
-
-#TODO Research, Implement, test  
-## Req15:  
-When {flightTest} is entered the system shall perform tests on the system to   
-ensure entagraty of the system and prints out the results.  
