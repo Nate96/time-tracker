@@ -1,7 +1,6 @@
 import argparse
 import time_tracker
 import json
-import logging
 
 
 if __name__ == '__main__':

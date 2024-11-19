@@ -6,6 +6,7 @@ import presenter
 REPO = repository
 MESSAGES = json.load(open("../Dialogue/Errors.json"))
 
+
 def punch_in(comment):
     """punch in
     punches the user in
@@ -109,27 +110,29 @@ def report(duration):
     ---------------------
     Total:      {} hours
     '''
-    entries = REPO.get_entries("week")
-    week_hours = [0] * 7
+    if duration == "":
+        entries = REPO.get_entries("week")
+        presenter.week(entries)
+    elif duration == "last":
+        entries = REPO.get_entries("lastWeek")
+        presenter.week(entries)
+    else:
+        entries = REPO.get_entries_with_task(duration)
+        presenter.format_entries(entries)
+
+
+def calculate_week(entries):
+    day_hours = [0] * 7
     total_hours = 0
 
     for entry in entries:
         dt = datetime.fromisoformat(entry[2])
         day_of_week = dt.weekday()
-        week_hours[day_of_week] += float(entry[3])
+
+        day_hours[day_of_week] += float(entry[3])
         total_hours += float(entry[3])
 
-    return f'''---------------------
-Monday:     {week_hours[1]} hours
-Tuesday:    {week_hours[1]} hours
-Wednesday:  {week_hours[2]} hours
-Thursday:   {week_hours[3]} hours
-Friday:     {week_hours[4]} hours
-Saturday:   {week_hours[5]} hours
-Sunday:     {week_hours[6]} hours
----------------------
-Total:      {total_hours} hours {_over_under(total_hours)}
-'''
+    return day_hours, total_hours
 
 
 def _get_day_total():

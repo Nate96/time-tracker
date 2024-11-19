@@ -1,4 +1,5 @@
 from datetime import datetime
+
 TOP = "---Entry---\n"
 BOTTOM = "\n---End---\n\n"
 DATE_TIME_FORMAT = "%A %Y-%m-%d %I:%M %p"
@@ -70,3 +71,17 @@ def format_entries(entries):
         output += f"{TOP}{format_in_time} - {format_out_time} {round(entry[3], 2)} Hours\n{entry[4]}\n{entry[5]}{BOTTOM}"
 
     return output
+
+
+def format_week(week_hours, total_hours, overUnder):
+    return f'''---------------------
+Monday:     {week_hours[1]} hours
+Tuesday:    {week_hours[1]} hours
+Wednesday:  {week_hours[2]} hours
+Thursday:   {week_hours[3]} hours
+Friday:     {week_hours[4]} hours
+Saturday:   {week_hours[5]} hours
+Sunday:     {week_hours[6]} hours
+---------------------
+Total:      {total_hours} hours {overUnder}
+'''
