@@ -1,8 +1,8 @@
+#!/user/bin/env python3
+
 import argparse
 import time_tracker
 import json
-import logging
-
 
 if __name__ == '__main__':
     args = None
