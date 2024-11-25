@@ -13,9 +13,9 @@ status ----------- show weather the user is punched in or out
 report ----------- show the hours worked each day of the current week  
 
 # Links
-installation ------------- [[install]]
-requirements ------------- [[requirements]]
-Database Document Design - [[ddd]]
+installation ------------- [[install]]  
+requirements ------------- [[requirements]]  
+Database Document Design - [[ddd]]  
 
 # Versions
 - Python: []
