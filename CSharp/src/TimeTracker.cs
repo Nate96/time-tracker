@@ -17,11 +17,8 @@ namespace TimeTrackerApp
         {
             (Boolean isValidState, Punch? lastPunch) = this.IsValidState("in");
 
-            if (isValidState)
-            {
-                repo.AddPunch("in", comment);
+            if (isValidState && repo.AddPunch("in", comment))
                 return ErrorMessages.PUNCHIN_SUCCESS;
-            }
             return ErrorMessages.PUNCHIN_VALID;
         }
 
