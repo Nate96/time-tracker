@@ -7,7 +7,8 @@ namespace TimeTrackerRepository
 {
     class Repository
     {
-        private const string DATABASE_LOCATION = "Data Source=../Test/Log.db";
+       // NOTE: all file paths need to be the absolute path
+        private const string DATABASE_LOCATION = "Data Source=../Log.db";
         private const string CREATE_TABLE      = "../SqlScripts/CreateTables.sql";
         private const string LAST_PUNCH        = "../SqlScripts/GetLastPunch.sql";
         private const string INSERT_PUNCH      = "../SqlScripts/InsertPunch.sql";
