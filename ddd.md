@@ -50,7 +50,7 @@ Describe any assumptions that influence the database design.
 
 ## 2.2 Constraints  
 1. Database must be stored locally  
-2. Must not must any ports  
+2. Must not use any ports  
 
 ## 2.3 Dependencies  
 Dependencies that impact the database design such as related hardware, software,  
