@@ -1,5 +1,5 @@
 # Time Tracker
-A simple CLI tool that track time while completing tasks. 
+A simple CLI tool that tracks time while completeing tasks. 
 
 
 # How to Use  
