@@ -1,52 +1,4 @@
-# Glossary  
-
-## Punch
-int:      id  
-string:   type "in" or "out"  
-datetime: punch datetime  
-string:   comment  
-
-
-## Entry
-int:      id  
-datetime: in punch
-datetime: out punch  
-float:    total time  
-string:   task name  
-string:   task comment  
-
-
-## Ideal hour rate  
-total hours = work day hours * day of the week  
-workd day hours = 8  
-
-40 = 8 * 5 Friday  
-32 = 8 * 4 Thursday  
-24 = 8 * 3 Wednesday  
-16 = 8 * 2 Tuesday  
- 8 = 8 * 1 Monday  
-
-
-## can_punch_in  
-A boolean varible that determins if a [[#Punch]] with a type of "in" can be added  
-to the database  
-
-
-## can_punch_out  
-A boolean varible that determins if a [[#Punch]] with a type of "out" can be  
-added to the database
-
-
-## datetime:
-All datetime will be local time  
-
-
-## fist day of the week:
-The first day of the week is Monday  
-
-
 # Requirements
-
 ## Req1:
 When {i "some text"} is inputted and [[#can_punch_in]] is true. The System shall;  
 1. create a [[#Punch]] in the database
@@ -130,19 +82,71 @@ The system will print a [[#Entry]] in the following format;
 ## Req10:
 The systam shall calculate the difference between the sum of hours for the
 current week and the [[#Ideal hour rate]] for the current day
- 
+
 
 ## Req11:
-When "help" is entered. The system shall print the title and how to use
-section in [[README]] to the terminal.
-
-
-## Req12:
 When the last [[#Punch]] type is "out" the system shall set [[#can_punch_in]]
 to true. Otherwise the system shall set [[#can_punch_in]] to false.
 
 
-## Req13:
-When the last [[#Punch]] type is "out" or there are no [[#Punch]]s in the databse
-the system shall set [[#can_punch_out]] to false otherwise the system shall set
-[[#can_punch_out]] to true
+## Req12:
+When the last [[#Punch]] type is "out" or there are no [[#Punch]]s in the
+databse the system shall set [[#can_punch_out]] to false otherwise the system
+shall set [[#can_punch_out]] to true
+
+
+## Req13: 
+The system will convert local DateTime into a [[#Julian Day]] when calculating
+an [[#Entry]] total time.
+
+
+# Glossary  
+## Punch
+int:      id  
+string:   type "in" or "out"  
+datetime: punch datetime  
+string:   comment  
+
+
+## Entry
+int:      id  
+datetime: in punch
+datetime: out punch  
+float:    total time  
+string:   task name  
+string:   task comment  
+
+
+## Ideal hour rate  
+total hours = work day hours * day of the week  
+workd day hours = 8  
+
+40 = 8 * 5 Friday  
+32 = 8 * 4 Thursday  
+24 = 8 * 3 Wednesday  
+16 = 8 * 2 Tuesday  
+ 8 = 8 * 1 Monday  
+
+
+## can_punch_in  
+A boolean varible that determins if a [[#Punch]] with a type of "in" can be added  
+to the database  
+
+
+## can_punch_out  
+A boolean varible that determins if a [[#Punch]] with a type of "out" can be  
+added to the database
+
+
+## datetime:
+All datetime will be local time  
+
+
+## fist day of the week:
+The first day of the week is Monday  
+
+
+## Julian Day
+Julian dates (abbreviated JD) are simply a continuous count of days and
+fractions since noon Universal Time on January 1, 4713 BC
+(on the Julian calendar).

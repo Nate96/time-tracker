@@ -8,15 +8,15 @@ namespace TimeTrackerRepository
     class Repository
     {
        // NOTE: all file paths need to be the absolute path
-        private const string DATABASE_LOCATION = "Data Source=../Log.db";
-        private const string CREATE_TABLE      = "../SqlScripts/CreateTables.sql";
-        private const string LAST_PUNCH        = "../SqlScripts/GetLastPunch.sql";
-        private const string INSERT_PUNCH      = "../SqlScripts/InsertPunch.sql";
-        private const string INSERT_ENTRY      = "../SqlScripts/InsertEntry.sql";
-        private const string TODAY             = "../SqlScripts/GetTodayEntry.sql";
-        private const string WEEK              = "../SqlScripts/GetWeekEntry.sql";
-        private const string MONTH             = "../SqlScripts/GetMonthEntry.sql";
-        private const string LAST_ENTRY        = "../SqlScripts/GetLastEntry.sql";
+        private const string DATABASE_LOCATION = "Data Source=../time-tracker//Log.db";
+        private const string CREATE_TABLE      = "../jade/time-tracker/SqlScripts/CreateTables.sql";
+        private const string LAST_PUNCH        = "../jade/time-tracker/SqlScripts/GetLastPunch.sql";
+        private const string INSERT_PUNCH      = "../jade/time-tracker/SqlScripts/InsertPunch.sql";
+        private const string INSERT_ENTRY      = "../jade/time-tracker/SqlScripts/InsertEntry.sql";
+        private const string TODAY             = "../jade/time-tracker/SqlScripts/GetTodayEntry.sql";
+        private const string WEEK              = "../jade/time-tracker/SqlScripts/GetWeekEntry.sql";
+        private const string MONTH             = "..jade/time-tracker/SqlScripts/GetMonthEntry.sql";
+        private const string LAST_ENTRY        = "../jade/time-tracker/SqlScripts/GetLastEntry.sql";
 
         public Repository()
         {

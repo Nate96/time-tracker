@@ -150,7 +150,6 @@ namespace TimeTrackerApp
            List<Entry> weekEntries = repo.GetEntries("week") ?? new List<Entry>();
            float [] weekHours = new float[WEEK_DAY_NUMBER];
 
-
            foreach (Entry entry in weekEntries)
            {
                DateTime day = DateTime.ParseExact(
