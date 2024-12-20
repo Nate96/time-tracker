@@ -1,6 +1,7 @@
 using TimeTrackerModels;
 using TimeTrackerRepository;
 using TimeTrackerErrors;
+using System.Globalization;
 
 namespace TimeTrackerApp
 {
@@ -137,6 +138,38 @@ namespace TimeTrackerApp
                     return "SUCCESS: wrote file";
                 }
             }
+        }
+
+        ///<summary>
+        /// Calculates hours worked through out the week, and outputs the 
+        /// results of is outputed via [Req7] formate
+        /// </summary>
+        public string Report() {
+           const uint WEEK_DAY_NUMBER = 7;
+
+           List<Entry> weekEntries = repo.GetEntries("week") ?? new List<Entry>();
+           float [] weekHours = new float[WEEK_DAY_NUMBER];
+
+
+           foreach (Entry entry in weekEntries)
+           {
+               DateTime day = DateTime.ParseExact(
+                     entry.outPunch.ToShortDateString(),
+                     "yyyy-MM-dd",
+                     CultureInfo.InvariantCulture);
+               uint dayIndex = (uint)day.DayOfWeek;
+               weekHours[dayIndex] += entry.totalTime;
+           }
+
+           return $"Monday:    {Math.Round(weekHours[0], 2)} hours\n"
+                + $"Tuesday:   {Math.Round(weekHours[1], 2)} hours\n"
+                + $"Wednesday: {Math.Round(weekHours[2], 2)} hours\n"
+                + $"Thursday:  {Math.Round(weekHours[3], 2)} hours\n"
+                + $"Friday:    {Math.Round(weekHours[4], 2)} hours\n"
+                + $"Saturday:  {Math.Round(weekHours[5], 2)} hours\n"
+                + $"Sunday:    {Math.Round(weekHours[6], 2)} hours\n"
+                + "-------------------------\n"
+                + $"Total:     {Math.Round(weekHours.Sum(), 2)} hours";
         }
 
         /// <summary>Gets the current date and the current time</summary>

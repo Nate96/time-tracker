@@ -28,6 +28,9 @@ class Program
             case "status":
                Console.WriteLine(timeTracker.Status());
                break;
+            case "report":
+               Console.WriteLine(timeTracker.Report());
+               break;
             default:
                Console.WriteLine(TimeTrackerErrors.ErrorMessages.INVALID_INPUT);
                break;
