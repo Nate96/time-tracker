@@ -3,6 +3,7 @@ using TimeTrackerRepository;
 using TimeTrackerErrors;
 using System.Globalization;
 
+
 namespace TimeTrackerApp
 {
     class TimeTracker
@@ -97,11 +98,12 @@ namespace TimeTrackerApp
             switch (lastPunch.type)
             {
                case "in":
-                  TimeSpan totalTime = DateTime.Now - lastPunch.punchDate;
-                  return $"Punch in for {(float)Math.Round(((float)totalTime.TotalMinutes / 60), 2)} hours\n"
+                  TimeSpan currentTotalTime = DateTime.Now - lastPunch.punchDate;
+                  float currentHours = (float)Math.Round(((float)currentTotalTime.TotalMinutes / 60), 2);
+                  return $"Punch in for {currentHours} hours\n"
                      + lastPunch.ToString()
-                     + $"Day:  {dayEntries.Sum(e => e.totalTime)} hours\n"
-                     + $"Week: {weekEntries.Sum(e => e.totalTime)} hours\n";
+                     + $"Day:  {currentHours + dayEntries.Sum(e => e.totalTime)} hours\n"
+                     + $"Week: {currentHours + weekEntries.Sum(e => e.totalTime)} hours\n";
                case "out":
                   List<Entry> lastEntry = repo.GetEntries("last");
                   if (lastEntry == null) return "ERROR: punches out of synce.";
@@ -152,12 +154,9 @@ namespace TimeTrackerApp
 
            foreach (Entry entry in weekEntries)
            {
-               DateTime day = DateTime.ParseExact(
-                     entry.outPunch.ToShortDateString(),
-                     "yyyy-MM-dd",
-                     CultureInfo.InvariantCulture);
-               uint dayIndex = (uint)day.DayOfWeek;
-               weekHours[dayIndex] += entry.totalTime;
+              //NOTE: This is to adjust for monday being the start of the week
+              uint adjusted = ((uint)entry.inPunch.DayOfWeek + 6) % 7;
+              weekHours[adjusted] += entry.totalTime;
            }
 
            return $"Monday:    {Math.Round(weekHours[0], 2)} hours\n"

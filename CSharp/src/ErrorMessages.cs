@@ -13,3 +13,5 @@ namespace TimeTrackerErrors
     public const string NO_ENTRIES        = "No Entries for today";
   }
 }
+
+

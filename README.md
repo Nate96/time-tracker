@@ -15,7 +15,7 @@ report ----------- show the house worked each day of the current week
 
 # Installation  
 1. install dotnet  
-2. Add the abosulte paths for files in CSharp/scr/Repository.cs  
+2. Add the abosulte paths for files in CSharp/scr/models/config.cs  
 3. run `dotnet build --configuration Realse`  
 4. Add to PATH  
     - zsh: add "export PATH=$PATH:{path to repo}/bin/Release/net9.0" to the end  

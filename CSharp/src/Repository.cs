@@ -1,5 +1,6 @@
 using Microsoft.Data.Sqlite;
 using TimeTrackerModels;
+using TimeTrackerConfig;
 
 //NOTE: DateTime.Now is in localtime
 
@@ -7,16 +8,7 @@ namespace TimeTrackerRepository
 {
     class Repository
     {
-       // NOTE: all file paths need to be the absolute path
-        private const string DATABASE_LOCATION = "Data Source=../time-tracker//Log.db";
-        private const string CREATE_TABLE      = "../jade/time-tracker/SqlScripts/CreateTables.sql";
-        private const string LAST_PUNCH        = "../jade/time-tracker/SqlScripts/GetLastPunch.sql";
-        private const string INSERT_PUNCH      = "../jade/time-tracker/SqlScripts/InsertPunch.sql";
-        private const string INSERT_ENTRY      = "../jade/time-tracker/SqlScripts/InsertEntry.sql";
-        private const string TODAY             = "../jade/time-tracker/SqlScripts/GetTodayEntry.sql";
-        private const string WEEK              = "../jade/time-tracker/SqlScripts/GetWeekEntry.sql";
-        private const string MONTH             = "..jade/time-tracker/SqlScripts/GetMonthEntry.sql";
-        private const string LAST_ENTRY        = "../jade/time-tracker/SqlScripts/GetLastEntry.sql";
+        public const string DATABASE_LOCATION = "Data Source="+ DbConfig.DATABASE_LOCATION;
 
         public Repository()
         {
@@ -26,19 +18,10 @@ namespace TimeTrackerRepository
 
             connection.Open();
             connection.CreateCommand();
-            command.CommandText = File.ReadAllText(CREATE_TABLE);
+            command.CommandText = File.ReadAllText(DbConfig.CREATE_TABLE);
             command.ExecuteNonQuery();
             connection.Close();
-        }
 
-        /// <summary>connects to the given database</summary>
-        /// <returns>SqliteConnection</return>
-        private SqliteConnection ConnectToDatabase()
-        {
-            SqliteConnection connection = new SqliteConnection(DATABASE_LOCATION);
-            connection.Open();
-
-            return connection;
         }
 
         /// <summary>Returns the most recent row in the Punch Table</summary>
@@ -48,7 +31,7 @@ namespace TimeTrackerRepository
             SqliteConnection connection = this.ConnectToDatabase();
             var command = connection.CreateCommand();
 
-            command.CommandText = File.ReadAllText(LAST_PUNCH);
+            command.CommandText = File.ReadAllText(DbConfig.LAST_PUNCH);
 
             var reader = command.ExecuteReader();
 
@@ -81,7 +64,7 @@ namespace TimeTrackerRepository
             SqliteConnection connection = this.ConnectToDatabase();
             var command = connection.CreateCommand();
 
-            command.CommandText = File.ReadAllText(INSERT_PUNCH);
+            command.CommandText = File.ReadAllText(DbConfig.INSERT_PUNCH);
             command.Parameters.AddWithValue("type", type);
             command.Parameters.AddWithValue("$comment", comment);
 
@@ -109,7 +92,7 @@ namespace TimeTrackerRepository
             connection = this.ConnectToDatabase();
             var command = connection.CreateCommand();
 
-            command.CommandText = File.ReadAllText(INSERT_ENTRY);
+            command.CommandText = File.ReadAllText(DbConfig.INSERT_ENTRY);
 
             if (command.ExecuteNonQuery() == 1)
             {
@@ -134,18 +117,18 @@ namespace TimeTrackerRepository
             switch (duration)
             {
                 case "day":
-                    command.CommandText = File.ReadAllText(TODAY);
+                    command.CommandText = File.ReadAllText(DbConfig.TODAY);
                     break;
                 case "week":
-                    command.CommandText = File.ReadAllText(WEEK);
+                    command.CommandText = File.ReadAllText(DbConfig.WEEK);
                     command.Parameters.AddWithValue("$move", $"{-(int)DateTime.Now.DayOfWeek} days");
                     break;
                 case "month":
-                    command.CommandText = File.ReadAllText(MONTH);
+                    command.CommandText = File.ReadAllText(DbConfig.MONTH);
                     command.Parameters.AddWithValue("$move", $"{-(int)DateTime.Now.Day} days");
                     break;
                 case "last":
-                    command.CommandText = File.ReadAllText(LAST_ENTRY);
+                    command.CommandText = File.ReadAllText(DbConfig.LAST_ENTRY);
                     break;
                 default:
                     return new List<Entry>();
@@ -166,6 +149,17 @@ namespace TimeTrackerRepository
 
             connection.Close();
             return entries;
+        }
+
+        /// <summary>connects to the given database</summary>
+        /// <returns>SqliteConnection</return>
+        private SqliteConnection ConnectToDatabase()
+        {
+           string database = $"Data Source={DbConfig.DATABASE_LOCATION}";
+           SqliteConnection connection = new SqliteConnection(database);
+           connection.Open();
+
+           return connection;
         }
     }
 }

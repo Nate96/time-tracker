@@ -20,10 +20,10 @@ namespace TimeTrackerModels
         ///<summary>Punch in string format</summary>
         ///<returns>
         ///Punch in the following format
-        ///"Date: {} Time: {} type comment: {}
+        ///Date: comment: 
         public override string ToString()
         {
-            return $"PUNCH: {this.punchDate.ToString(DATE_TIME_FORMAT)} {this.type} COMMENT: {this.comment}";
+            return $"{this.punchDate.ToString(DATE_TIME_FORMAT)}: {this.comment}";
         }
 
         ///<summary>Get name of the day</summary>
