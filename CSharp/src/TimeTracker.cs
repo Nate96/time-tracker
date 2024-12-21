@@ -20,7 +20,8 @@ namespace TimeTrackerApp
             (Boolean isValidState, Punch? lastPunch) = this.IsValidState("in");
 
             if (isValidState && repo.AddPunch("in", comment))
-                return ErrorMessages.PUNCHIN_SUCCESS;
+                return ErrorMessages.PUNCHIN_SUCCESS
+                   + "\n" + repo.GetLastPunch().ToString();
             return ErrorMessages.PUNCHIN_VALID;
         }
 
@@ -99,9 +100,10 @@ namespace TimeTrackerApp
             {
                case "in":
                   TimeSpan currentTotalTime = DateTime.Now - lastPunch.punchDate;
-                  float currentHours = (float)Math.Round(((float)currentTotalTime.TotalMinutes / 60), 2);
+                  float currentHours = (float)Math.Round(
+                        ((float)currentTotalTime.TotalMinutes / 60), 2);
                   return $"Punch in for {currentHours} hours\n"
-                     + lastPunch.ToString()
+                     + lastPunch.ToString() + "\n"
                      + $"Day:  {currentHours + dayEntries.Sum(e => e.totalTime)} hours\n"
                      + $"Week: {currentHours + weekEntries.Sum(e => e.totalTime)} hours\n";
                case "out":
