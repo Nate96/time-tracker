@@ -1,7 +1,6 @@
 using TimeTrackerModels;
 using TimeTrackerRepository;
 using TimeTrackerErrors;
-using System.Globalization;
 
 
 namespace TimeTrackerApp
@@ -103,7 +102,7 @@ namespace TimeTrackerApp
                   float currentHours = (float)Math.Round(
                         ((float)currentTotalTime.TotalMinutes / 60), 2);
                   return $"Punch in for {currentHours} hours\n"
-                     + lastPunch.ToString() + "\n"
+                     + lastPunch.ToString() + "\n\n"
                      + $"Day:  {currentHours + dayEntries.Sum(e => e.totalTime)} hours\n"
                      + $"Week: {currentHours + weekEntries.Sum(e => e.totalTime)} hours\n";
                case "out":
