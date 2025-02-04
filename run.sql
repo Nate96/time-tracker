@@ -1,6 +1,7 @@
 .mode column
 SELECT * 
 FROM entry
+
 --WHERE entry_date == (SELECT date("now", "localtime"));
 
 --SELECT * 

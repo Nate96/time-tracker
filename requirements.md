@@ -31,7 +31,11 @@ shall print "no punches"
 
 ## Req5:
 When "status" is inputted and the most recent [[#Punch]]'s type is "in" the  
-system shall print the most recent [[#Punch]].  
+system shall print the most recent [[#Punch]].
+1. Print "Punched in for {total hours from the most recent [[#Punch]]} hours"
+2. Print most resent [[#Punch]] \n\n
+3. print "Day:  {total worked hours for current day} hours"
+4. print "Week: {total worked hours for the current week}" hours"
 
 
 ## Req6:
@@ -119,7 +123,7 @@ string:   task comment
 
 ## Ideal hour rate  
 total hours = work day hours * day of the week  
-workd day hours = 8  
+work day hours = 8  
 
 40 = 8 * 5 Friday  
 32 = 8 * 4 Thursday  

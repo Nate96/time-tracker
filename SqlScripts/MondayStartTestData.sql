@@ -16,5 +16,6 @@ INSERT INTO entry(in_punch, out_punch, total_time, task_name, task_comment) VALU
 INSERT INTO entry(in_punch, out_punch, total_time, task_name, task_comment) VALUES("2024-08-10 21:46:32", "2024-08-13 21:46:32", 1.23, "Pickles", "oh yeah parona gun");
 
 SELECT *
+   , DAYNAME(in_pucnh) as day
 FROM entry
-WHERE Date(in_punch) >= DATE('2024-08-13', 'weekday 1', '-7 days');
+WHERE Date(in_punch) > DATE('2024-08-13', 'weekday 1', '-7 days');

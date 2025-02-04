@@ -101,18 +101,24 @@ namespace TimeTrackerApp
                   TimeSpan currentTotalTime = DateTime.Now - lastPunch.punchDate;
                   float currentHours = (float)Math.Round(
                         ((float)currentTotalTime.TotalMinutes / 60), 2);
+
+                  float weekhours = currentHours + weekEntries.Sum(e => e.totalTime); 
+                  float weekdif = projectedHours(weekhours);
                   return $"Punch in for {currentHours} hours\n"
                      + lastPunch.ToString() + "\n\n"
                      + $"Day:  {currentHours + dayEntries.Sum(e => e.totalTime)} hours\n"
-                     + $"Week: {currentHours + weekEntries.Sum(e => e.totalTime)} hours\n";
+                     + $"Week: {Math.Round(weekhours,2)} hours ({weekdif})\n";
                case "out":
                   List<Entry> lastEntry = repo.GetEntries("last");
                   if (lastEntry == null) return "ERROR: punches out of synce.";
+                  
+                  float weekHours = weekEntries.Sum(e => e.totalTime);
+                  float weekDif = projectedHours((float)weekHours);
 
                   return "Punched Out\n" 
                      + lastEntry[0].ToString()
                      + $"Day:  {dayEntries.Sum(e => e.totalTime)} hours\n"
-                     + $"Week: {weekEntries.Sum(e => e.totalTime)} hours\n";
+                     + $"Week: {weekHours} hours ({weekDif})\n";
                default:
                   return ErrorMessages.NO_ENTRIES;
             }
@@ -160,6 +166,9 @@ namespace TimeTrackerApp
               weekHours[adjusted] += entry.totalTime;
            }
 
+           double totalWeekHours = Math.Round(weekHours.Sum(), 2);
+           float difHours = projectedHours((float)totalWeekHours);
+
            return $"Monday:    {Math.Round(weekHours[0], 2)} hours\n"
                 + $"Tuesday:   {Math.Round(weekHours[1], 2)} hours\n"
                 + $"Wednesday: {Math.Round(weekHours[2], 2)} hours\n"
@@ -168,22 +177,7 @@ namespace TimeTrackerApp
                 + $"Saturday:  {Math.Round(weekHours[5], 2)} hours\n"
                 + $"Sunday:    {Math.Round(weekHours[6], 2)} hours\n"
                 + "-------------------------\n"
-                + $"Total:     {Math.Round(weekHours.Sum(), 2)} hours";
-        }
-
-        /// <summary>Gets the current date and the current time</summary>
-        /// <returns>
-        /// string: the current date in yyyy-MM-dd format
-        /// string: the current time in hh:mm PM/AM format
-        // NOTE: Unsure to seperate time and date, going to seperate
-        private (string, string) GetDateAndTime()
-        {
-            DateTime now = DateTime.Now;
-
-            string currentDate = now.ToString("yyyy-MM-dd");
-            string currentTime = now.ToShortTimeString();
-
-            return (currentDate, currentTime);
+                + $"Total:     {Math.Round(weekHours.Sum(), 2)} hours ({difHours})";
         }
 
         /// <summary>
@@ -219,5 +213,21 @@ namespace TimeTrackerApp
                 return (false, lastPunch);
         }
 
+        private float projectedHours(float hours)
+        {
+           const int MAX_WORK_WEEK_HOURS = TimeTrackerConfig.DbConfig.TARGET_WEEK_HOURS;
+           const int MAX_WORK_WEEK_DAYS = 5;
+           const int MAX_HOURS_PER_DAY = MAX_WORK_WEEK_HOURS / MAX_WORK_WEEK_DAYS;
+
+           int currentDay = ((int)DateTime.Now.DayOfWeek);
+           int projectedHours = 0;
+
+           if (currentDay <= MAX_WORK_WEEK_DAYS)
+              projectedHours = currentDay * MAX_HOURS_PER_DAY;
+           else
+              projectedHours = MAX_WORK_WEEK_HOURS;
+
+           return (float)Math.Round(hours - projectedHours, 2);
+        }
     }
 }
