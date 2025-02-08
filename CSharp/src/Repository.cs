@@ -24,8 +24,12 @@ namespace TimeTrackerRepository
 
         }
 
-        /// <summary>Returns the most recent row in the Punch Table</summary>
-        /// <returns>Punch</returns>
+        /// <summary>
+        ///    Returns the most recent row in the Punch Table
+        /// </summary>
+        /// <returns>
+        ///    Punch
+        /// </returns>
         public Punch GetLastPunch()
         {
             SqliteConnection connection = this.ConnectToDatabase();
@@ -53,11 +57,13 @@ namespace TimeTrackerRepository
             }
         }
 
-        /// <summary>adds to the punch table</summary>
+        /// <summary>
+        ///    adds to the punch table
+        /// </summary>
         /// <param name="punch">Punch</param>
         /// <returns>
-        /// true when the row is added successfully and false when the row is
-        /// not added successfully
+        ///    true when the row is added successfully and false when the row
+        ///    is not added successfully
         /// </returns>
         public Boolean AddPunch(string type, string comment)
         {
@@ -80,11 +86,13 @@ namespace TimeTrackerRepository
             }
         }
 
-        /// <summary>Adds a row to the entry table</summary>
+        /// <summary>
+        ///    Adds a row to the entry table
+        /// </summary>
         /// <param name="entry">Entry</param>
         /// <returns>
-        /// true when the row is added successfully and false when the row is
-        /// not added successfully
+        ///    true when the row is added successfully and false when the row
+        ///    is not added successfully
         /// </returns>
         public Boolean AddEntry()
         {
@@ -106,9 +114,13 @@ namespace TimeTrackerRepository
             }
         }
 
-        /// <summary>Get entries with the given duration</summary>
+        /// <summary>
+        ///    Get entries with the given duration
+        /// </summary>
         /// <param name="duration">the time span of the entries</param>
-        /// <returns>A list of Entries object<returns>
+        /// <returns>
+        ///    A list of Entries object
+        /// <returns>
         public List<Entry> GetEntries(string duration)
         {
             SqliteConnection connection = this.ConnectToDatabase();
@@ -151,8 +163,12 @@ namespace TimeTrackerRepository
             return entries;
         }
 
-        /// <summary>connects to the given database</summary>
-        /// <returns>SqliteConnection</return>
+        /// <summary>
+        ///    connects to the given database
+        /// </summary>
+        /// <returns>
+        ///    SqliteConnection
+        /// </return>
         private SqliteConnection ConnectToDatabase()
         {
            string database = $"Data Source={DbConfig.DATABASE_LOCATION}";

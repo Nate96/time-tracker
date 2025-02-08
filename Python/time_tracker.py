@@ -6,6 +6,7 @@ import presenter
 REPO = repository
 MESSAGES = json.load(open("../Dialogue/Errors.json"))
 
+
 def punch_in(comment):
     """punch in
     punches the user in

@@ -9,8 +9,6 @@ namespace TimeTrackerModels
         public  string   taskName    { get; }
         public  string   taskComment { get; }
 
-        private const string TOP    = "---Entry---\n";
-        private const string BOTTOM = "\n---End---\n\n";
         private const string DATE_TIME_FORMAT = "dddd dd-MM-yyyy hh:mm tt";
         private const string TIME_FORMAT = "hh:mm tt";
 
@@ -24,30 +22,26 @@ namespace TimeTrackerModels
             this.taskComment = taskComment;
         }
 
-        /// <summary>Entry Object to String</summary>
+        /// <summary>
+        ///    <para/> Entry Object to String
+        ///    <para/>  ==== Entry ====
+        ///    <para/> Day, Date, timeIn - timeOut, totalHours
+        ///    <para/> Title:   ""
+        ///    <para/> Comment: ""
+        /// </summary>
         /// <returns>
-        /// String: Entry with the following Format
-        /// ---Entry---
-        /// DATE {} IN: {} OUT: {}a
-        /// COMMENT:
-        /// {}
-        /// ---End---
+        ///    string
         /// </returns>
         public override string ToString()
         {
-            return $"{TOP}{this.inPunch.ToString(DATE_TIME_FORMAT)} - {this.outPunch.ToString(TIME_FORMAT)}, {Math.Round(this.totalTime, 2)} HOURS\nCOMMENT:\n{this.taskName}\n{this.taskComment}{BOTTOM}";
+            return $"=== Entry ===\n"
+                 + $"{this.inPunch.ToString(DATE_TIME_FORMAT)} - {this.outPunch.ToString(TIME_FORMAT)}, {Math.Round(this.totalTime, 2)} HOURS\n"
+                 + $"Title:   {this.taskName}\n"
+                 + $"Comment: {this.taskComment}";
         }
 
-        ///<summary>Formats Entry to Markdown Format</summary>
-        ///<returns> String: Entry with the following Format
-        ///**Date:** {} **IN:** {} **OUT:** {}
-        ///**Total Time:** {} 
-        ///**Comment:**
-        ///{}
-        ///</returns>
         public string MarkdownFormat()
         {
-            //return $"{TOP}{this.GetDayOfWeek(this.date)} {this.date}, {this.timeIn} - {this.timeOut}, {this.totalTime} **HOURS:** \n**COMMENT:**\n{this.comment}{BOTTOM}";
             return "not implemented yet";
         }
     }

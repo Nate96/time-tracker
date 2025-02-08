@@ -12,25 +12,30 @@ namespace TimeTrackerApp
 
         public TimeTracker() { this.repo = new Repository(); }
 
-        /// <summary>Punches the user in</summary>
-        /// <param name="comment">A string that will be asosiated with the punch</param>
-        /// <returns> a succuess message or a error message </returns>
+        /// <summary>
+        ///    Punches the user in
+        /// </summary>
+        /// <param name="comment"> comment for the Entry </param>
+        /// <returns>
+        ///    a success message or a error message
+        /// </returns>
         public string PunchIn(string comment)
         {
             (Boolean isValidState, Punch? lastPunch) = this.IsValidState("in");
 
             if (isValidState && repo.AddPunch("in", comment))
                 return ErrorMessages.PUNCHIN_SUCCESS
-                   + "\n" + repo.GetLastPunch().ToString();
+                     + "\n" + repo.GetLastPunch().ToString();
             return ErrorMessages.PUNCHIN_VALID;
         }
 
-        /// <summary>Punches out user and adds entry</summary>
-        /// <param name="comment">the comment that is asosicated with the punch</param>
+        /// <summary>
+        ///    Punches out user and adds entry
+        /// </summary>
+        /// <param name="comment"> title for the Entry
         /// <returns>
-        /// If punch out is seccesfull returns a log and the the entry that has
-        /// been added.
-        /// If the punch fails returns error message
+        ///    If punch out is successful returns a log and the entry that
+        ///    has been added. If the punch fails returns error message
         /// </returns>
         public string PunchOut(string comment)
         {
@@ -43,21 +48,19 @@ namespace TimeTrackerApp
                 if (repo.AddEntry())
                 {
                    List<Entry>? lastEntry = repo.GetEntries("last");
-                   return $"{ErrorMessages.PUNCHOUT_SUCCESS}\n"
-                        + $"{ErrorMessages.ENTRY_SUCCESS}\n"
-                        + $"{lastEntry?[0].ToString()}";
+                   return Presenter.PunchOutSuccess(lastEntry[0].ToString());
                 }
             }
             return ErrorMessages.PUNCHOUT_INVALID;
         }
 
-        /// <summary>Shows entries for the given duration</summary>
-        ///
-        /// <param name="duration">refer to index.md for valid duration</param>
+        /// <summary>
+        ///    Shows entries for the given duration
+        /// </summary>
+        /// <param name="duration"></param>
         /// <returns>
-        /// list of entries in as a string
-        /// if and invalid duration is given returns error message
-        /// if no entries for the to returns "none"
+        ///    list of entries in as a string if and invalid duration is given
+        ///    returns error message if no entries for the to returns "none"
         /// </returns>
         public string ShowEntries(string duration)
         {
@@ -81,10 +84,11 @@ namespace TimeTrackerApp
             }
         }
 
-        /// <summary>Returns status of System</summary>
+        /// <summary>
+        ///    Returns status of System</summary>
         /// <returns>
-        /// When the last punch type was out returns most recent entry string
-        /// when the last punch type was in returns most recent punch string
+        ///    When the last punch type was out returns most recent entry string
+        ///    when the last punch type was in returns most recent punch string
         /// </returns>
         /// NOTE: Duplicate Data with day and week lists
         public string Status()
@@ -93,23 +97,25 @@ namespace TimeTrackerApp
             List<Entry> dayEntries = repo.GetEntries("day");
             List<Entry> weekEntries = repo.GetEntries("week");
 
-            Presenter p = new Presenter();
-
             switch (lastPunch.type)
             {
                case "in":
-                  return p.InStatus(lastPunch, dayEntries, weekEntries);
+                  return Presenter.InStatus(lastPunch, dayEntries, weekEntries);
                case "out":
                   List<Entry> lastEntry = repo.GetEntries("last");
-                  return p.outStatus(lastEntry[0], dayEntries, weekEntries);
+                  return Presenter.outStatus(lastEntry[0], dayEntries, weekEntries);
                default:
                   return ErrorMessages.NO_ENTRIES;
             }
         }
 
-        /// <summary>writes the resutls of show Entries results.md</summary>
+        /// <summary>
+        ///    writes the results of show Entries results.md
+        /// </summary>
         /// <param name="duration">refer to index.md for valid duration</param>
-        /// <returns>Error or success message</returns>
+        /// <returns>
+        ///    Error or success message
+        /// </returns>
         public string WriteEntries(string duration)
         {
             List<Entry>? entries = repo.GetEntries(duration);
@@ -133,35 +139,36 @@ namespace TimeTrackerApp
         }
 
         ///<summary>
-        /// Calculates hours worked through out the week, and outputs the 
-        /// results of is outputed via [Req7] formate
+        ///    Calculates hours worked through out the week, and outputs the 
+        ///    results of is outputed via [Req7] formate
         /// </summary>
         public string Report() 
         {
-           Presenter p = new Presenter();
            List<Entry> weekEntries = repo.GetEntries("week") ?? new List<Entry>();
-           return p.reportWeekHours(weekEntries);
+           return Presenter.reportWeekHours(weekEntries);
         }
 
         /// <summary>
-        /// verifies the data is in the correct state for the action the user 
-        /// wants to perform.
-        /// VALID:
-        /// IN - 
-        /// 1. no table
-        /// 2. last type = "out"
-        /// OUT -
-        /// 1. last type = "in"
+        ///    verifies the data is in the correct state for the action the user 
+        ///    wants to perform.
+        ///    VALID:
+        ///    IN - 
+        ///    1. no table
+        ///    2. last type = "out"
+        ///    OUT -
+        ///    1. last type = "in"
         ///
-        /// INVALID:
-        /// IN - 
-        /// 1. last type = "in"
-        /// OUT -
-        /// 1. no table
-        /// 2. last type = "out"
+        ///    INVALID:
+        ///    IN - 
+        ///    1. last type = "in"
+        ///    OUT -
+        ///    1. no table
+        ///    2. last type = "out"
         /// </summary>
         /// <param name="type">the action the user wants to perform</param>
-        /// <returns>Boolean and a Punch Object</returns>
+        /// <returns>
+        ///    Boolean and a Punch Object
+        /// </returns>
         private (Boolean, Punch?) IsValidState(string type)
         {
             Punch? lastPunch = repo.GetLastPunch();

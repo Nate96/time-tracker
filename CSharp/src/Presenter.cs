@@ -7,14 +7,30 @@ namespace TimeTrackerPresenter
 {
    class Presenter
    {
-      public string PunchOutSuccess(string entry)
+      /// <summary>
+      ///    <para/> Returns
+      ///    <para/> Punch Success Message
+      ///    <para/> Entry Success Message
+      ///    <para/> string of <typeparamref name="Entry"/>
+      /// </summary>
+      /// <returns>
+      ///   string
+      /// </returns>
+      public static string PunchOutSuccess(string entry)
       {
          return $"{ErrorMessages.PUNCHOUT_SUCCESS}\n"
               + $"{ErrorMessages.ENTRY_SUCCESS}\n"
               + $"{entry}";
       }
 
-      public string InStatus(Punch punch, List<Entry> dayEntries, List<Entry> weekEntries)
+      /// <summary>
+      ///    <para/> Returns
+      ///    <para/> Punched in for {total}
+      ///    <para/> string of <typeparamref name="Punch"/>
+      ///    <para/> Day:  {}
+      ///    <para/> Week: {} (+/-)
+      /// </summary>
+      public static string InStatus(Punch punch, List<Entry> dayEntries, List<Entry> weekEntries)
       {
          TimeSpan currentTotalTime = DateTime.Now - punch.punchDate;
          
@@ -24,11 +40,11 @@ namespace TimeTrackerPresenter
 
          string weekLine;
          float weekdif;
-         bool hasTarget = Hours.ACTIVE;
+         bool hasTarget = Tracker.ACTIVE;
 
          if (hasTarget)
          {
-            weekdif = projectedHours(weekhours);
+            weekdif = Abacus.projectedHours(weekhours);
             weekLine = $"Week: {weekhours} hours ({weekdif})\n";
          }
          else
@@ -40,7 +56,13 @@ namespace TimeTrackerPresenter
             + weekLine;
       }
 
-      public string outStatus(Entry entry, List<Entry> dayEntries, List<Entry> weekEntries)
+
+      /// <summary>
+      ///    <para/> Returns
+      ///    <para/> Currently Punched Out
+      ///    <para/> the string of <paramref name="entry"/>
+      /// </summary>
+      public static string outStatus(Entry entry, List<Entry> dayEntries, List<Entry> weekEntries)
       {
          if (entry == null) return "ERROR: punches out of synce.";
 
@@ -49,23 +71,36 @@ namespace TimeTrackerPresenter
          
          float weekDif;
          string weekLine;
-         bool hasTarget = Hours.ACTIVE;
+         bool hasTarget = Tracker.ACTIVE;
 
          if (hasTarget)
          {
-            weekDif = projectedHours(weekHours);
+            weekDif = Abacus.projectedHours(weekHours);
             weekLine = $"Week: {weekHours} hours ({weekDif})\n";
          }
          else
             weekLine = $"Week: {weekHours} hours\n";
 
-         return "Punched Out\n" 
+         return "Currently Punched Out\n" 
             + entry.ToString()
             + $"Day:  {daySum} hours\n"
             + weekLine;
       }
 
-      public string reportWeekHours(List<Entry> entries)
+      /// <summary>
+      ///    <para/> Calculates the total hours worked for each day and week
+      ///    <para/> Returns
+      ///    <para/> "Monday:    {} hours"
+      ///    <para/> "Tuesday:   {} hours"
+      ///    <para/> "Wednesday: {} hours"
+      ///    <para/> "Thursday:  {} hours"
+      ///    <para/> "Friday:    {} hours"
+      ///    <para/> "Saturday:  {} hours"
+      ///    <para/> "Sunday:    {} hours"
+      ///    <para/> -------------------------
+      ///    <para/> Total:      {} hours (+/-)
+      /// </summary>
+      public static string reportWeekHours(List<Entry> entries)
       {
            const uint WEEK_DAY_NUMBER = 7;
            float [] weekHours = new float[WEEK_DAY_NUMBER];
@@ -80,11 +115,11 @@ namespace TimeTrackerPresenter
            double totalWeekHours = weekHours.Sum();
            float difHours;
            string totalLine;
-           bool hasTarget = Hours.ACTIVE;
+           bool hasTarget = Tracker.ACTIVE;
 
            if (hasTarget)
            {
-              difHours = projectedHours((float)totalWeekHours);
+              difHours = Abacus.projectedHours((float)totalWeekHours);
               totalLine = $"Total:     {weekHours.Sum()} hours ({difHours})";
            }
            else
@@ -102,19 +137,26 @@ namespace TimeTrackerPresenter
                 + totalLine;
       }
 
-      private float projectedHours(float hours)
+      private class Abacus 
       {
-         const float DAY_AVERAGE = Hours.TARGET_WORK_HOURS / Hours.MAX_WORK_WEEK_DAYS;
+         /// <summary>
+         ///   Calculates hours and shows weather the current hours is behind 
+         ///   or ahead of the expected hours for the current day in the week.
+         /// </summary>
+         /// <param name="hours"> hours worked for the current week</param>
+         public static float projectedHours(float hours)
+         {
+            const float DAY_AVERAGE = Tracker.TARGET_WORK_HOURS / Tracker.MAX_WORK_WEEK_DAYS;
 
-         int currentDay = ((int)DateTime.Now.DayOfWeek);
-         float projectedHours;
+            int currentDay = ((int)DateTime.Now.DayOfWeek);
+            float projectedHours;
 
-         if (currentDay <= Hours.MAX_WORK_WEEK_DAYS)
-            projectedHours = (float)Math.Round(currentDay * DAY_AVERAGE, 2);
-         else
-            projectedHours = Hours.TARGET_WORK_HOURS;
-
-         return (float)Math.Round(hours - projectedHours, 2);
+            if (currentDay <= Tracker.MAX_WORK_WEEK_DAYS)
+               projectedHours = (float)Math.Round(currentDay * DAY_AVERAGE, 2);
+            else
+               projectedHours = Tracker.TARGET_WORK_HOURS;
+            return (float)Math.Round(hours - projectedHours, 2);
+         }
       }
    }
 }
