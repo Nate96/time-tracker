@@ -12,10 +12,10 @@ namespace TimeTrackerConfig
       public const string TODAY             = ABSOLUTE_PATH + "/SqlScripts/GetTodayEntry.sql";
       public const string WEEK              = ABSOLUTE_PATH + "/SqlScripts/GetWeekEntry.sql";
       public const string MONTH             = ABSOLUTE_PATH + "/SqlScripts/GetMonthEntry.sql";
-      public const string LAST_ENTRY        = ABSOLUTE_PATH + "/SqlScripts/GetLastEntry.sql"
+      public const string LAST_ENTRY        = ABSOLUTE_PATH + "/SqlScripts/GetLastEntry.sql";
    }
 
-   public static class Hours 
+   public static class Tracker
    {
       public const int TARGET_WORK_HOURS = 5;
       public const int MAX_WORK_WEEK_DAYS = 5;
