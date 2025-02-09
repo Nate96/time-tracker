@@ -151,7 +151,7 @@ namespace TimeTrackerPresenter
             int currentDay = ((int)DateTime.Now.DayOfWeek);
             float projectedHours;
 
-            if (currentDay <= Tracker.MAX_WORK_WEEK_DAYS)
+            if (currentDay <= Tracker.MAX_WORK_WEEK_DAYS && currentDay != 0.0)
                projectedHours = (float)Math.Round(currentDay * DAY_AVERAGE, 2);
             else
                projectedHours = Tracker.TARGET_WORK_HOURS;
