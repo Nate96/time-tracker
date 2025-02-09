@@ -37,7 +37,7 @@ namespace TimeTrackerModels
             return $"=== Entry ===\n"
                  + $"{this.inPunch.ToString(DATE_TIME_FORMAT)} - {this.outPunch.ToString(TIME_FORMAT)}, {Math.Round(this.totalTime, 2)} HOURS\n"
                  + $"Title:   {this.taskName}\n"
-                 + $"Comment: {this.taskComment}";
+                 + $"Comment: {this.taskComment}\n";
         }
 
         public string MarkdownFormat()

@@ -83,7 +83,7 @@ namespace TimeTrackerPresenter
 
          return "Currently Punched Out\n" 
             + entry.ToString()
-            + $"Day:  {daySum} hours\n"
+            + $"\nDay:  {daySum} hours\n"
             + weekLine;
       }
 
