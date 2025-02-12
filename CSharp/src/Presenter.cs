@@ -34,9 +34,9 @@ namespace TimeTrackerPresenter
       {
          TimeSpan currentTotalTime = DateTime.Now - punch.punchDate;
          
-         float currentHours = (float)Math.Round(((float)currentTotalTime.TotalMinutes / 60), 2);
-         float weekhours = currentHours + weekEntries.Sum(e => e.totalTime); 
-         float daySum = currentHours + dayEntries.Sum(e => e.totalTime);
+         float currentHours = Abacus.Round(((float)currentTotalTime.TotalMinutes / 60));
+         float weekhours = Abacus.Round(currentHours + weekEntries.Sum(e => e.totalTime)); 
+         float daySum = Abacus.Round(currentHours + dayEntries.Sum(e => e.totalTime));
 
          string weekLine;
          float weekdif;
@@ -56,7 +56,6 @@ namespace TimeTrackerPresenter
             + weekLine;
       }
 
-
       /// <summary>
       ///    <para/> Returns
       ///    <para/> Currently Punched Out
@@ -66,12 +65,13 @@ namespace TimeTrackerPresenter
       {
          if (entry == null) return "ERROR: punches out of synce.";
 
-         float weekHours = weekEntries.Sum(e => e.totalTime);
-         float daySum = dayEntries.Sum(e => e.totalTime);
+         bool hasTarget = Tracker.ACTIVE;
+
+         float weekHours = Abacus.Round(weekEntries.Sum(e => e.totalTime));
+         float daySum = Abacus.Round(dayEntries.Sum(e => e.totalTime));
          
          float weekDif;
          string weekLine;
-         bool hasTarget = Tracker.ACTIVE;
 
          if (hasTarget)
          {
@@ -104,6 +104,10 @@ namespace TimeTrackerPresenter
       {
            const uint WEEK_DAY_NUMBER = 7;
            float [] weekHours = new float[WEEK_DAY_NUMBER];
+           bool hasTarget = Tracker.ACTIVE;
+
+           float difHours;
+           string totalLine;
 
            foreach (Entry entry in entries)
            {
@@ -112,19 +116,15 @@ namespace TimeTrackerPresenter
               weekHours[adjusted] += entry.totalTime;
            }
 
-           double totalWeekHours = weekHours.Sum();
-           float difHours;
-           string totalLine;
-           bool hasTarget = Tracker.ACTIVE;
+           float totalWeekHours = Abacus.Round(weekHours.Sum());
 
            if (hasTarget)
            {
-              difHours = Abacus.projectedHours((float)totalWeekHours);
-              totalLine = $"Total:     {weekHours.Sum()} hours ({difHours})";
+              difHours = Abacus.projectedHours(totalWeekHours);
+              totalLine = $"Total:     {totalWeekHours} hours ({difHours})";
            }
            else
-              totalLine =  $"Total:     {weekHours.Sum()} hours";
-
+              totalLine =  $"Total:     {totalWeekHours} hours";
 
            return $"Monday:    {weekHours[0]} hours\n"
                 + $"Tuesday:   {weekHours[1]} hours\n"
@@ -152,11 +152,16 @@ namespace TimeTrackerPresenter
             float projectedHours;
 
             if (currentDay <= Tracker.MAX_WORK_WEEK_DAYS && currentDay != 0.0)
-               projectedHours = (float)Math.Round(currentDay * DAY_AVERAGE, 2);
+               projectedHours = currentDay * DAY_AVERAGE;
             else
                projectedHours = Tracker.TARGET_WORK_HOURS;
-            return (float)Math.Round(hours - projectedHours, 2);
+            return Round(hours - projectedHours);
          }
+         
+         /// <summary>
+         ///   round a float to two decimal points
+         /// </sumary>
+         public static float Round(float num) { return (float)Math.Round(num, 2); }
       }
    }
 }
