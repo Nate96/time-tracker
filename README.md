@@ -13,7 +13,7 @@ status ----------- show weather the user is punched in or out
 report ----------- show the house worked each day of the current week  
 
 
-# Installation  
+# C# Installation  
 1. install dotnet  
 2. Add the abosulte paths for files in CSharp/scr/models/config.cs  
    NOTE: this file is not tracked.
@@ -25,8 +25,3 @@ report ----------- show the house worked each day of the current week
 ## Note
 This application can also be ran with python3. While in repository run 
 python3 { command }
-
-
-# Documentation  
-Database Design Document - [[ddd]]  
-Requirements ------------- [[requirements]]  
