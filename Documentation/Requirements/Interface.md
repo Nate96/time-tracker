@@ -2,6 +2,7 @@
 > outputs. These Requirements WILL NOT reference Logic/computation done by
 > other components of the System.
 
+===============================================================================
 # Punch In
 When "i {string}" is inputted and [[LowLevel#can_punch_in]] is true.
 The System will;
@@ -21,6 +22,7 @@ shall;
 4. print the most recent entry in the database  
 otherwise [[LowLevel#can_punch_out]] is false
 print [[Messages#Can't Punch Out]]
+
 
 # Status
 ## Status With no Pucnhes 
@@ -44,8 +46,9 @@ the system will;
    Day:  {} hours  
    Week: {} hours "-/+"{}  
 
+
 # Report
-When "report" is inputted. The system shall calculate;
+When "report" is inputted. The system will calculate;
 1. Total hours for each day the week
 2. The total hours worked for the week.
 
@@ -62,3 +65,13 @@ v---------------------
 Total:      {} hours "-/+"{}
 
 NOTE: Ignore v it is for formatting  
+
+
+# Update Last Punch
+When "update {[[LowLevel#DateTime]]" unputted and the last [[LowLevel#Punch]]
+type is "in". The system will;
+1. Print last [[LowLevel#Punch]]
+2. Update the last punch to the inputted [[LowLevel#DateTime]].
+3. Print updated punch [[LowLevel#DateTime]]
+otherwise
+print "currently clocked out"

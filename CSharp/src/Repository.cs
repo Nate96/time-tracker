@@ -8,7 +8,8 @@ namespace TimeTrackerRepository
 {
     class Repository
     {
-        public const string DATABASE_LOCATION = "Data Source="+ DbConfig.DATABASE_LOCATION;
+        public const string DATABASE_LOCATION = "Data Source=" 
+                                              + DbConfig.DATABASE_LOCATION;
 
         public Repository()
         {
