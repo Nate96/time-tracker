@@ -18,5 +18,3 @@ returns false if failed
 ## Get Entries
 Returns a list of entries for [Valid durations]. When not given a [Valid Duration]
 return and empty list
-
-
