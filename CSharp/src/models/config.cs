@@ -13,6 +13,8 @@ namespace TimeTrackerConfig
       public const string WEEK              = ABSOLUTE_PATH + "/SqlScripts/GetWeekEntry.sql";
       public const string MONTH             = ABSOLUTE_PATH + "/SqlScripts/GetMonthEntry.sql";
       public const string LAST_ENTRY        = ABSOLUTE_PATH + "/SqlScripts/GetLastEntry.sql";
+      public const string DAY_TOTAL         = ABSOLUTE_PATH + "/SqlScripts/DayTotal.sql";
+      public const string WEEK_TOTAL        = ABSOLUTE_PATH + "/SqlScripts/WeekTotal.sql";
    }
 
    public static class Tracker

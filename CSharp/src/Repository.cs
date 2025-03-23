@@ -22,7 +22,6 @@ namespace TimeTrackerRepository
             command.CommandText = File.ReadAllText(DbConfig.CREATE_TABLE);
             command.ExecuteNonQuery();
             connection.Close();
-
         }
 
         /// <summary>
@@ -162,6 +161,52 @@ namespace TimeTrackerRepository
 
             connection.Close();
             return entries;
+        }
+
+        public float GetWeekTotal()
+        { 
+            SqliteConnection connection = this.ConnectToDatabase();
+            var command = connection.CreateCommand();
+
+            command.CommandText = File.ReadAllText(DbConfig.WEEK_TOTAL);
+
+            var res = command.ExecuteReader();
+
+            if (!res.Read())
+            {
+               connection.Close();
+               return -1;
+            }
+            else
+            {
+               float total = res.GetFloat(0);
+               connection.Close();
+
+               return total;
+            }
+        }
+
+        public float GetDayTotal()
+        {
+            SqliteConnection connection = this.ConnectToDatabase();
+            var command = connection.CreateCommand();
+
+            command.CommandText = File.ReadAllText(DbConfig.DAY_TOTAL);
+
+            var res = command.ExecuteReader();
+
+            if (!res.Read())
+            {
+               connection.Close();
+               return -1;
+            }
+            else
+            {
+               float total = res.GetFloat(0);
+               connection.Close();
+
+               return total;
+            }
         }
 
         /// <summary>

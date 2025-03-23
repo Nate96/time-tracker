@@ -15,6 +15,7 @@ class Program
             switch (mode)
             {
                case "i":
+                  PunchClock pc = new PunchLock();
                   Console.WriteLine(timeTracker.PunchIn(comment));
                   break;
                case "o":

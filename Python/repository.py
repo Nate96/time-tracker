@@ -12,12 +12,14 @@ scripts = {
         'create_punch_table': "../SqlScripts/CreatePunchTable.sql",
         'create_entry_table': "../SqlScripts/CreateEntryTable.sql",
         'LAST_PUNCH':         "../SqlScripts/GetLastPunch.sql",
-        'INSERT_PUNCH':  "../SqlScripts/InsertPunch.sql",
-        'INSERT_ENTRY':  "../SqlScripts/InsertEntry.sql",
-        'TODAY':  "../SqlScripts/GetTodayEntry.sql",
-        'WEEK':  "../SqlScripts/GetWeekEntry.sql",
-        'MONTH':  "../SqlScripts/GetMonthEntry.sql",
-        'LAST_ENTRY':  "../SqlScripts/GetLastEntry.sql",
+        'INSERT_PUNCH':       "../SqlScripts/InsertPunch.sql",
+        'INSERT_ENTRY':       "../SqlScripts/InsertEntry.sql",
+        'TODAY':              "../SqlScripts/GetTodayEntry.sql",
+        'WEEK':               "../SqlScripts/GetWeekEntry.sql",
+        'MONTH':              "../SqlScripts/GetMonthEntry.sql",
+        'LAST_ENTRY':         "../SqlScripts/GetLastEntry.sql",
+        'WEEK_TOTAL':         "../SqlScripts/WeekTotal.sql",
+        'DAY_TOTAL':          "../SqlScripts/DayTotal.sql",
 }
 
 
@@ -112,6 +114,31 @@ def get_last_entry() -> Tuple[str, str, str, str, str, str]:
     """
     con = _connect_to_data_base()
     res = con.cursor().execute(_sql_script(scripts['LAST_ENTRY'])).fetchone()
+
+    con.close()
+
+    return res
+
+
+def get_week_total():
+    """Get Week Total
+    Returns the total the total of hours worked for the current week
+    """
+    con = _connect_to_data_base()
+    res = con.cursor().execute(_sql_script(scripts['WEEK_TOTAL'])) .fetchone()
+
+    con.close()
+
+    return res
+
+
+def get_day_total():
+    """ Get Day Total
+    Returns the total of hours worked for the current os date
+
+    """
+    con = _connect_to_data_base()
+    res = con.cursor().execute(_sql_script(scripts['DAY_TOTAL'])) .fetchone()
 
     con.close()
 
