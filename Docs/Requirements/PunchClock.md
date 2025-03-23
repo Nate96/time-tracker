@@ -1,20 +1,20 @@
-> This compement is responsible creating [[LowLevel#Punch]] and [[LowLevel#Entry]]
+> This compement is responsible creating [[Defs#Punch]] and [[Defs#Entry]]
 > For the System.
 
 ================================================================================
 # Punch In
-Create a [[LowLevel#Punch]] with the following;
+Create a [[Defs#Punch]] with the following;
 int:      id  
 string:   "in"  
-datetime: [[LowLevel#datetime]]  
+datetime: [[Defs#datetime]]  
 string:   comment  
 
 # Punch Out
-Create a [[LowLevel#Punch]] with the following;
+Create a [[Defs#Punch]] with the following;
 int:      id  
 string:   "out"  
-datetime: [[LowLevel#datetime]]  
+datetime: [[Defs#datetime]]  
 string:   comment  
 
 # Create Entry
-The System shall create an [[LowLevel#Entry]]
+The System shall create an [[Defs#Entry]]

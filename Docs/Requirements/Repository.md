@@ -2,16 +2,16 @@
 The system shall connect to a SQLite database defined by [CONFIG]
 
 # Get Last Punch
-If there are no punches then return a [[LowLevel#Punch]] with and id of -1 Else
-Returns the most recent [[LowLevel#Punch]]
+If there are no punches then return a [[Defs#Punch]] with and id of -1 Else
+Returns the most recent [[Defs#Punch]]
 
 # Add Punch
-Adds a [[LowLevel#Punch]] with the givin type and comment to the database.
+Adds a [[Defs#Punch]] with the givin type and comment to the database.
 Returns true when add is success
 Returns false when add failed
 
 # Add Entry
-Adds [[LowLevel#Entry]] to the database.
+Adds [[Defs#Entry]] to the database.
 Returns true if success
 returns false if failed
 

@@ -1,11 +1,11 @@
-# Can't Punch In
+## Can't Punch In
 Unable to punch in. 
 
-# Can't Punch Out
+## Can't Punch Out
 Unable to punch out
 
-# Punch In Success
+## Punch In Success
 Successfully punched in
 
-# Punch Out Success
+## Punch Out Success
 Successfully punched out
