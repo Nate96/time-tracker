@@ -24,6 +24,11 @@ otherwise when [[Defs#Can Punch Out]] is false
 print [[Messages#Can't Punch Out]]
 
 
+## Invalid Out Put
+When input invalid, the system will print "ERROR: invalid input, refer to
+README.md"
+
+
 ## Status
 ### Status With no Pucnhes 
 When "status" is inputted and there are no [[Defs#Punch]], the system will
@@ -73,3 +78,7 @@ type is "in". The system will;
 3. Print updated punch [[Defs#DateTime]]
 otherwise
 print "currently clocked out"
+
+## Reset > NOT IMPLEMENTED
+When "reset" is inputted, and the last [[defs#Punch]] type is "in" the system 
+will delete last [[defs#Punch]]

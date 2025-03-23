@@ -1,9 +1,8 @@
 #!/user/bin/env python3
 
 import argparse
-import punch_clock
+import time_tracker
 import json
-import presenter
 
 if __name__ == '__main__':
     args = None
@@ -20,15 +19,15 @@ if __name__ == '__main__':
     # Parse all command line arguments
     args = parser.parse_args(args)
 
-    if args.one == "i" or args.one == "in":
-        print(punch_clock.punch_in(args.two))
-    elif args.one == "o" or args.one == "out":
-        print(punch_clock.punch_out(args.two))
+    if args.one == "i":
+        print(time_tracker.punch_in(args.two))
+    elif args.one == "o":
+        print(time_tracker.punch_out(args.two))
     elif args.one == "show":
-        print(presenter.show_entrie(args.two))
+        print(time_tracker.show_entrie(args.two))
     elif args.one == "status":
-        print(presenter.status())
+        print(time_tracker.status())
     elif args.one == "report":
-        print(presenter.report(args.two))
+        print(time_tracker.report(args.two))
     else:
         print(MESSAGES["InvalidCommand"])

@@ -7,6 +7,51 @@ REPO = repository
 MESSAGES = json.load(open("../Dialogue/Errors.json"))
 
 
+def punch_in(comment):
+    """punch in
+    punches the user in
+
+    Parameters:
+    comment: comment linked to the punch
+
+    Returns:
+    str: a messages of the results of the process
+    """
+    last_punch = REPO.get_last_punch()
+
+    if last_punch is None or last_punch[1] == "out":
+        return presenter.format_punch(REPO.add_punch("in", comment))
+    elif last_punch[1] == "in":
+        return MESSAGES['PUNCHIN_INVALID']
+    else:
+        return MESSAGES['REFER_LOG']
+
+
+def punch_out(comment):
+    """punch out
+    punches the user out
+
+    Parameters:
+    comment: comment linked to the punch
+
+    Returns:
+    The most recent punch
+    """
+    last_punch = REPO.get_last_punch()
+
+    if last_punch is None:
+        return MESSAGES['NO_PUNCHES']
+    elif last_punch[1] == "out":
+        return MESSAGES['PUNCHOUT_INVALID']
+    elif last_punch[1] == "in":
+        REPO.add_punch("out", comment)
+        output = MESSAGES['PUNCHIN_SUCCESS'] + '\n'
+        output += presenter.format_entry(REPO.add_entry())
+        return output
+    else:
+        return MESSAGES['ENTRY_FAIL']
+
+
 def status():
     '''
     Presents the current status of the given databse in the following format
@@ -88,3 +133,44 @@ Total:      {total_hours} hours {_over_under(total_hours)}
 '''
 
 
+def _get_day_total():
+    day_entries = REPO.get_entries("day")
+
+    total_day_hours = 0
+    for entry in day_entries:
+        total_day_hours += float(entry[3])
+
+    return round(total_day_hours, 2)
+
+
+def _get_week_total():
+    week_entries = REPO.get_entries("week")
+
+    total_week_hours = 0
+    for entry in week_entries:
+        total_week_hours += float(entry[3])
+
+    return round(total_week_hours, 2)
+
+
+def _over_under(hours):
+    """over under
+    Calculates the hourse the user is head or behead for the current week
+
+    Paramaters:
+    hours: hours worked for the current week
+
+    Return:
+    int: positive if the user is ahead and negative when the user is behind
+    """
+    MAX_WORK_WEEK_HOURS = 40
+    MAX_WORK_WEEK_DAYS = 5
+    HOURS_PER_DAY = 8
+    day_of_week = datetime.today().weekday()
+
+    if day_of_week <= MAX_WORK_WEEK_DAYS:
+        projected_hours = day_of_week * HOURS_PER_DAY
+    else:
+        projected_hours = MAX_WORK_WEEK_HOURS
+
+    return hours - projected_hours
