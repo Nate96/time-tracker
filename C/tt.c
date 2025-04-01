@@ -10,13 +10,39 @@ int main(int argc, char *argv[]) {
    }
 
    if (strcmp(argv[1], "i") == 0) {
-      printf("Punch In");
+      int res;
+
+      switch (res) {
+         case -1:
+            printf("No Database");
+            break;
+         case 0:
+            printf("Already Punched in");
+            break;
+         case 1:
+            printf("Punched in Success");
+            break;
+      }
    } else if (strcmp(argv[1], "o") == 0) {
-      printf("Punch Out");
+      int res;
+
+      switch (res) {
+         case -1:
+            printf("No Database");
+            break;
+         case 0:
+            printf("Already Punched in");
+            break;
+         case 1:
+            printf("Punched in Success");
+            break;
+      }
    } else if (strcmp(argv[1], "status") == 0)  {
       printf("Status");
    } else if (strcmp(argv[1], "report") == 0)  {
       printf("report");
+   } else {
+      printf("ERROR Invalid input, please refer to README for more information");
    }
 } 
 
