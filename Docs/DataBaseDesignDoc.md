@@ -1,7 +1,7 @@
 ©2015 Documentation Consultants (www.SDLCforms.com)   
 
 Project Name - Time Tracker  
-Version ------ 1.0  
+Version ------ 1.1  
 
 # 1 Purpose  
 The Database Design Document maps the logical data model to the target database  
@@ -130,7 +130,7 @@ administration functions:
 - security administrator  
 
 ## 6.2 Database Identification  
-File Location: ./Log.db  
+File Location: {given dir}/Log.db  
 
 ## 6.5 Schema Information  
 Describe the overall structure of the schema and other global definition of the  
@@ -141,9 +141,9 @@ Punch Table
 ```sql
 CREATE TABLE IF NOT EXISTS  punch(  
    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT  
-   , type TEXT NOT NULL CHECK(type IN ('out', 'in'))  
+   , type VARCHAR(3) NOT NULL CHECK(type IN ('out', 'in'))  
    , punch_date DATETIME NOT NULL  
-   , comment TEXT NOT NULL  
+   , comment VARCHAR(140) NOT NULL  
 );  
 ```  
   
@@ -154,8 +154,8 @@ CREATE TABLE IF NOT EXISTS entry(
    , in_punch DATETIME NOT NULL  
    , out_punch DATETIME NOT NULL  
    , total_time FLOAT NOT NULL  
-   , task_name TEXT NOT NULL  
-   , task_comment TEXT NOT NULL  
+   , task_name VARCHAR(140) NOT NULL  
+   , task_comment VARCHAR(140) NOT NULL  
 );  
 ```  
   
