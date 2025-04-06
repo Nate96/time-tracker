@@ -2,12 +2,6 @@
 #include <string.h>
 
 int main(int argc, char *argv[]) {
-   // argc: argument count
-   // argv: argument vector (array of strings)
-
-   if (argc == 0) {
-      printf("ERROR or Status");
-   }
 
    if (strcmp(argv[1], "i") == 0) {
       int res;
