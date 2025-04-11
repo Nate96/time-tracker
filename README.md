@@ -23,7 +23,7 @@ A simple CLI tool that tracks time while completeing tasks.
 2. Add the abosulte paths for files in CSharp/scr/models/config.cs  
 3. run `dotnet build --configuration Release`  
 4. Add to command line  
-    - zsh: add "export PATH=$PATH:{path to repo}/bin/Release/netx.0" to .zshrc
+    - zsh: add "export PATH=$PATH:{path to repo}/bin/Release/netX.0" to .zshrc
     - windows PowerShell: Set-Alias -Name tt -Value "{path to exe}"
 
 ## Python
