@@ -14,7 +14,6 @@ A simple CLI tool that tracks time while completeing tasks.
 | status           | show weather the user is punched in or out            |
 | report           | show the house worked each day of the current week    |
 
-
 # Installation  
 
 ## C#
