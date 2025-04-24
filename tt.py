@@ -2,11 +2,10 @@
 
 import argparse
 import time_tracker
-import json
+import config
 
 if __name__ == '__main__':
     args = None
-    MESSAGES = json.load(open("../Dialogue/CommandErrors.json"))
 
     parser = argparse.ArgumentParser(
                         prog='Time Tracker',
@@ -30,4 +29,4 @@ if __name__ == '__main__':
     elif args.one == "report":
         print(time_tracker.report(args.two))
     else:
-        print(MESSAGES["InvalidCommand"])
+        print(config.MESSAGES["INVALID_COMMNAD"])
