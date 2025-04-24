@@ -16,7 +16,7 @@ MESSAGES = {
         }
 
 TRACKER = {
-        "ACTIVE":               False,
+        "ACTIVE":               True,
         "MAX_WORK_WEEK_HOURS":  0,
         "MAX_WORK_WEEK_DAYS":   0,
         "HOURS_PER_DAY":        0
