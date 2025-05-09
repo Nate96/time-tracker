@@ -8,16 +8,16 @@ import datetime
 
 
 scripts = {
-        'DATABASE_LOCATION':  "../Test/Log.db",
-        'create_punch_table': "../SqlScripts/CreatePunchTable.sql",
-        'create_entry_table': "../SqlScripts/CreateEntryTable.sql",
-        'LAST_PUNCH':         "../SqlScripts/GetLastPunch.sql",
-        'INSERT_PUNCH':  "../SqlScripts/InsertPunch.sql",
-        'INSERT_ENTRY':  "../SqlScripts/InsertEntry.sql",
-        'TODAY':  "../SqlScripts/GetTodayEntry.sql",
-        'WEEK':  "../SqlScripts/GetWeekEntry.sql",
-        'MONTH':  "../SqlScripts/GetMonthEntry.sql",
-        'LAST_ENTRY':  "../SqlScripts/GetLastEntry.sql",
+        'DATABASE_LOCATION':  "./Log.db",
+        'create_punch_table': "./SqlScripts/CreatePunchTable.sql",
+        'create_entry_table': "./SqlScripts/CreateEntryTable.sql",
+        'LAST_PUNCH':         "./SqlScripts/GetLastPunch.sql",
+        'INSERT_PUNCH':  "./SqlScripts/InsertPunch.sql",
+        'INSERT_ENTRY':  "./SqlScripts/InsertEntry.sql",
+        'TODAY':  "./SqlScripts/GetTodayEntry.sql",
+        'WEEK':  "./SqlScripts/GetWeekEntry.sql",
+        'MONTH':  "./SqlScripts/GetMonthEntry.sql",
+        'LAST_ENTRY':  "./SqlScripts/GetLastEntry.sql",
 }
 
 
@@ -140,6 +140,7 @@ def _connect_to_data_base():
     Returns:
     the connection for the datbase
     """
+
     CON = sqlite3.connect(scripts['DATABASE_LOCATION'])
     CUR = CON.cursor()
     CUR.execute(_sql_script(scripts['create_punch_table']))

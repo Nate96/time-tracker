@@ -4,3 +4,4 @@ Log.db
 results.txt
 bin/
 obj/
+config.py

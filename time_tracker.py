@@ -1,10 +1,9 @@
 from datetime import datetime
 import repository
-import json
 import presenter
+import config
 
 REPO = repository
-MESSAGES = json.load(open("../Dialogue/Errors.json"))
 
 
 def punch_in(comment):
@@ -22,9 +21,9 @@ def punch_in(comment):
     if last_punch is None or last_punch[1] == "out":
         return presenter.format_punch(REPO.add_punch("in", comment))
     elif last_punch[1] == "in":
-        return MESSAGES['PUNCHIN_INVALID']
+        return config.MESSAGES['PUNCHIN_INVALID']
     else:
-        return MESSAGES['REFER_LOG']
+        return config.MESSAGES['REFER_LOG']
 
 
 def punch_out(comment):
@@ -40,16 +39,16 @@ def punch_out(comment):
     last_punch = REPO.get_last_punch()
 
     if last_punch is None:
-        return MESSAGES['NO_PUNCHES']
+        return config.MESSAGES['NO_PUNCHES']
     elif last_punch[1] == "out":
-        return MESSAGES['PUNCHOUT_INVALID']
+        return config.MESSAGES['PUNCHOUT_INVALID']
     elif last_punch[1] == "in":
         REPO.add_punch("out", comment)
-        output = MESSAGES['PUNCHIN_SUCCESS'] + '\n'
+        output = config.MESSAGES['PUNCHIN_SUCCESS'] + '\n'
         output += presenter.format_entry(REPO.add_entry())
         return output
     else:
-        return MESSAGES['ENTRY_FAIL']
+        return config.MESSAGES['ENTRY_FAIL']
 
 
 def status():
@@ -65,7 +64,7 @@ def status():
     week_hours = _get_week_total()
 
     if last_punch is None:
-        return MESSAGES['NO_PUNCHES']
+        return config.MESSAGES['NO_PUNCHES']
 
     if last_punch[1] == "in":
         last_punch_time = datetime.fromisoformat(last_punch[2])
@@ -163,14 +162,11 @@ def _over_under(hours):
     Return:
     int: positive if the user is ahead and negative when the user is behind
     """
-    MAX_WORK_WEEK_HOURS = 40
-    MAX_WORK_WEEK_DAYS = 5
-    HOURS_PER_DAY = 8
     day_of_week = datetime.today().weekday()
 
-    if day_of_week <= MAX_WORK_WEEK_DAYS:
-        projected_hours = day_of_week * HOURS_PER_DAY
+    if day_of_week <= config.MAX_WORK_WEEK_DAYS:
+        projected_hours = day_of_week * config.HOURS_PER_DAY
     else:
-        projected_hours = MAX_WORK_WEEK_HOURS
+        projected_hours = config.MAX_WORK_WEEK_HOURS
 
     return hours - projected_hours
