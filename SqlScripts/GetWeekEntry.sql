@@ -2,6 +2,4 @@
 -- monday
 SELECT *
 FROM entry
-WHERE in_punch BETWEEN
-   STRFTIME('%Y-%m-%d', 'now', '-6 days', 'weekday 1') -- Start of Week (Monday)
-   AND STRFTIME('%Y-%m-%d', 'now', 'weekday 0')        -- End of Week (Sunday)
+WHERE DATE(in_punch) >= DATE('%Y-%m-%d', 'now', '-7 days', 'weekday 1') 
