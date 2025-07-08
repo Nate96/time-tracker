@@ -164,9 +164,9 @@ def _over_under(hours):
     """
     day_of_week = datetime.today().weekday()
 
-    if day_of_week <= config.MAX_WORK_WEEK_DAYS:
-        projected_hours = day_of_week * config.HOURS_PER_DAY
+    if day_of_week <= config.TRACKER["MAX_WORK_WEEK_DAYS"]:
+        projected_hours = day_of_week * config.TRACKER["HOURS_PER_DAY"]
     else:
-        projected_hours = config.MAX_WORK_WEEK_HOURS
+        projected_hours = config.TRACKER["MAX_WORK_WEEK_HOURS"]
 
     return hours - projected_hours
