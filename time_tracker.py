@@ -120,7 +120,7 @@ def report(duration):
         total_hours += float(entry[3])
 
     return f'''---------------------
-Monday:     {week_hours[1]} hours
+Monday:     {week_hours[0]} hours
 Tuesday:    {week_hours[1]} hours
 Wednesday:  {week_hours[2]} hours
 Thursday:   {week_hours[3]} hours
