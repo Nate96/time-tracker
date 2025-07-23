@@ -162,7 +162,7 @@ def _over_under(hours):
     Return:
     int: positive if the user is ahead and negative when the user is behind
     """
-    day_of_week = datetime.today().weekday()
+    day_of_week: int = (datetime.today().weekday() + 1)
 
     if day_of_week <= config.TRACKER["MAX_WORK_WEEK_DAYS"]:
         projected_hours = day_of_week * config.TRACKER["HOURS_PER_DAY"]
