@@ -3,12 +3,15 @@
 #        does not support this.
 
 from typing import Tuple, List
+from config import DATABASE
+
 import sqlite3
 import datetime
 
 
+
+
 scripts = {
-        'DATABASE_LOCATION':  "./Log.db",
         'create_punch_table': "./SqlScripts/CreatePunchTable.sql",
         'create_entry_table': "./SqlScripts/CreateEntryTable.sql",
         'LAST_PUNCH':         "./SqlScripts/GetLastPunch.sql",
@@ -141,7 +144,7 @@ def _connect_to_data_base():
     the connection for the datbase
     """
 
-    CON = sqlite3.connect(scripts['DATABASE_LOCATION'])
+    CON = sqlite3.connect(f'{DATABASE}')
     CUR = CON.cursor()
     CUR.execute(_sql_script(scripts['create_punch_table']))
     CUR.execute(_sql_script(scripts['create_entry_table']))

@@ -1,3 +1,10 @@
+from dotenv import load_dotenv
+import os
+
+load_dotenv() # This loads the variables from .env into os.environ
+
+DATABASE = os.getenv("DATABASE")
+
 MESSAGES = {
         "ENTRY_SUCCESS":    "Seccessfully added Entry",
         "ENTRY_FAIL":       "Entry was NOT added",
