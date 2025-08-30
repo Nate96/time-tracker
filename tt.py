@@ -3,6 +3,7 @@
 import argparse
 import time_tracker
 import config
+import dotenv
 
 if __name__ == '__main__':
     args = None
