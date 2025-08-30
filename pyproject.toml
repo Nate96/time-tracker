@@ -1,0 +1,7 @@
+[project]
+name = "time-tracker"
+version = "0.1.0"
+description = "App that tracks time"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = []
