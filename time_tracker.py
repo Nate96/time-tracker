@@ -1,41 +1,28 @@
 from datetime import datetime
+from config import PunchType, Res
+from repository import Punch, Entry 
+
 import repository
 import presenter
 import config
 
+
 REPO = repository
 
 
-def punch_in(comment):
-    """punch in
-    punches the user in
+def punch_in(comment: str) -> Res:
+    last_punch: Punch = REPO.get_last_punch()
 
-    Parameters:
-    comment: comment linked to the punch
-
-    Returns:
-    str: a messages of the results of the process
-    """
-    last_punch = REPO.get_last_punch()
-
-    if last_punch is None or last_punch[1] == "out":
-        return presenter.format_punch(REPO.add_punch("in", comment))
-    elif last_punch[1] == "in":
-        return config.MESSAGES['PUNCHIN_INVALID']
+    if last_punch is None or last_punch.type == PunchType.OUT.value:
+        REPO.add_punch(Punch(PunchType.INVALID.value, comment))
+        return Res.SEC_PUNCH
+    elif last_punch.type == "in":
+        return Res.INVAIL_PUNCH
     else:
-        return config.MESSAGES['REFER_LOG']
+        return Res.UNKNOWN 
 
 
 def punch_out(comment):
-    """punch out
-    punches the user out
-
-    Parameters:
-    comment: comment linked to the punch
-
-    Returns:
-    The most recent punch
-    """
     last_punch = REPO.get_last_punch()
 
     if last_punch is None:
@@ -43,7 +30,7 @@ def punch_out(comment):
     elif last_punch[1] == "out":
         return config.MESSAGES['PUNCHOUT_INVALID']
     elif last_punch[1] == "in":
-        REPO.add_punch("out", comment)
+        REPO.add_punch(PunchType.OUT, comment)
         output = config.MESSAGES['PUNCHIN_SUCCESS'] + '\n'
         output += presenter.format_entry(REPO.add_entry())
         return output

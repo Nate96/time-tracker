@@ -6,4 +6,16 @@ readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
     "pytest>=8.4.1",
+    "pytest-mock>=3.14.1",
+    "python-dotenv>=1.1.1",
 ]
+
+ # In pyproject.toml
+ [tool.setuptools.packages.find]
+ where = ["."] # Look for packages in the current directory
+ exclude = ["Docs*", "SqlScripts*"] # Exclude these directories
+ # Or, to explicitly include only certain packages:
+ # include = ["your_main_package_name*"]
+
+[tool.pytest.ini_options]
+env_files = [".env.test", ".env"]

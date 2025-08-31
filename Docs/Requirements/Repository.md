@@ -1,5 +1,7 @@
 ## Connect to the Database
 The system shall connect to a SQLite database defined by [CONFIG]
+return 
+returns false when [CONFIG] Is NOT definded
 
 ## Get Last Punch
 If there are no punches then return a [[Defs#Punch]] with and id of -1 Else
