@@ -1,7 +1,10 @@
 from datetime import datetime
+from config import PunchType
+
 import repository
 import presenter
 import config
+
 
 REPO = repository
 
@@ -19,7 +22,7 @@ def punch_in(comment):
     last_punch = REPO.get_last_punch()
 
     if last_punch is None or last_punch[1] == "out":
-        return presenter.format_punch(REPO.add_punch("in", comment))
+        return presenter.format_punch(REPO.add_punch(PunchType.IN, comment))
     elif last_punch[1] == "in":
         return config.MESSAGES['PUNCHIN_INVALID']
     else:
@@ -43,7 +46,7 @@ def punch_out(comment):
     elif last_punch[1] == "out":
         return config.MESSAGES['PUNCHOUT_INVALID']
     elif last_punch[1] == "in":
-        REPO.add_punch("out", comment)
+        REPO.add_punch(PunchType.OUT, comment)
         output = config.MESSAGES['PUNCHIN_SUCCESS'] + '\n'
         output += presenter.format_entry(REPO.add_entry())
         return output

@@ -1,3 +1,12 @@
+from dotenv import load_dotenv
+from enum import Enum
+
+import os
+
+load_dotenv() 
+
+DATABASE = os.getenv("DATABASE")
+
 MESSAGES = {
         "ENTRY_SUCCESS":    "Seccessfully added Entry",
         "ENTRY_FAIL":       "Entry was NOT added",
@@ -21,3 +30,19 @@ TRACKER = {
         "MAX_WORK_WEEK_DAYS":   0,
         "HOURS_PER_DAY":        0
         }
+
+SQL = {
+        'create_punch_table': "./SqlScripts/CreatePunchTable.sql",
+        'create_entry_table': "./SqlScripts/CreateEntryTable.sql",
+        'LAST_PUNCH':         "./SqlScripts/GetLastPunch.sql",
+        'INSERT_PUNCH':  "./SqlScripts/InsertPunch.sql",
+        'INSERT_ENTRY':  "./SqlScripts/InsertEntry.sql",
+        'TODAY':  "./SqlScripts/GetTodayEntry.sql",
+        'WEEK':  "./SqlScripts/GetWeekEntry.sql",
+        'MONTH':  "./SqlScripts/GetMonthEntry.sql",
+        'LAST_ENTRY':  "./SqlScripts/GetLastEntry.sql",
+}
+
+class PunchType(Enum):
+    OUT = "out"
+    IN  = "in"
