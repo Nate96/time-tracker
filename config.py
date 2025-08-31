@@ -8,12 +8,13 @@ load_dotenv()
 DATABASE = os.getenv("DATABASE")
 
 MESSAGES = {
+        "NO_DB": "No Database Defined, please define DATABASE .env",
+        "PUNCHOUT_SUCCESS": "Seccessfully punched out",
         "ENTRY_SUCCESS":    "Seccessfully added Entry",
         "ENTRY_FAIL":       "Entry was NOT added",
         "INVALID_INPUT":    "In-vaild input. Refer to index.md in the 'How to Use' section",
         "INVALID_DURATION": "In-valid duration please referr to index.md",
         "PUNCHIN_SUCCESS":  "Seccessfully punched in",
-        "PUNCHOUT_SUCCESS": "Seccessfully punched out",
         "PUNCHIN_INVALID":  "Already Punched in",
         "PUNCHOUT_INVALID": "Already Punched out",
         "NO_ENTRIES":       "There is no entries",
@@ -43,6 +44,15 @@ SQL = {
         'LAST_ENTRY':  "./SqlScripts/GetLastEntry.sql",
 }
 
+
 class PunchType(Enum):
-    OUT = "out"
-    IN  = "in"
+    OUT     = "out"
+    IN      = "in"
+
+class Res(Enum):
+    NO_DB            = 0
+    SEC_PUNCH        = 1
+    INVAIL_IN_PUNCH  = 2
+    INVAIL_OUT_PUNCH = 3
+    NO_PUNCH         = 4
+    DB_ERROR         = 5

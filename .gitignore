@@ -4,6 +4,6 @@ Log.db
 results.txt
 bin/
 obj/
-config.py
 
 .env
+.env.test

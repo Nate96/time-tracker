@@ -1,5 +1,6 @@
 from datetime import datetime
-from config import PunchType
+from config import PunchType, Res
+from repository import Punch, Entry 
 
 import repository
 import presenter
@@ -9,49 +10,28 @@ import config
 REPO = repository
 
 
-def punch_in(comment):
-    """punch in
-    punches the user in
+def punch_in(comment: str) -> Res:
+    last_punch: Punch = REPO.get_last_punch()
 
-    Parameters:
-    comment: comment linked to the punch
+    if last_punch.id == -1 or last_punch.type == PunchType.OUT.value:
+        REPO.add_punch(Punch(PunchType.IN.value, comment))
+        return Res.SEC_PUNCH
+    return Res.INVAIL_IN_PUNCH
 
-    Returns:
-    str: a messages of the results of the process
-    """
-    last_punch = REPO.get_last_punch()
 
-    if last_punch is None or last_punch[1] == "out":
-        return presenter.format_punch(REPO.add_punch(PunchType.IN, comment))
-    elif last_punch[1] == "in":
-        return config.MESSAGES['PUNCHIN_INVALID']
+def punch_out(comment: str) -> Res:
+    last_punch: Punch = REPO.get_last_punch()
+
+    if last_punch.id == -1:
+        return Res.NO_PUNCH 
+    elif last_punch.type == "out":
+        return Res.INVAIL_OUT_PUNCH
+    elif last_punch.type == "in":
+        REPO.add_punch(Punch(PunchType.OUT.value, comment))
+        REPO.add_entry()
+        return Res.SEC_PUNCH
     else:
-        return config.MESSAGES['REFER_LOG']
-
-
-def punch_out(comment):
-    """punch out
-    punches the user out
-
-    Parameters:
-    comment: comment linked to the punch
-
-    Returns:
-    The most recent punch
-    """
-    last_punch = REPO.get_last_punch()
-
-    if last_punch is None:
-        return config.MESSAGES['NO_PUNCHES']
-    elif last_punch[1] == "out":
-        return config.MESSAGES['PUNCHOUT_INVALID']
-    elif last_punch[1] == "in":
-        REPO.add_punch(PunchType.OUT, comment)
-        output = config.MESSAGES['PUNCHIN_SUCCESS'] + '\n'
-        output += presenter.format_entry(REPO.add_entry())
-        return output
-    else:
-        return config.MESSAGES['ENTRY_FAIL']
+        return Res.DB_ERROR 
 
 
 def status():
