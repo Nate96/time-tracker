@@ -48,10 +48,11 @@ SQL = {
 class PunchType(Enum):
     OUT     = "out"
     IN      = "in"
-    INVALID = "invalid"
 
 class Res(Enum):
-    NO_DB        = 0
-    SEC_PUNCH    = 1
-    INVAIL_PUNCH = 2
-    UNKNOWN      = 3
+    NO_DB            = 0
+    SEC_PUNCH        = 1
+    INVAIL_IN_PUNCH  = 2
+    INVAIL_OUT_PUNCH = 3
+    NO_PUNCH         = 4
+    DB_ERROR         = 5

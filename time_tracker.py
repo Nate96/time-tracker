@@ -13,29 +13,25 @@ REPO = repository
 def punch_in(comment: str) -> Res:
     last_punch: Punch = REPO.get_last_punch()
 
-    if last_punch is None or last_punch.type == PunchType.OUT.value:
-        REPO.add_punch(Punch(PunchType.INVALID.value, comment))
+    if last_punch.id == -1 or last_punch.type == PunchType.OUT.value:
+        REPO.add_punch(Punch(PunchType.IN.value, comment))
         return Res.SEC_PUNCH
+    return Res.INVAIL_IN_PUNCH
+
+
+def punch_out(comment: str) -> Res:
+    last_punch: Punch = REPO.get_last_punch()
+
+    if last_punch.id == -1:
+        return Res.NO_PUNCH 
+    elif last_punch.type == "out":
+        return Res.INVAIL_OUT_PUNCH
     elif last_punch.type == "in":
-        return Res.INVAIL_PUNCH
+        REPO.add_punch(Punch(PunchType.OUT.value, comment))
+        REPO.add_entry()
+        return Res.SEC_PUNCH
     else:
-        return Res.UNKNOWN 
-
-
-def punch_out(comment):
-    last_punch = REPO.get_last_punch()
-
-    if last_punch is None:
-        return config.MESSAGES['NO_PUNCHES']
-    elif last_punch[1] == "out":
-        return config.MESSAGES['PUNCHOUT_INVALID']
-    elif last_punch[1] == "in":
-        REPO.add_punch(PunchType.OUT, comment)
-        output = config.MESSAGES['PUNCHIN_SUCCESS'] + '\n'
-        output += presenter.format_entry(REPO.add_entry())
-        return output
-    else:
-        return config.MESSAGES['ENTRY_FAIL']
+        return Res.DB_ERROR 
 
 
 def status():

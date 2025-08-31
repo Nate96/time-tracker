@@ -28,6 +28,8 @@ class Entry():
 
 
 def add_punch(punch: Punch) -> None: 
+    create_tables()
+
     con = sqlite3.connect(f'{DATABASE}')
     con.cursor().execute(_sql_script(SQL['INSERT_PUNCH']),
                          (
@@ -42,6 +44,8 @@ def add_punch(punch: Punch) -> None:
 
 
 def add_entry() -> Entry: 
+    create_tables()
+
     con = sqlite3.connect(f'{DATABASE}')
     con.cursor().execute(_sql_script(SQL['INSERT_ENTRY']))
 
@@ -73,6 +77,8 @@ def get_entries(duration) -> list[Entry]:
 
 
 def get_last_punch() -> Punch: 
+    create_tables()
+
     con = sqlite3.connect(f'{DATABASE}')
     res = con.cursor().execute(_sql_script(SQL['LAST_PUNCH'])).fetchone()
     con.close()
@@ -102,3 +108,5 @@ def create_tables():
     cur.execute(_sql_script(SQL['create_punch_table']))
     cur.execute(_sql_script(SQL['create_entry_table']))
 
+    conn.commit()
+    conn.close()
