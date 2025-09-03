@@ -11,15 +11,21 @@ REPO = repository
 
 
 def punch_in(comment: str) -> Res:
+    '''
+    Returns SEC_PUNCH OR INVAILID_IN_PUNCH
+    '''
     last_punch: Punch = REPO.get_last_punch()
 
     if last_punch.id == -1 or last_punch.type == PunchType.OUT.value:
         REPO.add_punch(Punch(PunchType.IN.value, comment))
-        return Res.SEC_PUNCH
+        return Res.SEC_PUNCH_IN
     return Res.INVAIL_IN_PUNCH
 
 
 def punch_out(comment: str) -> Res:
+    '''
+    Returns NO_PUNCH, INVAID_OUT, SEC_PUNCH, DB.ERROR
+    '''
     last_punch: Punch = REPO.get_last_punch()
 
     if last_punch.id == -1:
@@ -29,7 +35,7 @@ def punch_out(comment: str) -> Res:
     elif last_punch.type == "in":
         REPO.add_punch(Punch(PunchType.OUT.value, comment))
         REPO.add_entry()
-        return Res.SEC_PUNCH
+        return Res.SEC_PUNCH_OUT
     else:
         return Res.DB_ERROR 
 

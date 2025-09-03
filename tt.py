@@ -1,11 +1,12 @@
-#!/user/bin/env ython3
+#!/user/bin/env Python3
 
 import argparse
 import time_tracker
-import config
+from config import Res, MESSAGES
 
 if __name__ == '__main__':
     args = None
+    punch_clock = time_tracker
 
     parser = argparse.ArgumentParser(
                         prog='Time Tracker',
@@ -19,14 +20,16 @@ if __name__ == '__main__':
     args = parser.parse_args(args)
 
     if args.one == "i":
-        print(time_tracker.punch_in(args.two))
+        res: Res = punch_clock.punch_in(args.two)
+        print(MESSAGES[res])
     elif args.one == "o":
-        print(time_tracker.punch_out(args.two))
+        res: Res = punch_clock.punch_out(args.two)
+        print(MESSAGES[res])
     elif args.one == "show":
-        print(time_tracker.show_entrie(args.two))
+        print(punch_clock.show_entrie(args.two))
     elif args.one == "status":
-        print(time_tracker.status())
+        print(punch_clock.status())
     elif args.one == "report":
-        print(time_tracker.report(args.two))
+        print(punch_clock.report(args.two))
     else:
-        print(config.MESSAGES["INVALID_COMMNAD"])
+        print(MESSAGES["INVALID_COMMNAD"])

@@ -2,7 +2,6 @@ import time_tracker
 import os
 
 from config import Res, DATABASE
-from repository import Punch
 
 punch_clock = time_tracker
 
@@ -16,22 +15,22 @@ def test_adding_punches():
     assert punch_clock.punch_out("test") == Res.NO_PUNCH
 
     # VERIFY punch_in returns a Res of SEC_PUNCH
-    assert punch_clock.punch_in("test") == Res.SEC_PUNCH
+    assert punch_clock.punch_in("test") == Res.SEC_PUNCH_IN
 
     # GIVEN last punch type is "in"
     # VERIFY punch_in returns a Res of INVAIL_IN_PUNCH
     assert time_tracker.punch_in("test") == Res.INVAIL_IN_PUNCH
 
-    # VERIFY punch_out returns a Res of SEC_PUNCH
+    # VERIFY punch_out returns a Res of SEC_PUNCH_OUT
     res = punch_clock.punch_out("test")
-    assert res == Res.SEC_PUNCH
+    assert res == Res.SEC_PUNCH_OUT
 
     # GIVEN last punch type is "out"
     # VERIFY punch_out returns a Res of INVAIL_OUT_PUNCH
     res = punch_clock.punch_out("test")
     assert res == Res.INVAIL_OUT_PUNCH
 
-    # VERIFY punch_in returns a Res of SEC_PUNCH
+    # VERIFY punch_in returns a Res of SEC_PUNCH_IN
     res = punch_clock.punch_in("test")
-    assert res == Res.SEC_PUNCH
+    assert res == Res.SEC_PUNCH_IN
 
