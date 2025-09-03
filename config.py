@@ -52,6 +52,8 @@ SQL = {
         'WEEK':  "./SqlScripts/GetWeekEntry.sql",
         'MONTH':  "./SqlScripts/GetMonthEntry.sql",
         'LAST_ENTRY':  "./SqlScripts/GetLastEntry.sql",
+        'SHOW_ENTRIES':  "./SqlScripts/ShowEntries.sql",
+
 }
 
 
