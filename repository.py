@@ -73,7 +73,17 @@ def get_entries(duration) -> list[Entry]:
 
     con.close()
 
-    return res
+    entries: list[Entry] = []
+
+    for item in res:
+        entries.append(Entry(
+            id = item[0],
+            in_punch=item[1],
+            out_punch=item[2],
+            total_time=item[3],
+            title=item[4],
+            comment=item[5]))
+    return entries
 
 
 def get_last_punch() -> Punch: 

@@ -8,25 +8,25 @@ load_dotenv()
 DATABASE = os.getenv("DATABASE")
 
 class Res(Enum):
-    NO_DB            = 0
-    SEC_PUNCH_IN     = 1
-    INVAIL_IN_PUNCH  = 2
-    INVAIL_OUT_PUNCH = 3
-    NO_PUNCH         = 4
-    DB_ERROR         = 5
-    SEC_PUNCH_OUT    = 6
+    NO_DB    = 0
+    SEC_IN   = 1
+    IN       = 2
+    OUT      = 3
+    NO_PUNCH = 4
+    DB_ERROR = 5
+    SEC_OUT  = 6
 
 MESSAGES = {
+        Res.SEC_IN:  "Seccessfully punched in",
+        Res.IN:      "Already Punched in",
+        Res.SEC_OUT: "Seccessfully punched out",
+        Res.OUT:     "Already Punched out",
         # "NO_DB": "No Database Defined, please define DATABASE .env",
         # "PUNCHOUT_SUCCESS": "Seccessfully punched out",
         # "ENTRY_SUCCESS":    "Seccessfully added Entry",
         # "ENTRY_FAIL":       "Entry was NOT added",
         # "INVALID_INPUT":    "In-vaild input. Refer to index.md in the 'How to Use' section",
         # "INVALID_DURATION": "In-valid duration please referr to index.md",
-        Res.SEC_PUNCH_IN:     "Seccessfully punched in",
-        Res.INVAIL_IN_PUNCH:  "Already Punched in",
-        Res.SEC_PUNCH_OUT:    "Seccessfully punched out",
-        Res.INVAIL_OUT_PUNCH: "Already Punched out",
         # "NO_ENTRIES":       "There is no entries",
         # "INVALID_STATE":    "Database is NOT in the correct state to perfome action",
         # "NO_PUNCHES":       "There are no punches",

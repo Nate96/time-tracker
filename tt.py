@@ -1,8 +1,11 @@
 #!/user/bin/env Python3
 
 import argparse
+from time import time
 import time_tracker
+
 from config import Res, MESSAGES
+from time_tracker import State
 
 if __name__ == '__main__':
     args = None
@@ -26,9 +29,20 @@ if __name__ == '__main__':
         res: Res = punch_clock.punch_out(args.two)
         print(MESSAGES[res])
     elif args.one == "show":
-        print(punch_clock.show_entrie(args.two))
+        print(time_tracker.show_entries())
     elif args.one == "status":
         print(punch_clock.status())
+        rsl: State = time_tracker.status()
+        print(MESSAGES[rsl.res])
+
+        if rsl.res == Res.IN:
+            print(f'Punched in For:  {rsl.get_punched_in_for()}')
+            print(rsl.last_punch)
+        else:
+            print(rsl.last_entry)
+
+        print(f'Day:             {rsl.get_day_total()} hours')
+        print(f'Week:            {rsl.get_day_total()} hours')
     elif args.one == "report":
         print(punch_clock.report(args.two))
     else:
