@@ -17,10 +17,11 @@ class Res(Enum):
     SEC_OUT  = 6
 
 MESSAGES = {
-        Res.SEC_IN:  "Seccessfully punched in",
-        Res.IN:      "Already Punched in",
-        Res.SEC_OUT: "Seccessfully punched out",
-        Res.OUT:     "Already Punched out",
+        Res.SEC_IN:   "Seccessfully punched in",
+        Res.IN:       "Already Punched in",
+        Res.SEC_OUT:  "Seccessfully punched out",
+        Res.OUT:      "Already Punched out",
+        Res.NO_PUNCH: "No punches"
         # "NO_DB": "No Database Defined, please define DATABASE .env",
         # "PUNCHOUT_SUCCESS": "Seccessfully punched out",
         # "ENTRY_SUCCESS":    "Seccessfully added Entry",
