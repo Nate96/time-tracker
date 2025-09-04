@@ -1,7 +1,7 @@
 #!/user/bin/env Python3
 
 import argparse
-from time import time
+import presenter
 import time_tracker
 
 from config import Res, MESSAGES
@@ -25,25 +25,26 @@ if __name__ == '__main__':
     if args.one == "i":
         res: Res = punch_clock.punch_in(args.two)
         print(MESSAGES[res])
+        print(presenter.show_last_punch())
     elif args.one == "o":
         res: Res = punch_clock.punch_out(args.two)
         print(MESSAGES[res])
+        print(presenter.show_last_entry())
     elif args.one == "show":
-        print(time_tracker.show_entries())
+        print(presenter.show_entries())
     elif args.one == "status":
-        print(punch_clock.status())
         rsl: State = time_tracker.status()
         print(MESSAGES[rsl.res])
 
-        if rsl.res == Res.IN:
-            print(f'Punched in For:  {rsl.get_punched_in_for()}')
-            print(rsl.last_punch)
-        else:
-            print(rsl.last_entry)
-
-        print(f'Day:             {rsl.get_day_total()} hours')
-        print(f'Week:            {rsl.get_day_total()} hours')
+        if rsl.res != Res.NO_PUNCH:
+            if  rsl.res == Res.IN:
+                print(presenter.show_punch(rsl.last_punch), '\n')
+                print(f'For:  {rsl.get_punched_in_for()} hours')
+            else:
+                print(presenter.show_entry(rsl.last_entry), '\n')
+            print(f'Day:  {rsl.get_day_total()} hours')
+            print(f'Week: {rsl.get_day_total()} hours')
     elif args.one == "report":
         print(punch_clock.report(args.two))
     else:
-        print(MESSAGES["INVALID_COMMNAD"])
+        print(MESSAGES[Res.INVALID_COMMAND])

@@ -1,11 +1,9 @@
 from datetime import datetime
-from config import DATABASE, PunchType, Res
-from repository import Punch, Entry 
+from config import PunchType, Res
+from repository import Punch 
 
 import repository
-import presenter
 import config
-import os
 
 
 REPO = repository
@@ -14,7 +12,7 @@ class State():
     def __init__(self, res: Res):
         self.res = res
         self.last_punch = REPO.get_last_punch()
-        self.last_entry = REPO.get_entries('last')
+        self.last_entry = REPO.get_last_entry()
 
     def get_punched_in_for(self) -> float:
         # last_punch_time = datetime.fromisoformat()
@@ -79,11 +77,7 @@ def status() -> State:
         return State(Res.OUT)
     return State(Res.IN)
 
-def show_entries() -> None:
-    '''runs sql quries in terminal '''
-    print("debug")
-    os.system(f"sqlite3 {DATABASE} {'SELECT * FROM Entry;'}")
-
+# def show_entries() -> None:
 
 
 def report(duration):

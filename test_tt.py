@@ -56,6 +56,8 @@ def test_status():
     # VERIFY status returns a state with OUT
     assert time_tracker.status().res == Res.OUT
 
+    # Delete Databse
+    os.remove(f'{DATABASE}')
     
 
 
