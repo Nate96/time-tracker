@@ -64,8 +64,8 @@ def format_entries(entries):
 
     return output
 
-def show_entries(): REPO.print_entries()
+def show_entries()-> None: REPO.print_entries()
 
-def show_last_punch(): return show_punch(REPO.get_last_punch())
+def show_last_punch()-> str: return show_punch(REPO.get_last_punch())
 
-def show_last_entry(): return show_entry(REPO.get_entries("last")[0])
+def show_last_entry()-> str: return show_entry(REPO.get_entries("last")[0])
