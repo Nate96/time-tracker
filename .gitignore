@@ -4,3 +4,7 @@ Log.db
 results.txt
 bin/
 obj/
+
+.env
+.env.test
+test.db
