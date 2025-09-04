@@ -2,14 +2,14 @@
 # ISSUE: Create Table sql scirpt has two commands and python
 #        does not support this.
 
-from sqlite3.dbapi2 import Connection
-from config import DATABASE, SQL, PunchType
+from config import DATABASE, SQL
 from datetime import datetime
 
 import sqlite3
+import os
 
 class Punch():
-    def __init__(self, punch_type: str, comment: str, time_stamp=None, id=0):
+    def __init__(self, punch_type: str, comment: str, time_stamp=datetime.now(), id=0):
         self.id         = id
         self.type       = punch_type
         self.time_stamp = time_stamp
@@ -42,7 +42,6 @@ def add_punch(punch: Punch) -> None:
     punch.time_stamp = datetime.now()
 
 
-
 def add_entry() -> Entry: 
     create_tables()
 
@@ -55,10 +54,22 @@ def add_entry() -> Entry:
     con.close()
 
     return Entry(res[0], res[1], res[2], res[3], res[4], res[5])
+
+
+def get_last_entry() -> Entry:
+    create_tables()
+    con = sqlite3.connect(f'{DATABASE}')
+    res = con.cursor().execute(_sql_script(SQL['LAST_ENTRY'])).fetchone()
+
+    print(res)
+
+    if res:
+        return Entry(res[0], res[1], res[2], res[3], res[4], res[5])
+    else:
+        return Entry(-1, datetime.now(), datetime.now(), 0.0, "", "")
             
 
-
-def get_entries(duration) -> list[Entry]:
+def get_entries(duration: str) -> list[Entry]:
     con = sqlite3.connect(f'{DATABASE}')
     cur = con.cursor()
 
@@ -68,12 +79,29 @@ def get_entries(duration) -> list[Entry]:
         res = cur.execute(_sql_script(SQL['WEEK'])).fetchall()
     elif duration == "month":
         res = cur.execute(_sql_script(SQL['MONTH'])).fetchall()
+    elif duration == "last":
+        res = cur.execute(_sql_script(SQL['LAST_ENTRY'])).fetchall()
     else:
+        con.close()
         return [Entry(-1, datetime.now(), datetime.now(), 0.0, "", "")]
 
-    con.close()
+    if res is None:
+        con.close()
+        return [Entry(-1, datetime.now(), datetime.now(), 0.0, "", "")]
 
-    return res
+    entries: list[Entry] = []
+
+    for item in res:
+        entries.append(Entry(
+            id = item[0],
+            in_punch=item[1],
+            out_punch=item[2],
+            total_time=item[3],
+            title=item[4],
+            comment=item[5]))
+
+    con.close()
+    return entries
 
 
 def get_last_punch() -> Punch: 
@@ -88,6 +116,9 @@ def get_last_punch() -> Punch:
 
     return Punch(res[1], res[3], time_stamp=res[2], id=res[0])
 
+
+def print_entries():
+    os.system(f'sqlite3 {DATABASE} -cmd \".mode column\" \" SELECT * FROM entry;\"')
 
 
 def _sql_script(file_path: str) -> str:

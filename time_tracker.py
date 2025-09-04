@@ -1,82 +1,83 @@
 from datetime import datetime
 from config import PunchType, Res
-from repository import Punch, Entry 
+from repository import Punch 
 
 import repository
-import presenter
 import config
 
 
 REPO = repository
 
+class State():
+    def __init__(self, res: Res):
+        self.res = res
+        self.last_punch = REPO.get_last_punch()
+        self.last_entry = REPO.get_last_entry()
+
+    def get_punched_in_for(self) -> float:
+        # last_punch_time = datetime.fromisoformat()
+        # delta_time = datetime.now() - last_punch_time
+
+        return 0.0 # delta_time.total_seconds() / 3600
+    
+    def get_day_total(self) -> float:
+        return 0.0
+
+    def get_week_total(self) -> float:
+        week_entries = REPO.get_entries("week")
+
+        total_week_hours = 0
+        for entry in week_entries:
+            total_week_hours += float()
+
+        return round(total_week_hours, 2)
+
+
+
 
 def punch_in(comment: str) -> Res:
+    '''
+    Returns SEC_PUNCH OR INVAILID_IN_PUNCH
+    '''
     last_punch: Punch = REPO.get_last_punch()
 
     if last_punch.id == -1 or last_punch.type == PunchType.OUT.value:
         REPO.add_punch(Punch(PunchType.IN.value, comment))
-        return Res.SEC_PUNCH
-    return Res.INVAIL_IN_PUNCH
+        return Res.SEC_IN
+    return Res.IN
 
 
 def punch_out(comment: str) -> Res:
+    '''
+    Returns NO_PUNCH, INVAID_OUT, SEC_PUNCH, DB.ERROR
+    '''
     last_punch: Punch = REPO.get_last_punch()
 
     if last_punch.id == -1:
         return Res.NO_PUNCH 
     elif last_punch.type == "out":
-        return Res.INVAIL_OUT_PUNCH
+        return Res.OUT
     elif last_punch.type == "in":
         REPO.add_punch(Punch(PunchType.OUT.value, comment))
         REPO.add_entry()
-        return Res.SEC_PUNCH
+        return Res.SEC_OUT
     else:
         return Res.DB_ERROR 
 
 
-def status():
+def status() -> State:
     '''
-    Presents the current status of the given databse in the following format
-
-    Status of Database
-
-    Day:  {} hours
-    Week: {} hours "-/+"{}
+    Returns NO_PUNCH, OUT, IN 
     '''
-    last_punch = REPO.get_last_punch()
-    week_hours = _get_week_total()
+    last_punch: Punch = REPO.get_last_punch()
 
-    if last_punch is None:
-        return config.MESSAGES['NO_PUNCHES']
+    if last_punch.id == -1:
+        return State(Res.NO_PUNCH)
+    elif last_punch.type == PunchType.OUT.value: 
+        return State(Res.OUT)
+    return State(Res.IN)
 
-    if last_punch[1] == "in":
-        last_punch_time = datetime.fromisoformat(last_punch[2])
-        delta_time = datetime.now() - last_punch_time
-        delta_time = delta_time.total_seconds() / 3600
-        return f'''---------------------
-Punched in for: {round(delta_time, 2)} hours
-{presenter.format_punch(last_punch)}
-
-Day:  {_get_day_total()} Hours
-Week: {week_hours} Hours {_over_under(week_hours)}
-'''
-    elif last_punch[1] == "out":
-        return f'''---------------------
-currenlty clocked out
-
-Day:  {_get_day_total()} Hours
-Week: {week_hours} Hours {_over_under(week_hours)}
-'''
-
-
-def show_entrie(duration):
-    '''Show Entires:
-    Show Entries for the given Duration in the following format
-    Entry{}
-
-    Total Hours: {}
-    '''
-    return presenter.format_entries(REPO.get_entries(duration))
+# def show_entries() -> None:
 
 
 def report(duration):
@@ -114,25 +115,6 @@ Sunday:     {week_hours[6]} hours
 Total:      {total_hours} hours {_over_under(total_hours)}
 '''
 
-
-def _get_day_total():
-    day_entries = REPO.get_entries("day")
-
-    total_day_hours = 0
-    for entry in day_entries:
-        total_day_hours += float(entry[3])
-
-    return round(total_day_hours, 2)
-
-
-def _get_week_total():
-    week_entries = REPO.get_entries("week")
-
-    total_week_hours = 0
-    for entry in week_entries:
-        total_week_hours += float(entry[3])
-
-    return round(total_week_hours, 2)
 
 
 def _over_under(hours):
