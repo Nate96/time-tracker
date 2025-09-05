@@ -61,8 +61,6 @@ def get_last_entry() -> Entry:
     con = sqlite3.connect(f'{DATABASE}')
     res = con.cursor().execute(_sql_script(SQL['LAST_ENTRY'])).fetchone()
 
-    print(res)
-
     if res:
         return Entry(res[0], res[1], res[2], res[3], res[4], res[5])
     else:

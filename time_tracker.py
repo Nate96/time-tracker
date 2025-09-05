@@ -39,6 +39,7 @@ def punch_in(comment: str) -> Res:
     '''
     Returns SEC_PUNCH OR INVAILID_IN_PUNCH
     '''
+    # NOTE: does not have id
     last_punch: Punch = REPO.get_last_punch()
 
     if last_punch.id == -1 or last_punch.type == PunchType.OUT.value:

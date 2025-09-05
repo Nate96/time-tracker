@@ -8,3 +8,6 @@ obj/
 .env
 .env.test
 test.db
+
+.coverage
+time_tracker.egg-info/
