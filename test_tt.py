@@ -100,29 +100,16 @@ def test_entries():
     punch_clock.punch_out("Test")
 
     # VERIFY the length of res is 2 for day
-    res = REPO.get_entries("day")
+    res = punch_clock.get_entries("day")
     assert len(res) == 2
 
     # VERIFY the length of res is 2 for week
-    res = REPO.get_entries("week")
+    res = punch_clock.get_entries("week")
     assert len(res) == 2
 
     # VERIFY the length of res is 2 for month
-    res = REPO.get_entries("month")
+    res = punch_clock.get_entries("month")
     assert len(res) == 2
-    
-    
 
-
-
-
-
-
-
-
-
-
-
-    
-
-
+    # VERIFY get_entries returns an empty list when INVALID_INTPUT 
+    assert punch_clock.get_entries("test") == []

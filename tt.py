@@ -2,7 +2,9 @@
 
 import argparse
 import presenter
+from repository import Entry
 import time_tracker
+import repository
 
 from config import Res, MESSAGES
 from time_tracker import State
@@ -33,7 +35,12 @@ if __name__ == '__main__':
         print(presenter.show_last_entry())
 
     elif args.one == "show":
-        print(presenter.print_entries())
+        entires: list[Entry] = time_tracker.get_entries(args.two)
+
+        if not entires:
+            print(Res.NO_PUNCH)
+        else:
+            print(presenter.show_entries(entires))
 
     elif args.one == "status":
         rsl: State = time_tracker.status()

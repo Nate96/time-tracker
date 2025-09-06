@@ -40,31 +40,9 @@ def show_entry(entry: Entry) -> str:
     return f"{HEADER}{in_formatted} - {out_formatted}, {round(entry.total_time, 2)} Hours\n{entry.title}\n{entry.comment}"
 
 
-def format_entries(entries):
-    """format entry
-    converts a tuple of a punch into a string
-
-    Parameters:
-    List(Entry(id, in_punch_datatime, out_punch_datetime, total_time, task_name, task_comment))
-
-    Returns:
-    ---Entry---
-    {in_punch_datetime} - {out_punch_time} {total_time} Hours
-    {task_name}
-    {task_comment}
-    --End--
-    """
-    output = ''
+def show_entries(entries: list[Entry]):
     for entry in entries:
-        in_time = datetime.strptime(entry[1], INPUT_FORMAT)
-        format_in_time = in_time.strftime(DATE_TIME_FORMAT)
-
-        out_time = datetime.strptime(entry[2], INPUT_FORMAT)
-        format_out_time = out_time.strftime(TIME_FORMAT)
-
-        output += f"{format_in_time} - {format_out_time} {round(entry[3], 2)} Hours\n{entry[4]}\n{entry[5]}"
-
-    return output
+        print(entry.id, entry.in_punch, entry.out_punch, entry.total_time, entry.title, entry.comment)
 
 def show_last_punch()-> str: return show_punch(REPO.get_last_punch())
 

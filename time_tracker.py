@@ -1,11 +1,9 @@
-from os import sendfile
+from typing import List
 import repository
 
-from datetime import date, datetime
+from datetime import datetime
 from config import PunchType, Res
 from repository import Punch, Entry
-
-
 
 REPO = repository
 FORMAT_STRING = "%Y-%m-%d %H:%M:%S"
@@ -75,6 +73,15 @@ def status() -> State:
     elif last_punch.type == PunchType.OUT.value: 
         return State(Res.OUT)
     return State(Res.IN)
+
+def get_entries(duration: str) -> list[Entry]:
+    if duration == "day":
+        return REPO.get_entries(duration)
+    elif duration == "week":
+        return REPO.get_entries(duration)
+    elif duration == "month":
+        return REPO.get_entries(duration)
+    else: return [] 
 
 # def show_entries() -> None:
 
