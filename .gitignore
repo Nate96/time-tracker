@@ -5,7 +5,7 @@ results.txt
 bin/
 obj/
 
-test.db
+timesheet.db
 
 .coverage
 time_tracker.egg-info/
