@@ -6,7 +6,6 @@ from config import DATABASE, SQL
 from datetime import datetime
 
 import sqlite3
-import os
 
 class Punch():
     def __init__(self, punch_type: str, comment: str, time_stamp=datetime.now(), id=0):
@@ -68,8 +67,11 @@ def get_last_entry() -> Entry:
             
 
 def get_entries(duration: str) -> list[Entry]:
+    create_tables()
+
     con = sqlite3.connect(f'{DATABASE}')
     cur = con.cursor()
+    INVAID = Entry(-1, datetime.now(), datetime.now(), 0.0, "", "")
 
     if duration == "day":
         res = cur.execute(_sql_script(SQL['TODAY'])).fetchall()
@@ -77,15 +79,9 @@ def get_entries(duration: str) -> list[Entry]:
         res = cur.execute(_sql_script(SQL['WEEK'])).fetchall()
     elif duration == "month":
         res = cur.execute(_sql_script(SQL['MONTH'])).fetchall()
-    elif duration == "last":
-        res = cur.execute(_sql_script(SQL['LAST_ENTRY'])).fetchall()
     else:
         con.close()
-        return [Entry(-1, datetime.now(), datetime.now(), 0.0, "", "")]
-
-    if res is None:
-        con.close()
-        return [Entry(-1, datetime.now(), datetime.now(), 0.0, "", "")]
+        return [INVAID]
 
     entries: list[Entry] = []
 
@@ -115,8 +111,6 @@ def get_last_punch() -> Punch:
     return Punch(res[1], res[3], time_stamp=res[2], id=res[0])
 
 
-def print_entries():
-    os.system(f'sqlite3 {DATABASE} -cmd \".mode column\" \" SELECT * FROM entry;\"')
 
 
 def _sql_script(file_path: str) -> str:

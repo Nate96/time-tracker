@@ -26,12 +26,15 @@ if __name__ == '__main__':
         res: Res = punch_clock.punch_in(args.two)
         print(MESSAGES[res])
         print(presenter.show_last_punch())
+
     elif args.one == "o":
         res: Res = punch_clock.punch_out(args.two)
         print(MESSAGES[res])
         print(presenter.show_last_entry())
+
     elif args.one == "show":
-        print(presenter.show_entries())
+        print(presenter.print_entries())
+
     elif args.one == "status":
         rsl: State = time_tracker.status()
         print(MESSAGES[rsl.res])
@@ -44,7 +47,9 @@ if __name__ == '__main__':
                 print(presenter.show_entry(rsl.last_entry), '\n')
             print(f'Day:  {rsl.get_day_total()} hours')
             print(f'Week: {rsl.get_day_total()} hours')
+
     elif args.one == "report":
-        print(punch_clock.report(args.two))
+        print(presenter.report(args.two))
+
     else:
         print(MESSAGES[Res.INVALID_COMMAND])

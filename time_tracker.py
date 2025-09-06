@@ -1,38 +1,38 @@
-from datetime import datetime
-from config import PunchType, Res
-from repository import Punch 
-
+from os import sendfile
 import repository
-import config
+
+from datetime import date, datetime
+from config import PunchType, Res
+from repository import Punch, Entry
+
 
 
 REPO = repository
+FORMAT_STRING = "%Y-%m-%d %H:%M:%S"
 
 class State():
     def __init__(self, res: Res):
         self.res = res
-        self.last_punch = REPO.get_last_punch()
-        self.last_entry = REPO.get_last_entry()
+        self.last_punch: Punch = REPO.get_last_punch()
+        self.last_entry: Entry = REPO.get_last_entry()
 
     def get_punched_in_for(self) -> float:
-        # last_punch_time = datetime.fromisoformat()
-        # delta_time = datetime.now() - last_punch_time
+        in_time: datetime = datetime.strptime(str(self.last_punch.time_stamp), FORMAT_STRING)
+        return round((datetime.now() - in_time).total_seconds() / 3600, 2)
 
-        return 0.0 # delta_time.total_seconds() / 3600
-    
+
     def get_day_total(self) -> float:
-        return 0.0
+        return self._get_total(REPO.get_entries("day"))
 
     def get_week_total(self) -> float:
-        week_entries = REPO.get_entries("week")
+        return self._get_total(REPO.get_entries("week"))
 
-        total_week_hours = 0
-        for entry in week_entries:
-            total_week_hours += float()
+    def _get_total(self, entries: list[Entry]):
+        total: float = 0
 
-        return round(total_week_hours, 2)
-
-
+        for ent in entries: 
+            total += ent.total_time
+        return round(total, 2)
 
 
 def punch_in(comment: str) -> Res:
@@ -58,12 +58,10 @@ def punch_out(comment: str) -> Res:
         return Res.NO_PUNCH 
     elif last_punch.type == "out":
         return Res.OUT
-    elif last_punch.type == "in":
+    else: 
         REPO.add_punch(Punch(PunchType.OUT.value, comment))
         REPO.add_entry()
         return Res.SEC_OUT
-    else:
-        return Res.DB_ERROR 
 
 
 def status() -> State:
@@ -80,59 +78,3 @@ def status() -> State:
 
 # def show_entries() -> None:
 
-
-def report(duration):
-    '''Report
-    Show stats of the given week in the following format
-    Monday:     {} hours
-    Tuesday:    {} hours
-    Wednesday:  {} hours
-    Thursday:   {} hours
-    Friday:     {} hours
-    Saturday:   {} hours
-    Sunday:     {} hours
-    ---------------------
-    Total:      {} hours
-    '''
-    entries = REPO.get_entries("week")
-    week_hours = [0] * 7
-    total_hours = 0
-
-    for entry in entries:
-        dt = datetime.fromisoformat(entry[2])
-        day_of_week = dt.weekday()
-        week_hours[day_of_week] += float(entry[3])
-        total_hours += float(entry[3])
-
-    return f'''---------------------
-Monday:     {week_hours[0]} hours
-Tuesday:    {week_hours[1]} hours
-Wednesday:  {week_hours[2]} hours
-Thursday:   {week_hours[3]} hours
-Friday:     {week_hours[4]} hours
-Saturday:   {week_hours[5]} hours
-Sunday:     {week_hours[6]} hours
----------------------
-Total:      {total_hours} hours {_over_under(total_hours)}
-'''
-
-
-
-def _over_under(hours):
-    """over under
-    Calculates the hourse the user is head or behead for the current week
-
-    Paramaters:
-    hours: hours worked for the current week
-
-    Return:
-    int: positive if the user is ahead and negative when the user is behind
-    """
-    day_of_week: int = (datetime.today().weekday() + 1)
-
-    if day_of_week <= config.TRACKER["MAX_WORK_WEEK_DAYS"]:
-        projected_hours = day_of_week * config.TRACKER["HOURS_PER_DAY"]
-    else:
-        projected_hours = config.TRACKER["MAX_WORK_WEEK_HOURS"]
-
-    return hours - projected_hours

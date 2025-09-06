@@ -1,10 +1,15 @@
+import repository
 import time_tracker 
 import os
+import time
 
 from config import Res, DATABASE
-from time_tracker import State, punch_in
+from repository import Entry
+from time_tracker import State
+
 
 punch_clock = time_tracker
+REPO = repository
 
 
 def test_adding_punches():
@@ -58,6 +63,66 @@ def test_status():
 
     # Delete Databse
     os.remove(f'{DATABASE}')
+
+def test_entries():
+    # GIVEN the database is Empty
+    with open(f'{DATABASE}', "w") as file: file.write("")
+
+    # WHEN invalid duration is inputed
+    res: list[Entry] = REPO.get_entries("test")
+
+    # VERIFY the first entry's id is -1
+    assert res[0].id == -1
+
+
+    # WHEN there are 2 entries in the DataBase 
+    punch_clock.punch_in("Test")
+
+    # GIVEN 45 seconds 
+    time.sleep(45)
+    s: State = time_tracker.status()
+    s = time_tracker.status()
+
+    # VERIFY punch_in_for is 0.01, week_total is 0, day_toal is 0 
+    assert s.get_punched_in_for() == 0.01
+    assert s.get_day_total() == 0
+    assert s.get_week_total() == 0
+
+    time.sleep(1)
+    punch_clock.punch_out("Test")
+
+    # VERIFY week_total is 0.01, day_toal is 0.01 
+    assert s.get_day_total() == 0.01
+    assert s.get_week_total() == 0.01
+
+    # GIVEN an Entry is added to the database
+    punch_clock.punch_in("Test")
+    punch_clock.punch_out("Test")
+
+    # VERIFY the length of res is 2 for day
+    res = REPO.get_entries("day")
+    assert len(res) == 2
+
+    # VERIFY the length of res is 2 for week
+    res = REPO.get_entries("week")
+    assert len(res) == 2
+
+    # VERIFY the length of res is 2 for month
+    res = REPO.get_entries("month")
+    assert len(res) == 2
+    
+    
+
+
+
+
+
+
+
+
+
+
+
     
 
 

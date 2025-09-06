@@ -5,7 +5,7 @@ build:
 	uv build
 
 verify:
-	uv run pytest --cov 
+	uv run pytest --cov -s test_tt.py
 
 cov:
 	uv run pytest --cov --cov-report=html
