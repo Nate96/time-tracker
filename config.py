@@ -3,6 +3,8 @@ from enum import Enum
 
 import os
 
+DATE_FORMAT = "%Y-%m-%d %H:%M:%S"
+
 load_dotenv() 
 
 DATABASE = os.getenv("DATABASE")

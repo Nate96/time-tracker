@@ -1,12 +1,9 @@
+import time_sheet
 from datetime import datetime
-from repository import Entry, Punch
-from time_tracker import REPO
-from config import DATABASE
-
-import os
+from punch_clock import Entry, Punch
+from config import TRACKER, Res, DATE_FORMAT, MESSAGES
 
 DATE_TIME_FORMAT = "%A %Y-%m-%d %I:%M %p"
-INPUT_FORMAT = "%Y-%m-%d %H:%M:%S"
 TIME_FORMAT = "%I:%M %p"
 
 HEADER = "==== Entry ====\n"
@@ -17,7 +14,7 @@ def show_punch(punch: Punch) -> str:
     Returns
     string - {datetime}, COMMENT: {comment}
     """
-    temp = datetime.strptime(f'{punch.time_stamp}', INPUT_FORMAT)
+    temp = datetime.strptime(f'{punch.time_stamp}', DATE_FORMAT)
     formatted = temp.strftime(DATE_TIME_FORMAT)
 
     return f"{formatted}, COMMENT: {punch.comment}"
@@ -31,27 +28,29 @@ def show_entry(entry: Entry) -> str:
     {task_name}
     {task_comment}
     """
-    temp = datetime.strptime(f'{entry.in_punch}', INPUT_FORMAT)
+    temp = datetime.strptime(f'{entry.in_punch}', DATE_FORMAT)
     in_formatted = temp.strftime(DATE_TIME_FORMAT)
 
-    temp = datetime.strptime(f'{entry.in_punch}', INPUT_FORMAT)
+    temp = datetime.strptime(f'{entry.in_punch}', DATE_FORMAT)
     out_formatted = temp.strftime(TIME_FORMAT)
 
     return f"{HEADER}{in_formatted} - {out_formatted}, {round(entry.total_time, 2)} Hours\n{entry.title}\n{entry.comment}"
 
 
-def show_entries(entries: list[Entry]):
-    for entry in entries:
-        print(entry.id, entry.in_punch, entry.out_punch, entry.total_time, entry.title, entry.comment)
+def show_entries(duration: str) -> None:
+    entries: list[Entry] = time_sheet.get_entries(duration)
 
-def show_last_punch()-> str: return show_punch(REPO.get_last_punch())
+    if not entries:
+        print(MESSAGES[Res.NO_PUNCH])
+    else:
+        for entry in entries:
+            print(entry.id, entry.in_punch, entry.out_punch, entry.total_time, entry.title, entry.comment)
 
-def show_last_entry()-> str: return show_entry(REPO.get_entries("last")[0])
+def show_last_punch()-> str: return show_punch(time_sheet.get_last_punch())
 
-def print_entries():
-    os.system(f'sqlite3 {DATABASE} -cmd \".mode column\" \" SELECT * FROM entry;\"')
+def show_last_entry()-> str: return show_entry(time_sheet.get_last_entry())
 
-def report(duration):
+def report():
     '''Report
     Show stats of the given week in the following format
     Monday:     {} hours
@@ -64,17 +63,21 @@ def report(duration):
     ---------------------
     Total:      {} hours
     '''
-    entries = REPO.get_entries("week")
-    week_hours = [0] * 7
-    total_hours = 0
+    entries = time_sheet.get_entries("week")
+    if not entries:
+        print(MESSAGES[Res.NO_PUNCH])
+    else:
+        week_hours = [0.0] * 7
+        total_hours = 0
 
-    for entry in entries:
-        dt = datetime.fromisoformat(entry[2])
-        day_of_week = dt.weekday()
-        week_hours[day_of_week] += float(entry[3])
-        total_hours += float(entry[3])
 
-    return f'''---------------------
+        for entry in entries:
+            punch: datetime = datetime.strptime(entry.in_punch, DATE_FORMAT )
+
+            week_hours[punch.weekday()] += float(entry.total_time)
+            total_hours += float(entry.total_time)
+
+        return f'''---------------------
 Monday:     {week_hours[0]} hours
 Tuesday:    {week_hours[1]} hours
 Wednesday:  {week_hours[2]} hours
@@ -98,10 +101,10 @@ def _over_under(hours):
     """
     day_of_week: int = (datetime.today().weekday() + 1)
 
-    if day_of_week <= config.TRACKER["MAX_WORK_WEEK_DAYS"]:
-        projected_hours = day_of_week * config.TRACKER["HOURS_PER_DAY"]
+    if day_of_week <= TRACKER["MAX_WORK_WEEK_DAYS"]:
+        projected_hours = day_of_week * TRACKER["HOURS_PER_DAY"]
     else:
-        projected_hours = config.TRACKER["MAX_WORK_WEEK_HOURS"]
+        projected_hours = TRACKER["MAX_WORK_WEEK_HOURS"]
 
     return hours - projected_hours
 

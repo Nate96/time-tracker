@@ -2,16 +2,14 @@
 
 import argparse
 import presenter
-from repository import Entry
-import time_tracker
-import repository
+import punch_clock
 
 from config import Res, MESSAGES
-from time_tracker import State
+from punch_clock import State
 
 if __name__ == '__main__':
     args = None
-    punch_clock = time_tracker
+    punch_clock = punch_clock
 
     parser = argparse.ArgumentParser(
                         prog='Time Tracker',
@@ -35,15 +33,10 @@ if __name__ == '__main__':
         print(presenter.show_last_entry())
 
     elif args.one == "show":
-        entires: list[Entry] = time_tracker.get_entries(args.two)
-
-        if not entires:
-            print(Res.NO_PUNCH)
-        else:
-            print(presenter.show_entries(entires))
+        presenter.show_entries(args.two)
 
     elif args.one == "status":
-        rsl: State = time_tracker.status()
+        rsl: State = punch_clock.status()
         print(MESSAGES[rsl.res])
 
         if rsl.res != Res.NO_PUNCH:
@@ -56,7 +49,7 @@ if __name__ == '__main__':
             print(f'Week: {rsl.get_day_total()} hours')
 
     elif args.one == "report":
-        print(presenter.report(args.two))
+        print(presenter.report())
 
     else:
         print(MESSAGES[Res.INVALID_COMMAND])

@@ -7,8 +7,14 @@ from datetime import datetime
 
 import sqlite3
 
+INPUT_FORMAT = "%Y-%m-%d %H:%M:%S"
+
 class Punch():
-    def __init__(self, punch_type: str, comment: str, time_stamp=datetime.now(), id=0):
+    def __init__(self, 
+                 punch_type: str,
+                 comment: str,
+                 time_stamp=datetime.now().strftime(INPUT_FORMAT),
+                 id=0):
         self.id         = id
         self.type       = punch_type
         self.time_stamp = time_stamp
@@ -16,14 +22,19 @@ class Punch():
 
 
 class Entry():
-    def __init__(self, id: int, in_punch: datetime, out_punch: datetime,
-             total_time: float, title: str, comment: str):
+    def __init__(self,
+                 id: int,
+                 total_time: float,
+                 title: str,
+                 comment: str,
+                 in_punch=datetime.now().strftime(INPUT_FORMAT),
+                 out_punch=datetime.now().strftime(INPUT_FORMAT)):
         self.id         = id
-        self.in_punch   = in_punch
-        self.out_punch  = out_punch
         self.total_time = total_time
         self.title      = title
         self.comment    = comment
+        self.in_punch   = in_punch
+        self.out_punch  = out_punch
 
 
 def add_punch(punch: Punch) -> None: 
@@ -37,8 +48,6 @@ def add_punch(punch: Punch) -> None:
                           ))
     con.commit()
     con.close()
-
-    punch.time_stamp = datetime.now()
 
 
 def add_entry() -> Entry: 
@@ -61,9 +70,9 @@ def get_last_entry() -> Entry:
     res = con.cursor().execute(_sql_script(SQL['LAST_ENTRY'])).fetchone()
 
     if res:
-        return Entry(res[0], res[1], res[2], res[3], res[4], res[5])
+        return Entry(res[0], res[3], res[4], res[5], res[1], res[2])
     else:
-        return Entry(-1, datetime.now(), datetime.now(), 0.0, "", "")
+        return Entry(-1, 0.0, "", "")
             
 
 def get_entries(duration: str) -> list[Entry]:
@@ -71,7 +80,6 @@ def get_entries(duration: str) -> list[Entry]:
 
     con = sqlite3.connect(f'{DATABASE}')
     cur = con.cursor()
-    INVAID = Entry(-1, datetime.now(), datetime.now(), 0.0, "", "")
 
     if duration == "day":
         res = cur.execute(_sql_script(SQL['TODAY'])).fetchall()
@@ -79,9 +87,11 @@ def get_entries(duration: str) -> list[Entry]:
         res = cur.execute(_sql_script(SQL['WEEK'])).fetchall()
     elif duration == "month":
         res = cur.execute(_sql_script(SQL['MONTH'])).fetchall()
+    elif duration == "all":
+        res = cur.execute("SELECT * FROM Entry;").fetchall()
     else:
         con.close()
-        return [INVAID]
+        return []
 
     entries: list[Entry] = []
 

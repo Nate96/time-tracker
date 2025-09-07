@@ -16,8 +16,11 @@ dependencies = [
  [tool.setuptools.packages.find]
  where = ["."] # Look for packages in the current directory
  exclude = ["Docs*", "SqlScripts*"] # Exclude these directories
- # Or, to explicitly include only certain packages:
- # include = ["your_main_package_name*"]
+ include = ["."]
 
 [tool.pytest.ini_options]
 env_files = [".env.test", ".env"]
+
+[tool.coverage.run]
+omit = ["*/test_*.py"]
+

@@ -1,5 +1,15 @@
-elp:
-	echo "Cammands:1. build:  Builds the project 2. verify: Runs all test";
+.PHONY: install
+
+help:
+	@echo "====Cammands===="
+	@echo "1. install:  Adds alias to .zshrc"
+	@echo "2. build:    Builds the project"
+	@echo "3. verify:   Runs all test"
+	@echo "4. coverage: Builds .htmlcov/"
+
+install:
+	@echo "alias tt='python3 $(realpath tt.py)'" >> ~/.zshrc
+	@echo "Restart temrinal"
 
 build:
 	uv build
