@@ -18,17 +18,17 @@ class State():
 
 
     def get_day_total(self) -> float:
-        return round(self._get_total(time_sheet.get_entries("day")), 2)
+        return self._get_total(time_sheet.get_entries("day"))
 
     def get_week_total(self) -> float:
-        return round(self._get_total(time_sheet.get_entries("week")), 2)
+        return self._get_total(time_sheet.get_entries("week"))
 
     def _get_total(self, entries: list[Entry]):
         total: float = 0
 
         for ent in entries: 
             total += ent.total_time
-        return total
+        return round(total, 2)
 
 
 def punch_in(comment: str) -> Res:
