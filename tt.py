@@ -38,15 +38,18 @@ if __name__ == '__main__':
     elif args.one == "status":
         rsl: State = punch_clock.status()
         print(MESSAGES[rsl.res])
+        day_total: float = 0.0
 
         if rsl.res != Res.NO_PUNCH:
             if  rsl.res == Res.IN:
+                day_total: float = rsl.get_punched_in_for()
+
                 print(presenter.show_punch(rsl.last_punch), '\n')
-                print(f'For:  {rsl.get_punched_in_for()} hours')
+                print(f'For:  {day_total} hours')
             else:
                 print(presenter.show_entry(rsl.last_entry), '\n')
-            print(f'Day:  {rsl.get_day_total()} hours')
-            print(f'Week: {rsl.get_day_total()} hours')
+            print(f'Day:  {day_total + rsl.get_day_total()} hours')
+            print(f'Week: {day_total + rsl.get_day_total()} hours')
 
     elif args.one == "report":
         print(presenter.report())
