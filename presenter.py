@@ -46,6 +46,7 @@ def show_entries(duration: str) -> None:
     from rich import box
 
     entries: list[Entry] = time_sheet.get_entries(duration)
+    total: float = 0.0
 
     if not entries:
         print(MESSAGES[Res.NO_PUNCH])
@@ -69,10 +70,13 @@ def show_entries(duration: str) -> None:
            temp = datetime.strptime(f'{e.out_punch}', DATE_FORMAT)
            out_formatted = temp.strftime(DATE_TIME_FORMAT_2)
 
+           total += e.total_time
            table.add_row(in_formatted, out_formatted, formatted, str(e.total_time), e.title, e.comment)
+
 
        cons = Console()
        cons.print(table)
+       print('Total: ', round(total, 2), 'hours')
 
 def show_last_punch()-> str: return show_punch(time_sheet.get_last_punch())
 
