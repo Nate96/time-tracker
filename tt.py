@@ -49,7 +49,7 @@ if __name__ == '__main__':
             else:
                 print(presenter.show_entry(rsl.last_entry), '\n')
             print(f'Day:  {day_total + rsl.get_day_total()} hours')
-            print(f'Week: {day_total + rsl.get_day_total()} hours')
+            print(f'Week: {day_total + rsl.get_week_total()} hours')
 
     elif args.one == "report":
         print(presenter.report())
