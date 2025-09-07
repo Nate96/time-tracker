@@ -8,8 +8,10 @@ help:
 	@echo "4. coverage: Builds .htmlcov/"
 
 install:
-	@echo "alias tt='python3 $(realpath tt.py)'" >> ~/.zshrc
+	@echo "alias tt='uv $(realpath tt.py)'" >> ~/.zshrc
 	@echo "Restart temrinal"
+	git branch local
+	git checkout local
 
 build:
 	uv build

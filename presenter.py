@@ -1,9 +1,12 @@
 import time_sheet
+
 from datetime import datetime
 from punch_clock import Entry, Punch
 from config import TRACKER, Res, DATE_FORMAT, MESSAGES
 
+
 DATE_TIME_FORMAT = "%A %Y-%m-%d %I:%M %p"
+DATE_TIME_FORMAT_2 = "%Y-%m-%d %I:%M %p"
 TIME_FORMAT = "%I:%M %p"
 
 HEADER = "==== Entry ====\n"
@@ -38,13 +41,38 @@ def show_entry(entry: Entry) -> str:
 
 
 def show_entries(duration: str) -> None:
+    from rich.console import Console
+    from rich.table import Table
+    from rich import box
+
     entries: list[Entry] = time_sheet.get_entries(duration)
 
     if not entries:
         print(MESSAGES[Res.NO_PUNCH])
     else:
-        for entry in entries:
-            print(entry.id, entry.in_punch, entry.out_punch, entry.total_time, entry.title, entry.comment)
+       table = Table(box=box.MINIMAL_DOUBLE_HEAD)
+
+       table.add_column('in punch', justify='left', highlight=True)
+       table.add_column('out punch', justify='left', highlight=True)
+       table.add_column('week day', justify='left', style='blue')
+       table.add_column('total', justify='right', style='green')
+       table.add_column('title', justify='left', style='magenta')
+       table.add_column('comment', justify='left')
+
+       for e in entries:
+           temp = datetime.strptime(f'{e.in_punch}', DATE_FORMAT)
+           formatted = temp.strftime('%A')
+
+           temp = datetime.strptime(f'{e.in_punch}', DATE_FORMAT)
+           in_formatted = temp.strftime(DATE_TIME_FORMAT_2)
+
+           temp = datetime.strptime(f'{e.out_punch}', DATE_FORMAT)
+           out_formatted = temp.strftime(DATE_TIME_FORMAT_2)
+
+           table.add_row(in_formatted, out_formatted, formatted, str(e.total_time), e.title, e.comment)
+
+       cons = Console()
+       cons.print(table)
 
 def show_last_punch()-> str: return show_punch(time_sheet.get_last_punch())
 
