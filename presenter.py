@@ -1,8 +1,12 @@
+from typing import no_type_check
 import time_sheet
 
 from datetime import datetime
 from punch_clock import Entry, Punch
 from config import TRACKER, Res, DATE_FORMAT, MESSAGES
+from rich.console import Console
+from rich.table import Table
+from rich import box, color
 
 
 DATE_TIME_FORMAT = "%A %Y-%m-%d %I:%M %p"
@@ -41,10 +45,6 @@ def show_entry(entry: Entry) -> str:
 
 
 def show_entries(duration: str) -> None:
-    from rich.console import Console
-    from rich.table import Table
-    from rich import box
-
     entries: list[Entry] = time_sheet.get_entries(duration)
     total: float = 0.0
 
@@ -53,12 +53,12 @@ def show_entries(duration: str) -> None:
     else:
        table = Table(box=box.MINIMAL_DOUBLE_HEAD)
 
-       table.add_column('in punch', justify='left', highlight=True)
-       table.add_column('out punch', justify='left', highlight=True)
-       table.add_column('week day', justify='left', style='blue')
-       table.add_column('total', justify='right', style='green')
-       table.add_column('title', justify='left', style='magenta')
-       table.add_column('comment', justify='left')
+       table.add_column('In Punch', justify='left', highlight=True)
+       table.add_column('Out Punch', justify='left', highlight=True)
+       table.add_column('Week Day', justify='left', style='blue')
+       table.add_column('Total', justify='right', style='green')
+       table.add_column('Title', justify='left', max_width=25, no_wrap=True, style='magenta')
+       table.add_column('Comment', justify='left')
 
        for e in entries:
            temp = datetime.strptime(f'{e.in_punch}', DATE_FORMAT)
@@ -82,61 +82,49 @@ def show_last_punch()-> str: return show_punch(time_sheet.get_last_punch())
 
 def show_last_entry()-> str: return show_entry(time_sheet.get_last_entry())
 
-def report():
-    '''Report
-    Show stats of the given week in the following format
-    Monday:     {} hours
-    Tuesday:    {} hours
-    Wednesday:  {} hours
-    Thursday:   {} hours
-    Friday:     {} hours
-    Saturday:   {} hours
-    Sunday:     {} hours
-    ---------------------
-    Total:      {} hours
-    '''
+def report() -> None:
     entries = time_sheet.get_entries("week")
     if not entries:
         print(MESSAGES[Res.NO_PUNCH])
     else:
-        week_hours = [0.0] * 7
+        week_hours: list[float] = [0.0] * 7
         total_hours = 0
 
+        table = Table(box=box.MINIMAL_DOUBLE_HEAD)
+
+        table.add_column('Day', justify='left', style='blue')
+        table.add_column('Hours', justify='right', style='green')
 
         for entry in entries:
-            punch: datetime = datetime.strptime(entry.in_punch, DATE_FORMAT )
+            punch: datetime = datetime.strptime(entry.in_punch, DATE_FORMAT)
 
             week_hours[punch.weekday()] += float(entry.total_time)
             total_hours += float(entry.total_time)
 
-        return f'''---------------------
-Monday:     {week_hours[0]} hours
-Tuesday:    {week_hours[1]} hours
-Wednesday:  {week_hours[2]} hours
-Thursday:   {week_hours[3]} hours
-Friday:     {week_hours[4]} hours
-Saturday:   {week_hours[5]} hours
-Sunday:     {week_hours[6]} hours
----------------------
-Total:      {total_hours} hours {_over_under(total_hours)}
-'''
+        table.add_row('Monday', str(week_hours[0]))
+        table.add_row('Tuesday', str(week_hours[1]))
+        table.add_row('Wednesday', str(week_hours[2]))
+        table.add_row('Thursday', str(week_hours[3]))
+        table.add_row('Friday', str(week_hours[4]))
+        table.add_row('Saturday', str(week_hours[5]))
+        table.add_row('Sunday', str(week_hours[6]))
 
-def _over_under(hours):
-    """over under
-    Calculates the hourse the user is head or behead for the current week
 
-    Paramaters:
-    hours: hours worked for the current week
+        cons = Console()
+        cons.print(table)
+        print(f'Total: {total_hours} hours {_over_under(total_hours)}')
 
-    Return:
-    int: positive if the user is ahead and negative when the user is behind
-    """
+def _over_under(hours: float) -> float:
     day_of_week: int = (datetime.today().weekday() + 1)
+    print(hours)
+    print(day_of_week)
 
     if day_of_week <= TRACKER["MAX_WORK_WEEK_DAYS"]:
         projected_hours = day_of_week * TRACKER["HOURS_PER_DAY"]
     else:
         projected_hours = TRACKER["MAX_WORK_WEEK_HOURS"]
 
-    return hours - projected_hours
+    print(projected_hours)
+
+    return round(hours - projected_hours, 2)
 
