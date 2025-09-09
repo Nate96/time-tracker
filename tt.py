@@ -53,6 +53,5 @@ if __name__ == '__main__':
 
     elif args.one == "report":
         print(presenter.report())
-
     else:
         print(MESSAGES[Res.INVALID_COMMAND])

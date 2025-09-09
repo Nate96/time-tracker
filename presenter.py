@@ -1,4 +1,3 @@
-from typing import no_type_check
 import time_sheet
 
 from datetime import datetime
@@ -6,7 +5,7 @@ from punch_clock import Entry, Punch
 from config import TRACKER, Res, DATE_FORMAT, MESSAGES
 from rich.console import Console
 from rich.table import Table
-from rich import box, color
+from rich import box
 
 
 DATE_TIME_FORMAT = "%A %Y-%m-%d %I:%M %p"
@@ -101,13 +100,13 @@ def report() -> None:
             week_hours[punch.weekday()] += float(entry.total_time)
             total_hours += float(entry.total_time)
 
-        table.add_row('Monday', str(week_hours[0]))
-        table.add_row('Tuesday', str(week_hours[1]))
-        table.add_row('Wednesday', str(week_hours[2]))
-        table.add_row('Thursday', str(week_hours[3]))
-        table.add_row('Friday', str(week_hours[4]))
-        table.add_row('Saturday', str(week_hours[5]))
-        table.add_row('Sunday', str(week_hours[6]))
+        table.add_row('Monday',    f'{int(week_hours[0])}:{int(round((week_hours[0] - int(week_hours[0])) * 60, 0)):02d}')
+        table.add_row('Tuesday',   f'{int(week_hours[1])}:{int(round((week_hours[1] - int(week_hours[1])) * 60, 0)):02d}')
+        table.add_row('Wednesday', f'{int(week_hours[2])}:{int(round((week_hours[2] - int(week_hours[2])) * 60, 0)):02d}')
+        table.add_row('Thursday',  f'{int(week_hours[3])}:{int(round((week_hours[3] - int(week_hours[3])) * 60, 0)):02d}')
+        table.add_row('Friday',    f'{int(week_hours[4])}:{int(round((week_hours[4] - int(week_hours[4])) * 60, 0)):02d}')
+        table.add_row('Saturday',  f'{int(week_hours[5])}:{int(round((week_hours[5] - int(week_hours[5])) * 60, 0)):02d}')
+        table.add_row('Sunday',    f'{int(week_hours[6])}:{int(round((week_hours[6] - int(week_hours[6])) * 60, 0)):02d}')
 
 
         cons = Console()
@@ -116,15 +115,11 @@ def report() -> None:
 
 def _over_under(hours: float) -> float:
     day_of_week: int = (datetime.today().weekday() + 1)
-    print(hours)
-    print(day_of_week)
 
     if day_of_week <= TRACKER["MAX_WORK_WEEK_DAYS"]:
         projected_hours = day_of_week * TRACKER["HOURS_PER_DAY"]
     else:
         projected_hours = TRACKER["MAX_WORK_WEEK_HOURS"]
-
-    print(projected_hours)
 
     return round(hours - projected_hours, 2)
 
