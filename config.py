@@ -7,7 +7,8 @@ DATE_FORMAT = "%Y-%m-%d %H:%M:%S"
 
 load_dotenv() 
 
-DATABASE = os.getenv("DATABASE")
+DATABASE: str = str(os.getenv("DATABASE"))
+ROOT:     str = str(os.getenv('ROOT'))
 
 class Res(Enum):
     NO_DB           = 0
@@ -40,23 +41,23 @@ MESSAGES = {
         }
 
 TRACKER = {
-        "ACTIVE":               False,
-        "MAX_WORK_WEEK_HOURS":  0,
-        "MAX_WORK_WEEK_DAYS":   0,
-        "HOURS_PER_DAY":        0
+        "ACTIVE":               True,
+        "MAX_WORK_WEEK_HOURS":  40,
+        "MAX_WORK_WEEK_DAYS":   5,
+        "HOURS_PER_DAY":        8
         }
 
 SQL = {
-        'create_punch_table': "./SqlScripts/CreatePunchTable.sql",
-        'create_entry_table': "./SqlScripts/CreateEntryTable.sql",
-        'LAST_PUNCH':         "./SqlScripts/GetLastPunch.sql",
-        'INSERT_PUNCH':       "./SqlScripts/InsertPunch.sql",
-        'INSERT_ENTRY':       "./SqlScripts/InsertEntry.sql",
-        'TODAY':              "./SqlScripts/GetTodayEntry.sql",
-        'WEEK':               "./SqlScripts/GetWeekEntry.sql",
-        'MONTH':              "./SqlScripts/GetMonthEntry.sql",
-        'LAST_ENTRY':         "./SqlScripts/GetLastEntry.sql",
-        'SHOW_ENTRIES':       "./SqlScripts/ShowEntries.sql",
+        'create_punch_table': ROOT + "./SqlScripts/CreatePunchTable.sql",
+        'create_entry_table': ROOT + "./SqlScripts/CreateEntryTable.sql",
+        'LAST_PUNCH':         ROOT + "./SqlScripts/GetLastPunch.sql",
+        'INSERT_PUNCH':       ROOT + "./SqlScripts/InsertPunch.sql",
+        'INSERT_ENTRY':       ROOT + "./SqlScripts/InsertEntry.sql",
+        'TODAY':              ROOT + "./SqlScripts/GetTodayEntry.sql",
+        'WEEK':               ROOT + "./SqlScripts/GetWeekEntry.sql",
+        'MONTH':              ROOT + "./SqlScripts/GetMonthEntry.sql",
+        'LAST_ENTRY':         ROOT + "./SqlScripts/GetLastEntry.sql",
+        'SHOW_ENTRIES':       ROOT + "./SqlScripts/ShowEntries.sql",
 
 }
 
