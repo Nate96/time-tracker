@@ -1,14 +1,10 @@
-from dotenv import load_dotenv
 from enum import Enum
-
-import os
 
 DATE_FORMAT = "%Y-%m-%d %H:%M:%S"
 
-load_dotenv() 
 
-DATABASE: str = str(os.getenv("DATABASE"))
-ROOT:     str = str(os.getenv('ROOT'))
+ROOT:     str = "."
+DATABASE: str = ROOT + "/timesheet.db"
 
 class Res(Enum):
     NO_DB           = 0
@@ -41,28 +37,28 @@ MESSAGES = {
         }
 
 TRACKER = {
-        "ACTIVE":               True,
-        "MAX_WORK_WEEK_HOURS":  40,
-        "MAX_WORK_WEEK_DAYS":   5,
-        "HOURS_PER_DAY":        8
+        "ACTIVE":              True,
+        "MAX_WORK_WEEK_HOURS": 40,
+        "MAX_WORK_WEEK_DAYS":  5,
+        "HOURS_PER_DAY":       8
         }
 
 SQL = {
-        'create_punch_table': ROOT + "./SqlScripts/CreatePunchTable.sql",
-        'create_entry_table': ROOT + "./SqlScripts/CreateEntryTable.sql",
-        'LAST_PUNCH':         ROOT + "./SqlScripts/GetLastPunch.sql",
-        'INSERT_PUNCH':       ROOT + "./SqlScripts/InsertPunch.sql",
-        'INSERT_ENTRY':       ROOT + "./SqlScripts/InsertEntry.sql",
-        'TODAY':              ROOT + "./SqlScripts/GetTodayEntry.sql",
-        'WEEK':               ROOT + "./SqlScripts/GetWeekEntry.sql",
-        'MONTH':              ROOT + "./SqlScripts/GetMonthEntry.sql",
-        'LAST_ENTRY':         ROOT + "./SqlScripts/GetLastEntry.sql",
-        'SHOW_ENTRIES':       ROOT + "./SqlScripts/ShowEntries.sql",
+        'create_punch_table': ROOT + "/SqlScripts/CreatePunchTable.sql",
+        'create_entry_table': ROOT + "/SqlScripts/CreateEntryTable.sql",
+        'LAST_PUNCH':         ROOT + "/SqlScripts/GetLastPunch.sql",
+        'INSERT_PUNCH':       ROOT + "/SqlScripts/InsertPunch.sql",
+        'INSERT_ENTRY':       ROOT + "/SqlScripts/InsertEntry.sql",
+        'TODAY':              ROOT + "/SqlScripts/GetTodayEntry.sql",
+        'WEEK':               ROOT + "/SqlScripts/GetWeekEntry.sql",
+        'MONTH':              ROOT + "/SqlScripts/GetMonthEntry.sql",
+        'LAST_ENTRY':         ROOT + "/SqlScripts/GetLastEntry.sql",
+        'SHOW_ENTRIES':       ROOT + "/SqlScripts/ShowEntries.sql",
 
 }
 
 
 class PunchType(Enum):
-    OUT     = "out"
-    IN      = "in"
+    OUT = "out"
+    IN  = "in"
 
