@@ -3,7 +3,7 @@ from enum import Enum
 DATE_FORMAT = "%Y-%m-%d %H:%M:%S"
 
 
-ROOT:     str = ""
+ROOT:     str = "."
 DATABASE: str = ROOT + "/timesheet.db"
 
 class Res(Enum):
