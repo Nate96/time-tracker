@@ -3,10 +3,8 @@ from enum import Enum
 DATE_FORMAT = "%Y-%m-%d %H:%M:%S"
 
 
-ROOT:     str = "/home/jade/time-tracker"
+ROOT:     str = ""
 DATABASE: str = ROOT + "/timesheet.db"
-
-# DATABASE: str = "/home/jade/Log/timesheet.db"
 
 class Res(Enum):
     NO_DB           = 0
