@@ -49,7 +49,9 @@ def show_entries(duration: str) -> None:
 
        headers = ["In punch", "Out Punch", "Day", "Total", "Title", "Comment"]
 
-       print(f'{headers[0]:<20} {headers[1]:<10} {headers[2]:<10} {headers[3]:<6} {headers[4]:<30} {headers[5]:<30}')
+       title_len = max(len(str(e.title)) for e in entries)
+
+       print(f'{headers[0]:<20} {headers[1]:<10} {headers[2]:<10} {headers[3]:<6} {headers[4]:<{title_len}} {headers[5]:<30}')
        print('-' * 90)
 
        for e in entries:
@@ -65,7 +67,7 @@ def show_entries(duration: str) -> None:
            e.title = e.title.replace("\n", "")
            e.comment = e.comment.replace("\n", "")
 
-           print(f'{in_formatted:<20} {out_formatted:<10} {day:<10} {e.total_time:<6} {e.title:<30} : {e.comment:<30}')
+           print(f'{in_formatted:<20} {out_formatted:<10} {day:<10} {e.total_time:<6} {e.title:<{title_len}}: {e.comment:<30}')
            total =+ e.total_time
     
        print('Total: ', round(total, 2), 'hours')
