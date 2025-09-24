@@ -124,19 +124,6 @@ def show_state():
         print(f'Week: {day_total + rsl.get_week_total():.2f} hours')
 
 
-def show_help():
-    print(f"""App/Alias Name tt
-          i "your comment"    punches in
-          o "your comment"    punches out
-          status              shows the state of the time sheet (in or out)
-          report              shows the total worked hours for each day, and the total for the current week 
-          show last           shows the last entry
-          show day            shows all entries for the day
-          show week           shows all entries for the week
-          show month          shows all entries for the month
-          """)
-
-
 def _over_under(hours: float) -> float:
     day_of_week: int = (datetime.today().weekday() + 1)
 

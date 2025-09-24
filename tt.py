@@ -46,5 +46,4 @@ Actions:
     elif args.action == "show": presenter.show_entries(args.comment)
     elif args.action == "status": presenter.show_state()
     elif args.action == "report": presenter.report()
-    elif args.action in ("help", "--h", "-h" ): presenter.show_help()
     else: print(MESSAGES[Res.INVALID_COMMAND])
