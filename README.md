@@ -15,28 +15,8 @@ A simple CLI tool that tracks time while completing tasks.
 | report           | show the hours worked each day of the current week                   |
 
 # Installation  
-
-## C#
-1. install dotnet  
-2. run `git clone https://github.com/Nate96/time-tracker.git`
-3. run `git checkout C#`
-4. Add the abosulte paths for files in CSharp/scr/models/config.cs  
-5. run `dotnet build --configuration Release`  
-6. Add to command line  
-    - zsh: add "export PATH=$PATH:{path to repo}/bin/Release/netX.0" to .zshrc
-    - windows PowerShell: Set-Alias -Name tt -Value "{path to exe}"
-
-## Python
-1. install Python3
-2. run `git clone https://github.com/Nate96/time-tracker.git`
-3. run `git checkout Python`
-4. Add .env file
-   ```
-   REPO_PATH=''
-   TARGET_WORK_HOURS=5;
-   MAX_WORK_WEEK_DAYS=5;
-   TRACK=false;
-   ```
-5. Add to command line
-    - add alias to zsh: alias tt ="Python3 {path to tt.py}"
-    - windows PowerShell: Set-Alias -Name tt -Value "Python3 {path to tt.py}"
+1. Install Python3
+2. run `git pull https://www.github.com/Nate96/time-tracker.git`
+3. In the time-tracker directory run `make verify` to verify the app is working 
+   correctly
+4. In the time-tracker directory run `make install`
