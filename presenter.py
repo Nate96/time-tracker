@@ -100,7 +100,7 @@ def report() -> None:
         print(f'Saturday:  {int(week_hours[5])}:{int(round((week_hours[5] - int(week_hours[5])) * 60, 0)):02d}')
         print(f'Sunday:    {int(week_hours[6])}:{int(round((week_hours[6] - int(week_hours[6])) * 60, 0)):02d}\n')
 
-        print(f'Total:     {total_hours:.f2} hours {_over_under(total_hours):.f2}')
+        print(f'Total:     {total_hours:.2f} hours {_over_under(total_hours):.2f}')
 
 
 def _over_under(hours: float) -> float:
