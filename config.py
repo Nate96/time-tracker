@@ -4,7 +4,7 @@ DATE_FORMAT = "%Y-%m-%d %H:%M:%S"
 
 
 ROOT:     str = "."
-DATABASE: str = ROOT + "/timesheet.db"
+DATABASE: str = "./timesheet.db"
 
 class Res(Enum):
     NO_DB           = 0

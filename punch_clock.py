@@ -14,7 +14,7 @@ class State():
 
     def get_punched_in_for(self) -> float:
         in_time: datetime = datetime.strptime(str(self.last_punch.time_stamp), FORMAT_STRING)
-        return round((datetime.now() - in_time).total_seconds() / 3600, 2)
+        return (datetime.now() - in_time).total_seconds() / 3600
 
 
     def get_day_total(self) -> float:
@@ -28,7 +28,7 @@ class State():
 
         for ent in entries: 
             total += ent.total_time
-        return round(total, 2)
+        return total
 
 
 def punch_in(comment: str) -> Res:
