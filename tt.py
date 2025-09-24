@@ -45,11 +45,11 @@ if __name__ == '__main__':
                 day_total: float = rsl.get_punched_in_for()
 
                 print(presenter.show_punch(rsl.last_punch), '\n')
-                print(f'For:  {day_total} hours')
+                print(f'For:  {day_total:.2f} hours')
             else:
                 print(presenter.show_entry(rsl.last_entry), '\n')
-            print(f'Day:  {day_total + rsl.get_day_total()} hours')
-            print(f'Week: {day_total + rsl.get_week_total()} hours')
+            print(f'Day:  {day_total + rsl.get_day_total():.2f} hours')
+            print(f'Week: {day_total + rsl.get_week_total():.2f} hours')
 
     elif args.one == "report":
         print(presenter.report())

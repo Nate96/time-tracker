@@ -68,9 +68,9 @@ def show_entries(duration: str) -> None:
            e.comment = e.comment.replace("\n", "")
 
            print(f'{in_formatted:<20} {out_formatted:<10} {day:<10} {e.total_time:<6} {e.title:<{title_len}}: {e.comment:<30}')
-           total =+ e.total_time
+           total += e.total_time
     
-       print('Total: ', round(total, 2), 'hours')
+       print(f'Total: {total} hours')
 
 def show_last_punch( )-> str: return show_punch(time_sheet.get_last_punch())
 
@@ -100,7 +100,7 @@ def report() -> None:
         print(f'Saturday:  {int(week_hours[5])}:{int(round((week_hours[5] - int(week_hours[5])) * 60, 0)):02d}')
         print(f'Sunday:    {int(week_hours[6])}:{int(round((week_hours[6] - int(week_hours[6])) * 60, 0)):02d}\n')
 
-        print(f'Total:     {total_hours} hours {_over_under(total_hours)}')
+        print(f'Total:     {total_hours:.f2} hours {_over_under(total_hours):.f2}')
 
 
 def _over_under(hours: float) -> float:
@@ -111,5 +111,5 @@ def _over_under(hours: float) -> float:
     else:
         projected_hours = TRACKER["MAX_WORK_WEEK_HOURS"]
 
-    return round((hours - projected_hours), 2)
+    return hours - projected_hours
 
