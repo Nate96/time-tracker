@@ -5,53 +5,46 @@ import presenter
 import punch_clock
 
 from config import Res, MESSAGES
-from punch_clock import State
 
 if __name__ == '__main__':
     args = None
     punch_clock = punch_clock
 
     parser = argparse.ArgumentParser(
-                        prog='Time Tracker',
+                        formatter_class=argparse.RawDescriptionHelpFormatter,
+                        prog='tt',
                         description='punch in punch out system',
-                        epilog='Hello')
+                        epilog=f'''
+Actions:
+  i "your comment"    Punches in
+  o "your comment"    Punches out
+  status              Shows the state of the time sheet (in or out)
+  report              Shows the total worked hours for each day, and the total
+                      for the current week
+  show last           Shows the last entry
+  show day            Shows all entries for the day
+  show week           Shows all entries for the week
+  show month          Shows all entries for the month
+                                ''')
 
-    parser.add_argument('one')
-    parser.add_argument('two', nargs='?', default='')
+    parser.add_argument('action', help='refer to actions')
+    parser.add_argument('comment', default='', help='strings that are tied to the punch')
 
     # Parse all command line arguments
     args = parser.parse_args(args)
 
-    if args.one == "i":
-        res: Res = punch_clock.punch_in(args.two)
+    if args.action in ("i", "in"):
+        res: Res = punch_clock.punch_in(args.comment)
         print(MESSAGES[res])
-        print(presenter.show_last_punch())
+        presenter.show_last_punch()
 
-    elif args.one == "o":
-        res: Res = punch_clock.punch_out(args.two)
+    elif args.action in ("o", "out"):
+        res: Res = punch_clock.punch_out(args.comment)
         print(MESSAGES[res])
-        print(presenter.show_last_entry())
+        presenter.show_last_entry()
 
-    elif args.one == "show":
-        presenter.show_entries(args.two)
-
-    elif args.one == "status":
-        rsl: State = punch_clock.status()
-        print(MESSAGES[rsl.res])
-        day_total: float = 0.0
-
-        if rsl.res != Res.NO_PUNCH:
-            if  rsl.res == Res.IN:
-                day_total: float = rsl.get_punched_in_for()
-
-                print(presenter.show_punch(rsl.last_punch), '\n')
-                print(f'For:  {day_total:.2f} hours')
-            else:
-                print(presenter.show_entry(rsl.last_entry), '\n')
-            print(f'Day:  {day_total + rsl.get_day_total():.2f} hours')
-            print(f'Week: {day_total + rsl.get_week_total():.2f} hours')
-
-    elif args.one == "report":
-        print(presenter.report())
-    else:
-        print(MESSAGES[Res.INVALID_COMMAND])
+    elif args.action == "show": presenter.show_entries(args.comment)
+    elif args.action == "status": presenter.show_state()
+    elif args.action == "report": presenter.report()
+    elif args.action in ("help", "--h", "-h" ): presenter.show_help()
+    else: print(MESSAGES[Res.INVALID_COMMAND])
