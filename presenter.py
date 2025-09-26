@@ -1,8 +1,9 @@
 import time_sheet
 
 from datetime import datetime
-from punch_clock import Entry, Punch
+from punch_clock import Entry, Punch, State, status
 from config import TRACKER, Res, DATE_FORMAT, MESSAGES
+
 
 DATE_TIME_FORMAT   = "%Y-%m-%d %I:%M %p"
 DATE_TIME_FORMAT_2 = "%Y-%m-%d %I:%M %p"
@@ -11,7 +12,7 @@ TIME_FORMAT        = "%I:%M %p"
 HEADER = "==== Entry ====\n"
 
 
-def show_punch(punch: Punch) -> str:
+def show_punch(punch: Punch):
     """
     Returns
     string - {datetime}, COMMENT: {comment}
@@ -19,10 +20,10 @@ def show_punch(punch: Punch) -> str:
     temp = datetime.strptime(f'{punch.time_stamp}', DATE_FORMAT)
     formatted = temp.strftime(DATE_TIME_FORMAT)
 
-    return f"{formatted}, COMMENT: {punch.comment}"
+    print(f"{formatted}, COMMENT: {punch.comment}")
 
 
-def show_entry(entry: Entry) -> str:
+def show_entry(entry: Entry):
     """
     Returns:
     ==== Entry ====
@@ -36,7 +37,7 @@ def show_entry(entry: Entry) -> str:
     temp = datetime.strptime(f'{entry.in_punch}', DATE_FORMAT)
     out_formatted = temp.strftime(TIME_FORMAT)
 
-    return f"{HEADER}{in_formatted} - {out_formatted}, {round(entry.total_time, 2)} Hours\n{entry.title}\n{entry.comment}"
+    print(f"{HEADER}{in_formatted} - {out_formatted}, {round(entry.total_time, 2)} Hours\n{entry.title}\n{entry.comment}")
 
 
 def show_entries(duration: str) -> None:
@@ -72,11 +73,14 @@ def show_entries(duration: str) -> None:
     
        print(f'Total: {total} hours')
 
-def show_last_punch( )-> str: return show_punch(time_sheet.get_last_punch())
 
-def show_last_entry() -> str: return show_entry(time_sheet.get_last_entry())
+def show_last_punch( ): show_punch(time_sheet.get_last_punch())
 
-def report() -> None:
+
+def show_last_entry(): show_entry(time_sheet.get_last_entry())
+
+
+def report():
     entries = time_sheet.get_entries("week")
 
     if not entries:
@@ -101,6 +105,23 @@ def report() -> None:
         print(f'Sunday:    {int(week_hours[6])}:{int(round((week_hours[6] - int(week_hours[6])) * 60, 0)):02d}\n')
 
         print(f'Total:     {total_hours:.2f} hours {_over_under(total_hours):.2f}')
+
+
+def show_state():
+    rsl: State = status()
+    print(MESSAGES[rsl.res])
+    day_total: float = 0.0
+
+    if rsl.res != Res.NO_PUNCH:
+        if  rsl.res == Res.IN:
+            day_total: float = rsl.get_punched_in_for()
+
+            print(show_punch(rsl.last_punch), '\n')
+            print(f'For:  {day_total:.2f} hours')
+        else:
+            print(show_entry(rsl.last_entry), '\n')
+        print(f'Day:  {day_total + rsl.get_day_total():.2f} hours')
+        print(f'Week: {day_total + rsl.get_week_total():.2f} hours')
 
 
 def _over_under(hours: float) -> float:
