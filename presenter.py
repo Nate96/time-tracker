@@ -34,7 +34,7 @@ def show_entry(entry: Entry):
     temp = datetime.strptime(f'{entry.in_punch}', DATE_FORMAT)
     in_formatted = temp.strftime(DATE_TIME_FORMAT)
 
-    temp = datetime.strptime(f'{entry.in_punch}', DATE_FORMAT)
+    temp = datetime.strptime(f'{entry.out_punch}', DATE_FORMAT)
     out_formatted = temp.strftime(TIME_FORMAT)
 
     print(f"{HEADER}{in_formatted} - {out_formatted}, {round(entry.total_time, 2)} Hours\n{entry.title}\n{entry.comment}")
