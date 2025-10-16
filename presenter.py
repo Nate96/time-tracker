@@ -71,7 +71,7 @@ def show_entries(duration: str) -> None:
            print(f'{in_formatted:<20} {out_formatted:<10} {day:<10} {e.total_time:<6} {e.title:<{title_len}}: {e.comment:<30}')
            total += e.total_time
     
-       print(f'Total: {total} hours')
+       print(f'\nTotal: {total:.2f} hours')
 
 
 def show_last_punch( ): show_punch(time_sheet.get_last_punch())
