@@ -96,15 +96,14 @@ def report():
             total_hours += float(entry.total_time)
 
         print("\n==== Report =====")
+        print(f'Sunday:    {int(week_hours[6])}:{int(round((week_hours[6] - int(week_hours[6])) * 60, 0)):02d}')
         print(f'Monday:    {int(week_hours[0])}:{int(round((week_hours[0] - int(week_hours[0])) * 60, 0)):02d}')
         print(f'Tuesday:   {int(week_hours[1])}:{int(round((week_hours[1] - int(week_hours[1])) * 60, 0)):02d}')
         print(f'Wednesday: {int(week_hours[2])}:{int(round((week_hours[2] - int(week_hours[2])) * 60, 0)):02d}')
         print(f'Thursday:  {int(week_hours[3])}:{int(round((week_hours[3] - int(week_hours[3])) * 60, 0)):02d}')
         print(f'Friday:    {int(week_hours[4])}:{int(round((week_hours[4] - int(week_hours[4])) * 60, 0)):02d}')
         print(f'Saturday:  {int(week_hours[5])}:{int(round((week_hours[5] - int(week_hours[5])) * 60, 0)):02d}')
-        print(f'Sunday:    {int(week_hours[6])}:{int(round((week_hours[6] - int(week_hours[6])) * 60, 0)):02d}\n')
-
-        print(f'Total:     {total_hours:.2f} hours {_over_under(total_hours):.2f}')
+        print(f'\nTotal:     {total_hours:.2f} hours {_over_under(total_hours):.2f}')
 
 
 def show_state():
