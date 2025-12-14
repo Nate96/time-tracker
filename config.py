@@ -3,8 +3,8 @@ from enum import Enum
 DATE_FORMAT = "%Y-%m-%d %H:%M:%S"
 
 
-ROOT:     str = "/Users/nbraukhoff/Time-Tracker"
-DATABASE: str = "/Users/nbraukhoff/.local/Vault/timesheet.db"
+ROOT:     str = "."
+DATABASE: str = "./timesheet.db"
 
 class Res(Enum):
     NO_DB           = 0

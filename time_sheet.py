@@ -2,7 +2,7 @@
 #        does not support this.
 
 from config import DATABASE, SQL
-from datetime import datetime
+from datetime import datetime, date, timedelta
 
 import sqlite3
 
@@ -83,7 +83,22 @@ def get_entries(duration: str) -> list[Entry]:
     if duration == "day":
         res = cur.execute(_sql_script(SQL['TODAY'])).fetchall()
     elif duration == "week":
-        res = cur.execute(_sql_script(SQL['WEEK'])).fetchall()
+        start, end = _get_current_week_date_range()
+        res = cur.execute(f"""
+                          SELECT *
+                          FROM Entry
+                          WHERE DATE(in_punch) BETWEEN DATE('{end}') AND DATE('{start}');
+                          """
+                ).fetchall()
+    elif duration == "last":
+        start, end = _get_last_week_date_range()
+        print(start, end)
+        res = cur.execute(f"""
+                          SELECT *
+                          FROM Entry
+                          WHERE DATE(in_punch) BETWEEN DATE('{start}') AND DATE('{end}');
+                          """
+                ).fetchall()
     elif duration == "month":
         res = cur.execute(_sql_script(SQL['MONTH'])).fetchall()
     elif duration == "all":
@@ -142,3 +157,19 @@ def create_tables():
 
     conn.commit()
     conn.close()
+
+def _get_current_week_date_range() -> tuple[date, date]:
+    today = date.today()
+    day_of_week_sunday_0 = (today.weekday() + 1) % 7
+    start_of_week = today - timedelta(days=day_of_week_sunday_0)
+
+    return (today, start_of_week)
+
+def _get_last_week_date_range() -> tuple[date, date]:
+    today = date.today()
+    day_of_week_sunday_0 = (today.weekday() + 1) % 7
+    start_of_this_week = today - timedelta(days=day_of_week_sunday_0)
+    start_of_last_week = start_of_this_week - timedelta(days=7)
+    end_of_last_week = start_of_this_week - timedelta(days=1)
+
+    return (start_of_last_week, end_of_last_week)
