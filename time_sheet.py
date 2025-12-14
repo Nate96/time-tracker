@@ -1,5 +1,4 @@
-# NOTE: typing is not inforced but acts more like a hint
-# ISSUE: Create Table sql scirpt has two commands and python
+# ISSUE: Create Table sql script has two commands and python
 #        does not support this.
 
 from config import DATABASE, SQL
