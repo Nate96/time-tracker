@@ -49,18 +49,14 @@ def add_punch(punch: Punch) -> None:
     con.close()
 
 
-def add_entry() -> Entry: 
+def add_entry(): 
     create_tables()
 
     con = sqlite3.connect(f'{DATABASE}')
     con.cursor().execute(_sql_script(SQL['INSERT_ENTRY']))
-
-    res = con.cursor().execute(_sql_script(SQL['LAST_ENTRY'])).fetchone()
-
     con.commit()
     con.close()
 
-    return Entry(res[0], res[1], res[2], res[3], res[4], res[5])
 
 
 def get_last_entry() -> Entry:
@@ -111,7 +107,7 @@ def get_entries(duration: str) -> list[Entry]:
 
     for item in res:
         entries.append(Entry(
-            id = item[0],
+            id=item[0],
             in_punch=item[1],
             out_punch=item[2],
             total_time=item[3],
@@ -132,7 +128,7 @@ def get_last_punch() -> Punch:
     if res is None:
         return Punch("", "", id=-1 )
 
-    return Punch(res[1], res[3], time_stamp=res[2], id=res[0])
+    return Punch(id=res[0], punch_type=res[1], time_stamp=res[2], comment=res[3])
 
 
 
