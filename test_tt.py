@@ -7,8 +7,6 @@ from punch_clock import State, punch_out, punch_in, status
 from time_sheet import get_entries
 from presenter import show_last_punch, show_last_entry, show_entries, report
 
-
-
 def test_adding_punches():
     # GIVEN the database is Empty
     with open(f'{DATABASE}', "w") as file: file.write("")
@@ -127,8 +125,7 @@ def test_presenter():
             show_entries("all")
 
             report()
-        except:
-            assert False
+        except(Exception): assert False
 
 
     # GIVEN no Database

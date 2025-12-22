@@ -3,5 +3,5 @@
 SELECT *
 FROM entry
 WHERE in_punch BETWEEN
-   STRFTIME('%Y-%m-%d', 'now', '-6 days', 'weekday 1') -- Start of Week (Monday)
-   AND STRFTIME('%Y-%m-%d', 'now', 'weekday 0')        -- End of Week (Sunday)
+   STRFTIME('%Y-%m-%d', 'now', '-6 days', 'weekday 0', 'localtime') -- Start of Week (Monday)
+   AND STRFTIME('%Y-%m-%d', 'now', 'weekday 0', 'localtime')        -- End of Week (Sunday)

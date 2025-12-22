@@ -9,7 +9,9 @@ DATE_TIME_FORMAT   = "%Y-%m-%d %I:%M %p"
 DATE_TIME_FORMAT_2 = "%Y-%m-%d %I:%M %p"
 TIME_FORMAT        = "%I:%M %p"
 
-HEADER = "==== Entry ====\n"
+HEADER  = "========= Entry ============\n"
+REPORT  = "========= Report ==========="
+DIVIDER = "============================"
 
 
 def show_punch(punch: Punch):
@@ -80,8 +82,11 @@ def show_last_punch( ): show_punch(time_sheet.get_last_punch())
 def show_last_entry(): show_entry(time_sheet.get_last_entry())
 
 
-def report():
-    entries = time_sheet.get_entries("week")
+def report(duration: str) -> None:
+    if not duration: duration = "week"
+
+    entries = time_sheet.get_entries(duration)
+    
 
     if not entries:
         print(MESSAGES[Res.NO_PUNCH])
@@ -95,16 +100,37 @@ def report():
             week_hours[punch.weekday()] += float(entry.total_time)
             total_hours += float(entry.total_time)
 
-        print("\n==== Report =====")
-        print(f'Monday:    {int(week_hours[0])}:{int(round((week_hours[0] - int(week_hours[0])) * 60, 0)):02d}')
-        print(f'Tuesday:   {int(week_hours[1])}:{int(round((week_hours[1] - int(week_hours[1])) * 60, 0)):02d}')
-        print(f'Wednesday: {int(week_hours[2])}:{int(round((week_hours[2] - int(week_hours[2])) * 60, 0)):02d}')
-        print(f'Thursday:  {int(week_hours[3])}:{int(round((week_hours[3] - int(week_hours[3])) * 60, 0)):02d}')
-        print(f'Friday:    {int(week_hours[4])}:{int(round((week_hours[4] - int(week_hours[4])) * 60, 0)):02d}')
-        print(f'Saturday:  {int(week_hours[5])}:{int(round((week_hours[5] - int(week_hours[5])) * 60, 0)):02d}')
-        print(f'Sunday:    {int(week_hours[6])}:{int(round((week_hours[6] - int(week_hours[6])) * 60, 0)):02d}\n')
+        print(f"\n{REPORT}")
 
-        print(f'Total:     {total_hours:.2f} hours {_over_under(total_hours):.2f}')
+        print(f'Sunday:    {_convert_float_to_time(week_hours[6])} Hours')
+        print(show_day_breakdown([e for e in entries if datetime.strptime(e.in_punch, DATE_FORMAT).weekday() == 6])[:-1])
+        print(DIVIDER)
+
+        print(f'Monday:    {_convert_float_to_time(week_hours[0])} Hours')
+        print(show_day_breakdown([e for e in entries if datetime.strptime(e.in_punch, DATE_FORMAT).weekday() == 0])[:-1])
+        print(DIVIDER)
+
+        print(f'Tuesday:   {_convert_float_to_time(week_hours[1])} Hours')
+        print(show_day_breakdown([e for e in entries if datetime.strptime(e.in_punch, DATE_FORMAT).weekday() == 1])[:-1])
+        print(DIVIDER)
+
+        print(f'Wednesday: {_convert_float_to_time(week_hours[2])} Hours')
+        print(show_day_breakdown([e for e in entries if datetime.strptime(e.in_punch, DATE_FORMAT).weekday() == 2])[:-1])
+        print(DIVIDER)
+
+        print(f'Thursday:  {_convert_float_to_time(week_hours[3])} Hours')
+        print(show_day_breakdown([e for e in entries if datetime.strptime(e.in_punch, DATE_FORMAT).weekday() == 3])[:-1])
+        print(DIVIDER)
+
+        print(f'Friday:    {_convert_float_to_time(week_hours[4])} Hours')
+        print(show_day_breakdown([e for e in entries if datetime.strptime(e.in_punch, DATE_FORMAT).weekday() == 4])[:-1])
+        print(DIVIDER)
+
+        print(f'Saturday:  {_convert_float_to_time(week_hours[5])} Hours')
+        print(show_day_breakdown([e for e in entries if datetime.strptime(e.in_punch, DATE_FORMAT).weekday() == 5])[:-1])
+        print(DIVIDER)
+        
+        print(f'Total:     {_convert_float_to_time(total_hours)} hours {_convert_float_to_time(_over_under(total_hours))}')
 
 
 def show_state():
@@ -125,7 +151,7 @@ def show_state():
 
 
 def _over_under(hours: float) -> float:
-    day_of_week: int = (datetime.today().weekday() + 1)
+    day_of_week: int = (datetime.today().weekday() + 1) % 7
 
     if day_of_week <= TRACKER["MAX_WORK_WEEK_DAYS"]:
         projected_hours = day_of_week * TRACKER["HOURS_PER_DAY"]
@@ -134,3 +160,20 @@ def _over_under(hours: float) -> float:
 
     return hours - projected_hours
 
+
+def show_day_breakdown(entries: list[Entry]) -> str:
+    tasks = {}
+    for entry in entries:
+        tasks[entry.title] = tasks.get(entry.title, 0.0) + entry.total_time
+
+    output = ""
+    for name, amount in tasks.items():
+        output += f"* {name:<8} {_convert_float_to_time(amount)} hours\n"
+
+    return output
+
+def _convert_float_to_time(hours: float) -> str:
+    h = int(abs(hours))
+    m = int(round((abs(hours) - h) * 60, 0))
+
+    return f"{h:02d}:{m:02d}"

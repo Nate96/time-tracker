@@ -14,7 +14,7 @@ if __name__ == '__main__':
                         formatter_class=argparse.RawDescriptionHelpFormatter,
                         prog='tt',
                         description='punch in punch out system',
-                        epilog=f'''
+                        epilog='''
 Actions:
   i "your comment"    Punches in
   o "your comment"    Punches out
@@ -44,5 +44,5 @@ Actions:
         presenter.show_last_entry()
     elif args.action == "show": presenter.show_entries(args.comment)
     elif args.action == "status": presenter.show_state()
-    elif args.action == "report": presenter.report()
+    elif args.action == "report": presenter.report(args.comment)
     else: print(MESSAGES[Res.INVALID_COMMAND])
