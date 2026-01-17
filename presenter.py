@@ -1,4 +1,5 @@
 from datetime import datetime
+import pprint
 
 from test_tt import test_status
 import time_sheet
@@ -104,35 +105,33 @@ def report(duration: str) -> None:
             total_hours += float(entry.total_time)
 
         print(f"\n{REPORT}")
-
         print(f'Sunday:    {_convert_float_to_time(week_hours[6])} Hours')
-        print(show_day_breakdown([e for e in entries if datetime.strptime(e.in_punch, DATE_FORMAT).weekday() == 6])[:-1])
-        print(DIVIDER)
+        show_day_breakdown([e for e in entries if datetime.strptime(e.in_punch, DATE_FORMAT).weekday() == 6])
+        print('')
 
         print(f'Monday:    {_convert_float_to_time(week_hours[0])} Hours')
-        print(show_day_breakdown([e for e in entries if datetime.strptime(e.in_punch, DATE_FORMAT).weekday() == 0])[:-1])
-        print(DIVIDER)
+        show_day_breakdown([e for e in entries if datetime.strptime(e.in_punch, DATE_FORMAT).weekday() == 0])
+        print('')
 
         print(f'Tuesday:   {_convert_float_to_time(week_hours[1])} Hours')
-        print(show_day_breakdown([e for e in entries if datetime.strptime(e.in_punch, DATE_FORMAT).weekday() == 1])[:-1])
-        print(DIVIDER)
+        show_day_breakdown([e for e in entries if datetime.strptime(e.in_punch, DATE_FORMAT).weekday() == 1])
+        print('')
 
         print(f'Wednesday: {_convert_float_to_time(week_hours[2])} Hours')
-        print(show_day_breakdown([e for e in entries if datetime.strptime(e.in_punch, DATE_FORMAT).weekday() == 2])[:-1])
-        print(DIVIDER)
+        show_day_breakdown([e for e in entries if datetime.strptime(e.in_punch, DATE_FORMAT).weekday() == 2])
+        print('')
 
         print(f'Thursday:  {_convert_float_to_time(week_hours[3])} Hours')
-        print(show_day_breakdown([e for e in entries if datetime.strptime(e.in_punch, DATE_FORMAT).weekday() == 3])[:-1])
-        print(DIVIDER)
+        show_day_breakdown([e for e in entries if datetime.strptime(e.in_punch, DATE_FORMAT).weekday() == 3])
+        print('')
 
         print(f'Friday:    {_convert_float_to_time(week_hours[4])} Hours')
-        print(show_day_breakdown([e for e in entries if datetime.strptime(e.in_punch, DATE_FORMAT).weekday() == 4])[:-1])
-        print(DIVIDER)
+        show_day_breakdown([e for e in entries if datetime.strptime(e.in_punch, DATE_FORMAT).weekday() == 4])
+        print('')
 
         print(f'Saturday:  {_convert_float_to_time(week_hours[5])} Hours')
-        print(show_day_breakdown([e for e in entries if datetime.strptime(e.in_punch, DATE_FORMAT).weekday() == 5])[:-1])
+        show_day_breakdown([e for e in entries if datetime.strptime(e.in_punch, DATE_FORMAT).weekday() == 5])
         print(DIVIDER)
-        
         print(f'Total:     {_convert_float_to_time(total_hours)} hours {_convert_float_to_time(_over_under(total_hours))}')
         print(f'{show_total_breakdown(entries)}')
 
@@ -177,16 +176,18 @@ def _over_under(hours: float) -> float:
     return hours - projected_hours
 
 
-def show_day_breakdown(entries: list[punch_clock.Entry]) -> str:
-    tasks = {}
-    for entry in entries:
-        tasks[entry.title] = tasks.get(entry.title, 0.0) + entry.total_time
+def show_day_breakdown(entries: list[punch_clock.Entry]) -> None:
+    if entries:
+        tasks = {}
+        for entry in entries:
+            tasks[entry.title] = tasks.get(entry.title, 0.0) + entry.total_time
 
-    output = ""
-    for name, amount in tasks.items():
-        output += f"* {name:<8} {_convert_float_to_time(amount)} hours\n"
+        output = ""
+        for name, amount in tasks.items():
+            output += f"* {name:<8} {_convert_float_to_time(amount)} hours\n"
 
-    return output
+        print(output[:-1])  # Remove last newline
+
 
 def _convert_float_to_time(hours: float) -> str:
     h = int(abs(hours))
