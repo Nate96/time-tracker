@@ -1,5 +1,5 @@
 from config import Res
-from punch_clock import punch_out, punch_in, status
+from punch_clock import punch_out, punch_in, status, task_break_down
 from time_sheet import get_entries
 from unittest.mock import MagicMock
 
@@ -43,6 +43,7 @@ def test_status(mocker):
     mock_connection = MagicMock()
     mock_cursor = MagicMock()
 
+    # TODO: Refactor so it doesn't call the database 3 times
     mock_cursor.execute.return_value.fetchone.side_effect = [ 
         None, # tc1
         None, # tc1
@@ -122,6 +123,37 @@ def test_entries(mocker):
 #     # GIVEN an Entry is added to the database
 #     punch_in("Test")
 #     punch_out("Test")
+
+def test_task_break_down(mocker):
+    mock_connection = MagicMock()
+    mock_cursor = MagicMock()
+
+    mock_cursor.execute.return_value.fetchall.side_effect = [ 
+        [
+            ( "1", "2025-01-15 09:00:00", "2025-01-15 10:00:00", 1.0, "task 1", "Test Comment"), 
+            ( "2", "2025-01-15 10:00:00", "2025-01-15 11:00:00", 1.0, "task 1", "Another Test Comment")
+        ], # TC1
+        [
+            ( "1", "2025-01-15 09:00:00", "2025-01-15 10:00:00", 1.0, "task 1", "Test Comment"), 
+            ( "2", "2025-01-15 10:00:00", "2025-01-15 11:00:00", 1.0, "task 2", "Another Test Comment"),
+            ( "2", "2025-01-15 12:00:00", "2025-01-15 13:00:00", 1.0, "task 2", "Another Test Comment")
+        ], # TC2
+    ]
+    mock_connection.cursor.return_value = mock_cursor
+    mocker.patch('sqlite3.connect', return_value=mock_connection)
+
+    # [TC1] GIVEN 2 entries with the same title.
+    #       VERIFY 1 task is returned with a total time of 2.0
+    assert task_break_down("all") == { "task 1": 2.0 }
+    
+
+    # [TC2] GIVEN 3 entries with 2 different titles.
+    #       VERIFY 2 tasks are returned with the correct total times.
+    assert task_break_down("all") == { "task 1": 1.0, "task 2": 2.0 }
+
+
+# TODO: Tests date cutoff for week, month, day
+
  
  
 

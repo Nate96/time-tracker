@@ -65,7 +65,6 @@ def status() -> State:
     Returns NO_PUNCH, OUT, IN 
     '''
     last_punch: Punch = time_sheet.get_last_punch()
-    print(last_punch)
 
     if last_punch.id == -1:
         return State(Res.NO_PUNCH)
@@ -73,3 +72,14 @@ def status() -> State:
         return State(Res.OUT)
     return State(Res.IN)
 
+
+def task_break_down(duration: str) -> dict[str, float]:
+    entries: list[Entry] = time_sheet.get_entries(duration)
+    task_dict: dict[str, float] = {}
+
+    for ent in entries:
+        if ent.title in task_dict:
+            task_dict[ent.title] += ent.total_time
+        else:
+            task_dict[ent.title] = ent.total_time
+    return task_dict

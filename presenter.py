@@ -1,7 +1,8 @@
-import time_sheet
-
 from datetime import datetime
-from punch_clock import Entry, Punch, State, status
+
+import time_sheet
+import punch_clock
+
 from config import TRACKER, Res, DATE_FORMAT, MESSAGES
 
 
@@ -14,7 +15,7 @@ REPORT  = "========= Report ==========="
 DIVIDER = "============================"
 
 
-def show_punch(punch: Punch):
+def show_punch(punch: punch_clock.Punch):
     """
     Returns
     string - {datetime}, COMMENT: {comment}
@@ -25,7 +26,7 @@ def show_punch(punch: Punch):
     print(f"{formatted}, COMMENT: {punch.comment}")
 
 
-def show_entry(entry: Entry):
+def show_entry(entry: punch_clock.Entry):
     """
     Returns:
     ==== Entry ====
@@ -43,7 +44,7 @@ def show_entry(entry: Entry):
 
 
 def show_entries(duration: str) -> None:
-    entries: list[Entry] = time_sheet.get_entries(duration)
+    entries: list[punch_clock.Entry] = time_sheet.get_entries(duration)
     total: float = 0.0
 
     if not entries:
@@ -131,10 +132,20 @@ def report(duration: str) -> None:
         print(DIVIDER)
         
         print(f'Total:     {_convert_float_to_time(total_hours)} hours {_convert_float_to_time(_over_under(total_hours))}')
+        print(f'           {show_total_breakdown(duration)}')
 
+
+def show_total_breakdown(duration: str) -> str:
+    break_down = punch_clock.task_break_down(duration)
+    output = ""
+
+    for name, amount in break_down.items():
+        output += f"* {name:<8} {_convert_float_to_time(amount)} hours\n"
+
+    return output
 
 def show_state():
-    rsl: State = status()
+    rsl: punch_clock.State = punch_clock.status()
     print(MESSAGES[rsl.res])
     day_total: float = 0.0
 
@@ -161,7 +172,7 @@ def _over_under(hours: float) -> float:
     return hours - projected_hours
 
 
-def show_day_breakdown(entries: list[Entry]) -> str:
+def show_day_breakdown(entries: list[punch_clock.Entry]) -> str:
     tasks = {}
     for entry in entries:
         tasks[entry.title] = tasks.get(entry.title, 0.0) + entry.total_time
