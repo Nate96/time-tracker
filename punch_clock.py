@@ -65,6 +65,7 @@ def status() -> State:
     Returns NO_PUNCH, OUT, IN 
     '''
     last_punch: Punch = time_sheet.get_last_punch()
+    print(last_punch)
 
     if last_punch.id == -1:
         return State(Res.NO_PUNCH)
