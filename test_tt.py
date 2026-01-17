@@ -1,12 +1,7 @@
-import os
-import time
-
-from config import Res, DATABASE
-from time_sheet import Entry
-from punch_clock import State, punch_out, punch_in, status
+from config import Res
+from punch_clock import punch_out, punch_in, status
 from time_sheet import get_entries
-from presenter import show_last_punch, show_last_entry, show_entries, report
-from unittest.mock import Mock, MagicMock, patch
+from unittest.mock import MagicMock
 
 # NOTE: tc = test case
 
@@ -80,77 +75,37 @@ def test_entries(mocker):
 
     mock_cursor.execute.return_value.fetchall.side_effect = [ 
         [
-            (
-                "1",
-                "2025-01-15 09:00:00",
-                "2025-01-15 10:00:00",
-                "1.0",
-                "Test Entry",
-                "Test Comment"
-            ), 
-            (
-                "2",
-                "2025-01-15 10:00:00",
-                "2025-01-15 11:00:00",
-                "1.0",
-                "Another Test Entry",
-                "Another Test Comment"
-            )
+            ( "1", "2025-01-15 09:00:00", "2025-01-15 10:00:00", "1.0", "Test Entry", "Test Comment"), 
+            ( "2", "2025-01-15 10:00:00", "2025-01-15 11:00:00", "1.0", "Another Test Entry", "Another Test Comment")
         ], # tc2
         [
-            (
-                "1",
-                "2025-01-15 09:00:00",
-                "2025-01-15 10:00:00",
-                "1.0",
-                "Test Entry",
-                "Test Comment"
-            ), 
-            (
-                "2",
-                "2025-01-15 10:00:00",
-                "2025-01-15 11:00:00",
-                "1.0",
-                "Another Test Entry",
-                "Another Test Comment"
-            )
+            ( "1", "2025-01-15 09:00:00", "2025-01-15 10:00:00", "1.0", "Test Entry", "Test Comment"), 
+            ( "2", "2025-01-15 10:00:00", "2025-01-15 11:00:00", "1.0", "Another Test Entry", "Another Test Comment")
         ], # tc3
         [
-            (
-                "1",
-                "2025-01-15 09:00:00",
-                "2025-01-15 10:00:00",
-                "1.0",
-                "Test Entry",
-                "Test Comment"
-            ), 
-            (
-                "2",
-                "2025-01-15 10:00:00",
-                "2025-01-15 11:00:00",
-                "1.0",
-                "Another Test Entry",
-                "Another Test Comment"
-            )
+            ( "1", "2025-01-15 09:00:00", "2025-01-15 10:00:00", "1.0", "Test Entry", "Test Comment"), 
+            ( "2", "2025-01-15 10:00:00", "2025-01-15 11:00:00", "1.0", "Another Test Entry", "Another Test Comment")
         ], # tc4
         [] # tc5
     ]
     mock_connection.cursor.return_value = mock_cursor
     mocker.patch('sqlite3.connect', return_value=mock_connection)
 
-    # [tc1] GIVEN the database is Empty WHEN invalid duration is inputed VERIFY
-    # get_entires returns an emptry list
+    # [tc1] GIVEN the database is Empty and an invalid duration is inputed
+    #       VERIFY get_entires returns an emptry list
     assert get_entries("test") == []
 
-    # [tc2,3,4] GIVEN the database has 2 entries VERIFY the length of res is 2
-    # for day, week, and month
+    # [tc2,3,4] GIVEN the database has 2 entries
+    #           VERIFY the length of res is 2 for day, week, and month
     assert len(get_entries("day")) == 2
     assert len(get_entries("week")) == 2
     assert len(get_entries("month")) == 2
 
-    # [tc5] GIVEN the database has 2 entries VERIFY get_entries returns an
-    # empty list when INVALID_INTPUT 
+    # [tc5] GIVEN the database has 2 entries
+    #       VERIFY get_entries returns an empty list when INVALID_INTPUT 
     assert get_entries("test") == []
+
+
 
    # VERIFY punch_in_for is 0.01, week_total is 0, day_toal is 0 
 #     assert s.get_punched_in_for() > 0
