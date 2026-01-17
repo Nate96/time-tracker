@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from test_tt import test_status
 import time_sheet
 import punch_clock
 
@@ -84,6 +85,7 @@ def show_last_entry(): show_entry(time_sheet.get_last_entry())
 
 
 def report(duration: str) -> None:
+    # Just doing weeks for now
     if not duration: duration = "week"
 
     entries = time_sheet.get_entries(duration)
@@ -132,14 +134,17 @@ def report(duration: str) -> None:
         print(DIVIDER)
         
         print(f'Total:     {_convert_float_to_time(total_hours)} hours {_convert_float_to_time(_over_under(total_hours))}')
-        print(f'           {show_total_breakdown(duration)}')
+        print(f'{show_total_breakdown(entries)}')
 
 
-def show_total_breakdown(duration: str) -> str:
-    break_down = punch_clock.task_break_down(duration)
+def show_total_breakdown(entries: list[punch_clock.Entry]) -> str:
     output = ""
+    task_dict: dict[str, float] = {}
 
-    for name, amount in break_down.items():
+    for ent in entries:
+        task_dict[ent.title] = task_dict.get(ent.title, 0.0) + ent.total_time
+
+    for name, amount in task_dict.items():
         output += f"* {name:<8} {_convert_float_to_time(amount)} hours\n"
 
     return output
