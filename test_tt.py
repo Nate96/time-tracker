@@ -43,6 +43,7 @@ def test_status(mocker):
     mock_connection = MagicMock()
     mock_cursor = MagicMock()
 
+    # TODO: Refactor so it doesn't call the database 3 times
     mock_cursor.execute.return_value.fetchone.side_effect = [ 
         None, # tc1
         None, # tc1
@@ -106,7 +107,6 @@ def test_entries(mocker):
     assert get_entries("test") == []
 
 
-
    # VERIFY punch_in_for is 0.01, week_total is 0, day_toal is 0 
 #     assert s.get_punched_in_for() > 0
 #     assert s.get_day_total() == 0
@@ -122,8 +122,7 @@ def test_entries(mocker):
 #     # GIVEN an Entry is added to the database
 #     punch_in("Test")
 #     punch_out("Test")
- 
- 
+
 
 # def test_presenter():
 # 

@@ -72,4 +72,3 @@ def status() -> State:
     elif last_punch.type == PunchType.OUT.value: 
         return State(Res.OUT)
     return State(Res.IN)
-
