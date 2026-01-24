@@ -16,8 +16,7 @@ if __name__ == '__main__':
                         description='punch in punch out system',
                         epilog='''
 Actions:
-  i "your comment" Punches in
-  o "your comment" Punches out
+  p "your comment" Punches in/out
   status           Shows the state of the time sheet (in or out)
   report           Shows the total worked hours for each day, and the total for
                    the current week
