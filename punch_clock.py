@@ -3,6 +3,8 @@ import time_sheet
 from datetime import datetime
 from config import PunchType, Res
 from time_sheet import Punch, Entry
+from config import PunchType
+from pydantic import BaseModel
 
 FORMAT_STRING = "%Y-%m-%d %H:%M:%S"
 
@@ -28,36 +30,19 @@ class State():
 
         for ent in entries: 
             total += ent.total_time
+
         return total
 
 
-def punch_in(comment: str) -> Res:
-    '''
-    Returns SEC_PUNCH OR INVAILID_IN_PUNCH
-    '''
-    # NOTE: does not have id
+def punch(comment: str) -> Punch | Entry:
     last_punch: Punch = time_sheet.get_last_punch()
 
-    if last_punch.id == -1 or last_punch.type == PunchType.OUT.value:
-        time_sheet.add_punch(Punch(PunchType.IN.value, comment))
-        return Res.SEC_IN
-    return Res.IN
+    print("!!", last_punch)
 
-
-def punch_out(comment: str) -> Res:
-    '''
-    Returns NO_PUNCH, INVAID_OUT, SEC_PUNCH, DB.ERROR
-    '''
-    last_punch: Punch = time_sheet.get_last_punch()
-
-    if last_punch.id == -1:
-        return Res.NO_PUNCH 
-    elif last_punch.type == "out":
-        return Res.OUT
-    else: 
-        time_sheet.add_punch(Punch(PunchType.OUT.value, comment))
-        time_sheet.add_entry()
-        return Res.SEC_OUT
+    if last_punch.type == PunchType.IN:
+        return time_sheet.punch_out(comment)
+    else:
+        return time_sheet.add_punch(comment, PunchType.IN)
 
 
 def status() -> State:
@@ -70,4 +55,5 @@ def status() -> State:
         return State(Res.NO_PUNCH)
     elif last_punch.type == PunchType.OUT.value: 
         return State(Res.OUT)
+
     return State(Res.IN)

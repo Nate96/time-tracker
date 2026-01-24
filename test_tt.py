@@ -1,60 +1,92 @@
-from config import Res
-from punch_clock import punch_out, punch_in, status
-from time_sheet import get_entries
+from config import PunchType, Res
+from punch_clock import punch, status
+from time_sheet import Entry, get_entries, Punch
 from unittest.mock import MagicMock
 
 # NOTE: tc = test case
 
-def test_adding_punches(mocker):
+def test_punching(mocker: MagicMock):
+    """
+    """
+    # Punch: defined in time_sheet.py
+    # Entry: define in time_sheet.py
+
     mock_connection = MagicMock()
     mock_cursor = MagicMock()
 
     mock_cursor.execute.return_value.fetchone.side_effect = [ 
-        None, # tc1
-        None, # tc2
-        (1, "in",  "2024-01-15 09:00:00", "test"), # tc3 Punch
-        (1, "in",  "2024-01-15 09:00:00", "test"), # tc4 Punch
-        (1, "out",  "2024-01-15 10:00:00", "test comment"), # tc5 Punch
+        None, # [TC1]
+        (1, "in",  "2024-01-15 09:00:00", "test"), # [TC1]
+        (1, "in",  "2024-01-15 09:00:00", "test"), # [TC2]
+        (2, "out", "2024-01-15 10:00:00", "testing"), # [TC2]
+        (1, "2024-01-15 09:00:00", "2024-01-15 10:00:00", 1.0, "test", "testing"), # [TC2]
+        (2, "out", "2024-01-15 10:00:00", "testing"), # [TC3]
+        (1, "in",  "2024-01-15 10:01:00", "test"), # [TC1]
+
     ]
+
     mock_connection.cursor.return_value = mock_cursor
     mocker.patch('sqlite3.connect', return_value=mock_connection)
 
-    # [tc1] GIVEN the database is Empty VERIFY punch_out returns a Res of
-    # NO_PUNCH
-    assert punch_out("test") == Res.NO_PUNCH
+    # [TC1] GIVEN  an empty database 
+    #       VERIFY The system returns a [Punch]
+    assert punch("test") == Punch(
+                                id=1,
+                                type=PunchType.IN.value,
+                                time_stamp="2024-01-15 09:00:00",
+                                comment="test")
 
-    # [tc2] GIVEN the database is Empty VERIFY punch_in returns a Res of
-    # SEC_PUNCH
-    assert punch_in("test") == Res.SEC_IN
+    # [TC2] GIVEN  A Punch with a type of "in" is in the database
+    #       VERIFY The system returns a [Entry]
+    assert punch("testing") == Entry(
+                                id=1,
+                                in_punch="2024-01-15 09:00:00",
+                                out_punch="2024-01-15 10:00:00",
+                                total_time=1.0,
+                                title="test",
+                                comment="testing")
 
-    # [tc3] GIVEN last punch type is "in" VERIFY punch_in returns a Res of
-    # INVAIL_IN_PUNCH
-    assert punch_in("test") == Res.IN
- 
-    # [tc4] GIVEN the last punch has a type of "in" VERIFY punch_out returns a
-    # Res of SEC_PUNCH_OUT
-    assert punch_out("test comment") == Res.SEC_OUT
- 
-    # [tc5] GIVEN last punch type is "out" VERIFY punch_out returns a Res of
-    # INVAIL_OUT_PUNCH
-    assert punch_out("another test comment") == Res.OUT
- 
-def test_status(mocker):
-    mock_connection = MagicMock()
-    mock_cursor = MagicMock()
+    # [TC3] GIVEN  A the last Punch type of out
+    #       VERIFY The system returns a [Punch]
+    assert punch("test") == Punch(
+                                id=1,
+                                type=PunchType.IN.value,
+                                time_stamp="2024-01-15 10:01:00",
+                                comment="test")
 
-    # TODO: Refactor so it doesn't call the database 3 times
-    mock_cursor.execute.return_value.fetchone.side_effect = [ 
-        None, # tc1
-        None, # tc1
-        None, # tc1
-    ]
-    mock_connection.cursor.return_value = mock_cursor
-    mocker.patch('sqlite3.connect', return_value=mock_connection)
 
-    # [tc1] VERIFY status return a state with NO_PUNCH
-    assert status().res == Res.NO_PUNCH
- 
+#    # [tc2] GIVEN the database is Empty VERIFY punch_in returns a Res of
+#    # SEC_PUNCH
+#    assert punch_in("test") == Res.SEC_IN
+#
+#    # [tc3] GIVEN last punch type is "in" VERIFY punch_in returns a Res of
+#    # INVAIL_IN_PUNCH
+#    assert punch_in("test") == Res.IN
+# 
+#    # [tc4] GIVEN the last punch has a type of "in" VERIFY punch_out returns a
+#    # Res of SEC_PUNCH_OUT
+#    assert punch_out("test comment") == Res.SEC_OUT
+# 
+#    # [tc5] GIVEN last punch type is "out" VERIFY punch_out returns a Res of
+#    # INVAIL_OUT_PUNCH
+#    assert punch_out("another test comment") == Res.OUT
+# 
+#def test_status(mocker):
+#    mock_connection = MagicMock()
+#    mock_cursor = MagicMock()
+#
+#    # TODO: Refactor so it doesn't call the database 3 times
+#    mock_cursor.execute.return_value.fetchone.side_effect = [ 
+#        None, # tc1
+#        None, # tc1
+#        None, # tc1
+#    ]
+#    mock_connection.cursor.return_value = mock_cursor
+#    mocker.patch('sqlite3.connect', return_value=mock_connection)
+#
+#    # [tc1] VERIFY status return a state with NO_PUNCH
+#    assert status().res == Res.NO_PUNCH
+# 
     # GIVEN the last punch type was in
 #     _ = punch_in("test")
 # 

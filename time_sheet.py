@@ -1,73 +1,95 @@
 # ISSUE: Create Table sql script has two commands and python
 #        does not support this.
 
-from config import DATABASE, SQL
+from pydantic import BaseModel
+
+from config import DATABASE, SQL, PunchType
 from datetime import datetime, date, timedelta
 
 import sqlite3
 
 INPUT_FORMAT = "%Y-%m-%d %H:%M:%S"
 
-class Punch():
-    def __init__(self, 
-                 punch_type: str,
-                 comment: str,
-                 time_stamp=datetime.now().strftime(INPUT_FORMAT),
-                 id=0):
-        self.id         = id
-        self.type       = punch_type
-        self.time_stamp = time_stamp
-        self.comment    = comment
+class Punch(BaseModel):
+    id:         int
+    type:       PunchType
+    time_stamp: str
+    comment:    str
 
 
-class Entry():
-    def __init__(self,
-                 id: int,
-                 total_time: float,
-                 title: str,
-                 comment: str,
-                 in_punch=datetime.now().strftime(INPUT_FORMAT),
-                 out_punch=datetime.now().strftime(INPUT_FORMAT)):
-        self.id         = id
-        self.total_time = total_time
-        self.title      = title
-        self.comment    = comment
-        self.in_punch   = in_punch
-        self.out_punch  = out_punch
+class Entry(BaseModel):
+    id:         int
+    in_punch:   str
+    out_punch:  str
+    total_time: float
+    title:      str
+    comment:    str
 
 
-def add_punch(punch: Punch) -> None: 
+def add_punch(comment: str, punch_type: PunchType) -> Punch: 
     create_tables()
 
     con = sqlite3.connect(f'{DATABASE}')
     con.cursor().execute(_sql_script(SQL['INSERT_PUNCH']),
                          (
-                              punch.type,
-                              punch.comment
+                              punch_type.value,
+                              comment
                           ))
     con.commit()
     con.close()
 
+    return get_last_punch()
 
-def add_entry(): 
-    create_tables()
+
+def punch_out(comment: str) -> Entry: 
+    add_punch(comment, PunchType.OUT)
 
     con = sqlite3.connect(f'{DATABASE}')
     con.cursor().execute(_sql_script(SQL['INSERT_ENTRY']))
     con.commit()
     con.close()
 
+    return get_last_entry()
+
+
+def get_last_punch() -> Punch: 
+    create_tables()
+
+    con = sqlite3.connect(f'{DATABASE}')
+    res = con.cursor().execute(_sql_script(SQL['LAST_PUNCH'])).fetchone()
+    con.close()
+
+    print('ts!!', res)
+
+    if res is None:
+        return Punch(id=-1, type=PunchType.OUT, time_stamp="", comment="")
+
+    return Punch(id=res[0], type=res[1], time_stamp=res[2], comment=res[3])
+
 
 
 def get_last_entry() -> Entry:
     create_tables()
+
     con = sqlite3.connect(f'{DATABASE}')
     res = con.cursor().execute(_sql_script(SQL['LAST_ENTRY'])).fetchone()
 
     if res:
-        return Entry(res[0], res[3], res[4], res[5], res[1], res[2])
+        return Entry(
+                id=res[0],
+                in_punch=res[1],
+                out_punch=res[2],
+                total_time=res[3],
+                title=res[4],
+                comment=res[5])
     else:
-        return Entry(-1, 0.0, "", "")
+        return Entry(
+                id=-1,
+                in_punch="",
+                out_punch="",
+                total_time=0.0,
+                title="",
+                comment="")
             
 
 def get_entries(duration: str) -> list[Entry]:
@@ -116,20 +138,6 @@ def get_entries(duration: str) -> list[Entry]:
 
     con.close()
     return entries
-
-
-def get_last_punch() -> Punch: 
-    create_tables()
-
-    con = sqlite3.connect(f'{DATABASE}')
-    res = con.cursor().execute(_sql_script(SQL['LAST_PUNCH'])).fetchone()
-    con.close()
-
-    if res is None:
-        return Punch("", "", id=-1 )
-
-    return Punch(id=res[0], punch_type=res[1], time_stamp=res[2], comment=res[3])
-
 
 
 
