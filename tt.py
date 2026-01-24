@@ -34,13 +34,8 @@ Actions:
     args = parser.parse_args(args)
 
     if args.action in ("p", "punch"):
-        results = punch_clock.punch(args.comment)
-
-        if isinstance(results, Punch):
-            presenter.show_punch(results)
-        else:
-            presenter.show_entry(results)
-
+        punch_clock.punch(args.comment)
+        presenter.show_state()
     elif args.action == "show": presenter.show_entries(args.comment)
     elif args.action == "status": presenter.show_state()
     elif args.action == "report": presenter.report(args.comment)

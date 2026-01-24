@@ -3,7 +3,7 @@ from datetime import datetime
 import time_sheet
 import punch_clock
 
-from config import TRACKER, Res, DATE_FORMAT, MESSAGES
+from config import TRACKER, PunchType, Res, DATE_FORMAT, MESSAGES
 
 
 DATE_TIME_FORMAT   = "%Y-%m-%d %I:%M %p"
@@ -35,7 +35,9 @@ def show_entry(entry: punch_clock.Entry):
     temp = datetime.strptime(f'{entry.out_punch}', DATE_FORMAT)
     out_formatted = temp.strftime(TIME_FORMAT)
 
-    print(f"{in_formatted} - {out_formatted}, {round(entry.total_time, 2)} Hours\n{entry.title}\n{entry.comment}")
+    print(f"{round(entry.total_time, 2)} Hours {in_formatted} - {out_formatted}")
+    print(f"_{entry.title}_")
+    print(entry.comment)
 
 
 def show_entries(duration: str):
@@ -139,8 +141,10 @@ def show_state():
     state = punch_clock.State()
     session_total: float = 0.0
 
-    if state.last_punch != -1:
-        if  state.last_punch.type == Res.IN.value:
+    if state.last_punch.id != -1:
+        print("**STATE**:", state.last_punch.type.value)
+
+        if  state.last_punch.type == PunchType.IN:
             session_total: float = state.get_punched_in_for()
 
             show_punch(state.last_punch)
@@ -149,8 +153,9 @@ def show_state():
         else:
             show_entry(state.last_entry)
             print('')
-        print(f'Day:    {session_total + state.get_day_total():.2f} hours')
-        print(f'Week:   {session_total + state.get_week_total():.2f} hours')
+
+        print(f'Day:     {session_total + state.get_day_total():.2f} hours')
+        print(f'Week:    {session_total + state.get_week_total():.2f} hours')
     else:
         print(Res.NO_DB.value)
 
