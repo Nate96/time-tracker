@@ -59,8 +59,6 @@ def get_last_punch() -> Punch:
     res = con.cursor().execute(_sql_script(SQL['LAST_PUNCH'])).fetchone()
     con.close()
 
-    print('ts!!', res)
-
     if res is None:
         return Punch(id=-1, type=PunchType.OUT, time_stamp="", comment="")
 
@@ -109,14 +107,7 @@ def get_entries(duration: str) -> list[Entry]:
                           """
                 ).fetchall()
     elif duration == "last":
-        start, end = _get_last_week_date_range()
-        print(start, end)
-        res = cur.execute(f"""
-                          SELECT *
-                          FROM Entry
-                          WHERE DATE(in_punch) BETWEEN DATE('{start}') AND DATE('{end}');
-                          """
-                ).fetchall()
+        return [get_last_entry()]
     elif duration == "month":
         res = cur.execute(_sql_script(SQL['MONTH'])).fetchall()
     elif duration == "all":
