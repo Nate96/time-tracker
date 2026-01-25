@@ -16,8 +16,7 @@ DIVIDER = "======================"
 
 def show_punch(punch: punch_clock.Punch):
     """
-    Returns
-    string - {datetime}, COMMENT: {comment}
+    comment, date
     """
     temp = datetime.strptime(f'{punch.time_stamp}', DATE_FORMAT)
     formatted = temp.strftime(DATE_TIME_FORMAT)
@@ -27,7 +26,9 @@ def show_punch(punch: punch_clock.Punch):
 
 def show_entry(entry: punch_clock.Entry):
     """
-    Returns:
+    {total} Hours (in out)
+    title
+    comment
     """
     temp = datetime.strptime(f'{entry.in_punch}', DATE_FORMAT)
     in_formatted = temp.strftime(DATE_TIME_FORMAT)
