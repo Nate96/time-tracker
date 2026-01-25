@@ -3,36 +3,32 @@ from datetime import datetime
 import time_sheet
 import punch_clock
 
-from config import TRACKER, Res, DATE_FORMAT, MESSAGES
+from config import TRACKER, PunchType, Res, DATE_FORMAT, MESSAGES
 
 
 DATE_TIME_FORMAT   = "%Y-%m-%d %I:%M %p"
 DATE_TIME_FORMAT_2 = "%Y-%m-%d %I:%M %p"
 TIME_FORMAT        = "%I:%M %p"
 
-HEADER  = "========= Entry ========\n"
 REPORT  = "======= Report ======="
 DIVIDER = "======================"
 
 
-def show_punch(punch: punch_clock.Punch) -> str:
+def show_punch(punch: punch_clock.Punch):
     """
-    Returns
-    string - {datetime}, COMMENT: {comment}
+    comment, date
     """
     temp = datetime.strptime(f'{punch.time_stamp}', DATE_FORMAT)
     formatted = temp.strftime(DATE_TIME_FORMAT)
 
-    return f"{formatted}, COMMENT: {punch.comment}"
+    print(f"{punch.comment}, {formatted}")
 
 
 def show_entry(entry: punch_clock.Entry):
     """
-    Returns:
-    ==== Entry ====
-    {in_punch_datetime} - {out_punch_time} {total_time} Hours
-    {task_name}
-    {task_comment}
+    {total} Hours (in out)
+    title
+    comment
     """
     temp = datetime.strptime(f'{entry.in_punch}', DATE_FORMAT)
     in_formatted = temp.strftime(DATE_TIME_FORMAT)
@@ -40,10 +36,12 @@ def show_entry(entry: punch_clock.Entry):
     temp = datetime.strptime(f'{entry.out_punch}', DATE_FORMAT)
     out_formatted = temp.strftime(TIME_FORMAT)
 
-    print(f"{HEADER}{in_formatted} - {out_formatted}, {round(entry.total_time, 2)} Hours\n{entry.title}\n{entry.comment}")
+    print(f"{round(entry.total_time, 2)} Hours {in_formatted} - {out_formatted}")
+    print(f"_{entry.title}_")
+    print(entry.comment)
 
 
-def show_entries(duration: str) -> None:
+def show_entries(duration: str):
     entries: list[punch_clock.Entry] = time_sheet.get_entries(duration)
     total: float = 0.0
 
@@ -77,7 +75,7 @@ def show_entries(duration: str) -> None:
        print(f'\nTotal: {total:.2f} hours')
 
 
-def show_last_punch( ): show_punch(time_sheet.get_last_punch())
+def show_last_punch(): show_punch(time_sheet.get_last_punch())
 
 
 def show_last_entry(): show_entry(time_sheet.get_last_entry())
@@ -139,21 +137,28 @@ def show_total_breakdown(entries: list[punch_clock.Entry]) -> str:
 
     return output
 
+
 def show_state():
-    rsl: punch_clock.State = punch_clock.status()
-    print(MESSAGES[rsl.res])
-    day_total: float = 0.0
+    state = punch_clock.State()
+    session_total: float = 0.0
 
-    if rsl.res != Res.NO_PUNCH:
-        if  rsl.res == Res.IN:
-            day_total: float = rsl.get_punched_in_for()
+    if state.last_punch.id != -1:
+        print("**STATE**:", state.last_punch.type.value)
 
-            print(show_punch(rsl.last_punch), '\n')
-            print(f'For:  {day_total:.2f} hours')
+        if  state.last_punch.type == PunchType.IN:
+            session_total: float = state.get_punched_in_for()
+
+            show_punch(state.last_punch)
+            print('')
+            print(f'Session: {session_total:.2f} hours')
         else:
-            print(show_entry(rsl.last_entry), '\n')
-        print(f'Day:  {day_total + rsl.get_day_total():.2f} hours')
-        print(f'Week: {day_total + rsl.get_week_total():.2f} hours')
+            show_entry(state.last_entry)
+            print('')
+
+        print(f'Day:     {session_total + state.get_day_total():.2f} hours')
+        print(f'Week:    {session_total + state.get_week_total():.2f} hours')
+    else:
+        print(Res.NO_DB.value)
 
 
 def show_day_breakdown(entries: list[punch_clock.Entry]) -> None:
