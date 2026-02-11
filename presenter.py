@@ -37,7 +37,7 @@ def show_entry(entry: punch_clock.Entry):
     out_formatted = temp.strftime(TIME_FORMAT)
 
     print(f"{round(entry.total_time, 2)} Hours {in_formatted} - {out_formatted}")
-    print(f"_{entry.title}_")
+    print(f"*{entry.title}*")
     print(entry.comment)
 
 
@@ -150,13 +150,13 @@ def show_state():
 
             show_punch(state.last_punch)
             print('')
-            print(f'Session: {session_total:.2f} hours')
+            print(f'Session: {_convert_float_to_time(session_total)} hours')
         else:
             show_entry(state.last_entry)
             print('')
 
-        print(f'Day:     {session_total + state.get_day_total():.2f} hours')
-        print(f'Week:    {session_total + state.get_week_total():.2f} hours')
+        print(f'Day:     {_convert_float_to_time(session_total + state.get_day_total())} hours')
+        print(f'Week:    {_convert_float_to_time(session_total + state.get_week_total())} hours')
     else:
         print(Res.NO_DB.value)
 
