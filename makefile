@@ -8,8 +8,8 @@ help:
 	@echo "4. coverage: Builds .htmlcov/"
 
 install:
-	@echo "alias tt='uv run $(realpath tt.py)'" >> ~/.zshrc
-	@echo "Restart temrinal"
+	@echo "alias tt='uv run --project $(realpath .) $(realpath tt.py)'" >> ~/.zshrc
+	@echo "source ~/.zshrc"
 	git branch local
 	git checkout local
 
