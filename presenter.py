@@ -1,4 +1,6 @@
 from datetime import datetime
+from rich.console import Console
+from rich.table import Table
 
 import time_sheet
 import punch_clock
@@ -6,9 +8,8 @@ import punch_clock
 from config import PunchType, Res, DATE_FORMAT, MESSAGES
 
 
-DATE_TIME_FORMAT   = "%Y-%m-%d %I:%M %p"
-DATE_TIME_FORMAT_2 = "%Y-%m-%d %I:%M %p"
-TIME_FORMAT        = "%I:%M %p"
+DATE_TIME_FORMAT = "%Y-%m-%d %I:%M %p"
+TIME_FORMAT      = "%I:%M %p"
 
 REPORT  = "==== Report ===="
 DIVIDER = "================"
@@ -42,21 +43,26 @@ def show_entry(entry: punch_clock.Entry):
 
 
 def show_entries(duration: str):
+
     entries: list[punch_clock.Entry] = time_sheet.get_entries(duration)
     total: float = 0.0
+
+    table = Table(
+            box=None,
+            header_style="bold underline",
+            )
+
+    table.add_column("Day",       justify="left", style="cyan", no_wrap=True)
+    table.add_column("In Punch",  justify="left", style="green", no_wrap=True)
+    table.add_column("Out Punch", justify="left", style="yellow", no_wrap=True)
+    table.add_column("Total",     justify="left", style="blue", no_wrap=True)
+    table.add_column("Title",     justify="left", style="magenta", no_wrap=True)
+    table.add_column("Comment",   justify="left", style="bright_green", no_wrap=True)
 
     if not entries:
         print(MESSAGES[Res.NO_PUNCH])
     else:
-
-       headers = ["In punch", "Out Punch", "Day", "Total", "Title", "Comment"]
-
-       title_len = max(len(str(e.title)) for e in entries)
-
-       print(f'{headers[0]:<20} {headers[1]:<10} {headers[2]:<10} {headers[3]:<6} {headers[4]:<{title_len}} {headers[5]:<30}')
-       print('-' * 90)
-
-       for e in entries:
+        for e in entries:
            temp = datetime.strptime(f'{e.in_punch}', DATE_FORMAT)
            in_formatted = temp.strftime(DATE_TIME_FORMAT)
 
@@ -69,10 +75,13 @@ def show_entries(duration: str):
            e.title = e.title.replace("\n", "")
            e.comment = e.comment.replace("\n", "")
 
-           print(f'{in_formatted:<20} {out_formatted:<10} {day:<10} {e.total_time:<6} {e.title:<{title_len}}: {e.comment:<30}')
+           table.add_row(day,in_formatted, out_formatted, str(e.total_time), e.title, e.comment)
            total += e.total_time
-    
-       print(f'\nTotal: {_convert_float_to_time(total)}')
+
+        console = Console()
+        console.print(table)
+
+        print(f'\nTotal: {_convert_float_to_time(total)}')
 
 
 def show_last_punch(): show_punch(time_sheet.get_last_punch())
