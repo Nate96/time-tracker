@@ -1,11 +1,11 @@
 __pycache__
-Log.db
 .DS_Store
 results.txt
 bin/
 obj/
 
 timesheet.db
+.env
 
 .coverage
 time_tracker.egg-info/

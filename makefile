@@ -10,8 +10,8 @@ help:
 install:
 	@echo "alias tt='uv run --project $(realpath .) $(realpath tt.py)'" >> ~/.zshrc
 	@echo "source ~/.zshrc"
-	git branch local
-	git checkout local
+	@echo "ROOT=$(realpath .)" >> .env
+	git checkout -b local
 
 build:
 	uv build

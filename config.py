@@ -1,9 +1,12 @@
+import os
 from enum import Enum
+from dotenv import load_dotenv
+
+load_dotenv()
 
 DATE_FORMAT = "%Y-%m-%d %H:%M:%S"
 
-
-ROOT:     str = "."
+ROOT:     str = str(os.getenv("ROOT")) if not None else "./"
 DATABASE: str = "./timesheet.db"
 
 class Res(Enum):

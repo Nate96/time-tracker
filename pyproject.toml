@@ -5,6 +5,7 @@ description = "App that tracks time"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
+    "dotenv>=0.9.9",
     "pydantic>=2.12.5",
     "pytest>=8.4.1",
     "pytest-cov>=6.3.0",
