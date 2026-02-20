@@ -7,7 +7,6 @@ import punch_clock
 
 from config import PunchType, Res, DATE_FORMAT, MESSAGES
 
-
 DATE_TIME_FORMAT = "%Y-%m-%d %I:%M %p"
 TIME_FORMAT      = "%I:%M %p"
 
