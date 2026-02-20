@@ -4,7 +4,7 @@
 from pydantic import BaseModel
 
 from config import DATABASE, SQL, PunchType
-from datetime import datetime, date, timedelta
+from datetime import date, timedelta
 
 import sqlite3
 
@@ -27,7 +27,7 @@ class Entry(BaseModel):
 
 
 def add_punch(comment: str, punch_type: PunchType) -> Punch: 
-    create_tables()
+    _create_tables()
 
     con = sqlite3.connect(f'{DATABASE}')
     con.cursor().execute(_sql_script(SQL['INSERT_PUNCH']),
@@ -53,7 +53,7 @@ def punch_out(comment: str) -> Entry:
 
 
 def get_last_punch() -> Punch: 
-    create_tables()
+    _create_tables()
 
     con = sqlite3.connect(f'{DATABASE}')
     res = con.cursor().execute(_sql_script(SQL['LAST_PUNCH'])).fetchone()
@@ -67,7 +67,7 @@ def get_last_punch() -> Punch:
 
 
 def get_last_entry() -> Entry:
-    create_tables()
+    _create_tables()
 
     con = sqlite3.connect(f'{DATABASE}')
     res = con.cursor().execute(_sql_script(SQL['LAST_ENTRY'])).fetchone()
@@ -88,10 +88,10 @@ def get_last_entry() -> Entry:
                 total_time=0.0,
                 title="",
                 comment="")
-            
+
 
 def get_entries(duration: str) -> list[Entry]:
-    create_tables()
+    _create_tables()
 
     con = sqlite3.connect(f'{DATABASE}')
     cur = con.cursor()
@@ -99,20 +99,27 @@ def get_entries(duration: str) -> list[Entry]:
     if duration == "day":
         res = cur.execute(_sql_script(SQL['TODAY'])).fetchall()
     elif duration == "week":
-        start, end = _get_current_week_date_range()
-        res = cur.execute(f"""
-                          SELECT *
-                          FROM Entry
-                          WHERE DATE(in_punch) BETWEEN DATE('{end}') AND DATE('{start}');
-                          """
-                ).fetchall()
+        start, end = _get_week_date_range()
+        res = cur.execute(_sql_script(SQL['GET_ENTRIES']), 
+                          (
+                              start,
+                              end)
+                          ).fetchall()
     elif duration == "last":
         return [get_last_entry()]
     elif duration == "month":
         res = cur.execute(_sql_script(SQL['MONTH'])).fetchall()
     elif duration == "all":
         res = cur.execute("SELECT * FROM Entry;").fetchall()
+    elif duration == "last week":
+        start, end = _get_week_date_range()
+        res = cur.execute(_sql_script(SQL['GET_ENTRIES']), 
+                          (
+                              (str(end - timedelta(days=7))),
+                              str(end))
+                          ).fetchall()
     else:
+
         con.close()
         return []
 
@@ -133,17 +140,12 @@ def get_entries(duration: str) -> list[Entry]:
 
 
 def _sql_script(file_path: str) -> str:
-    """sql script
-    Reads in the given .sql file
-
-    Returns: sql_stript string
-    """
     with open(file_path, 'r') as file:
         script = file.read()
     return script
 
 
-def create_tables():
+def _create_tables():
     conn = sqlite3.connect(f'{DATABASE}')
     cur = conn.cursor()
 
@@ -153,18 +155,8 @@ def create_tables():
     conn.commit()
     conn.close()
 
-def _get_current_week_date_range() -> tuple[date, date]:
-    today = date.today()
+def _get_week_date_range(today = date.today()) -> tuple[date, date]:
     day_of_week_sunday_0 = (today.weekday() + 1) % 7
     start_of_week = today - timedelta(days=day_of_week_sunday_0)
 
     return (today, start_of_week)
-
-def _get_last_week_date_range() -> tuple[date, date]:
-    today = date.today()
-    day_of_week_sunday_0 = (today.weekday() + 1) % 7
-    start_of_this_week = today - timedelta(days=day_of_week_sunday_0)
-    start_of_last_week = start_of_this_week - timedelta(days=7)
-    end_of_last_week = start_of_this_week - timedelta(days=1)
-
-    return (start_of_last_week, end_of_last_week)
