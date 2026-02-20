@@ -15,31 +15,70 @@ REPORT  = "==== Report ===="
 DIVIDER = "================"
 
 
-def show_punch(punch: punch_clock.Punch):
-    """
-    comment, date
-    """
-    temp = datetime.strptime(f'{punch.time_stamp}', DATE_FORMAT)
-    formatted = temp.strftime(DATE_TIME_FORMAT)
+def show_state():
+    state = punch_clock.State()
+    session_total: float = 0.0
 
-    print(f"{punch.comment}, {formatted}")
+    if state.last_punch.id != -1:
+        print("**STATE**:", state.last_punch.type.value)
+
+        if  state.last_punch.type == PunchType.IN:
+            session_total: float = state.get_punched_in_for()
+
+            _show_punch(state.last_punch)
+            print('')
+            print(f'Session: {_convert_float_to_time(session_total)}')
+        else:
+            _show_entry(state.last_entry)
+            print('')
+
+        print(f'Day:     {_convert_float_to_time(session_total + state.get_day_total())}')
+        print(f'Week:    {_convert_float_to_time(session_total + state.get_week_total())}')
+    else:
+        print(Res.NO_DB.value)
 
 
-def show_entry(entry: punch_clock.Entry):
-    """
-    {total}  (in out)
-    title
-    comment
-    """
-    temp = datetime.strptime(f'{entry.in_punch}', DATE_FORMAT)
-    in_formatted = temp.strftime(DATE_TIME_FORMAT)
+def report(duration: str) -> None:
+    if duration == "last": duration = "last week"
 
-    temp = datetime.strptime(f'{entry.out_punch}', DATE_FORMAT)
-    out_formatted = temp.strftime(TIME_FORMAT)
+    entries = time_sheet.get_entries(duration)
 
-    print(f"{round(entry.total_time, 2)}  {in_formatted} - {out_formatted}")
-    print(f"*{entry.title}*")
-    print(entry.comment)
+    if not entries:
+        print(MESSAGES[Res.NO_PUNCH])
+    else:
+        week_hours: list[float] = [0.0] * 7
+        total_hours = 0
+
+        for entry in entries:
+            punch: datetime = datetime.strptime(entry.in_punch, DATE_FORMAT)
+
+            week_hours[punch.weekday()] += float(entry.total_time)
+            total_hours += float(entry.total_time)
+
+        print(f"\n{REPORT}")
+        print(f'Sunday:    {_convert_float_to_time(week_hours[6])}')
+        _show_day_breakdown([e for e in entries if datetime.strptime(e.in_punch, DATE_FORMAT).weekday() == 6])
+
+        print(f'Monday:    {_convert_float_to_time(week_hours[0])}')
+        _show_day_breakdown([e for e in entries if datetime.strptime(e.in_punch, DATE_FORMAT).weekday() == 0])
+
+        print(f'Tuesday:   {_convert_float_to_time(week_hours[1])}')
+        _show_day_breakdown([e for e in entries if datetime.strptime(e.in_punch, DATE_FORMAT).weekday() == 1])
+
+        print(f'Wednesday: {_convert_float_to_time(week_hours[2])}')
+        _show_day_breakdown([e for e in entries if datetime.strptime(e.in_punch, DATE_FORMAT).weekday() == 2])
+
+        print(f'Thursday:  {_convert_float_to_time(week_hours[3])}')
+        _show_day_breakdown([e for e in entries if datetime.strptime(e.in_punch, DATE_FORMAT).weekday() == 3])
+
+        print(f'Friday:    {_convert_float_to_time(week_hours[4])}')
+        _show_day_breakdown([e for e in entries if datetime.strptime(e.in_punch, DATE_FORMAT).weekday() == 4])
+
+        print(f'Saturday:  {_convert_float_to_time(week_hours[5])}')
+        _show_day_breakdown([e for e in entries if datetime.strptime(e.in_punch, DATE_FORMAT).weekday() == 5])
+        print(DIVIDER)
+        print(f'Total:     {_convert_float_to_time(total_hours)}')
+        print(f'{_show_total_breakdown(entries)}')
 
 
 def show_entries(duration: str):
@@ -84,56 +123,27 @@ def show_entries(duration: str):
         print(f'\nTotal: {_convert_float_to_time(total)}')
 
 
-def show_last_punch(): show_punch(time_sheet.get_last_punch())
-
-
-def show_last_entry(): show_entry(time_sheet.get_last_entry())
-
-
-def report(duration: str) -> None:
-    if duration == "last": duration = "last week"
-
-    entries = time_sheet.get_entries(duration)
-
-    if not entries:
-        print(MESSAGES[Res.NO_PUNCH])
-    else:
-        week_hours: list[float] = [0.0] * 7
-        total_hours = 0
-
+def _show_day_breakdown(entries: list[punch_clock.Entry]) -> None:
+    if entries:
+        tasks = {}
         for entry in entries:
-            punch: datetime = datetime.strptime(entry.in_punch, DATE_FORMAT)
+            tasks[entry.title] = tasks.get(entry.title, 0.0) + entry.total_time
 
-            week_hours[punch.weekday()] += float(entry.total_time)
-            total_hours += float(entry.total_time)
+        output = ""
+        for name, amount in tasks.items():
+            output += f"* {name:<8} {_convert_float_to_time(amount)}\n"
 
-        print(f"\n{REPORT}")
-        print(f'Sunday:    {_convert_float_to_time(week_hours[6])}')
-        show_day_breakdown([e for e in entries if datetime.strptime(e.in_punch, DATE_FORMAT).weekday() == 6])
-
-        print(f'Monday:    {_convert_float_to_time(week_hours[0])}')
-        show_day_breakdown([e for e in entries if datetime.strptime(e.in_punch, DATE_FORMAT).weekday() == 0])
-
-        print(f'Tuesday:   {_convert_float_to_time(week_hours[1])}')
-        show_day_breakdown([e for e in entries if datetime.strptime(e.in_punch, DATE_FORMAT).weekday() == 1])
-
-        print(f'Wednesday: {_convert_float_to_time(week_hours[2])}')
-        show_day_breakdown([e for e in entries if datetime.strptime(e.in_punch, DATE_FORMAT).weekday() == 2])
-
-        print(f'Thursday:  {_convert_float_to_time(week_hours[3])}')
-        show_day_breakdown([e for e in entries if datetime.strptime(e.in_punch, DATE_FORMAT).weekday() == 3])
-
-        print(f'Friday:    {_convert_float_to_time(week_hours[4])}')
-        show_day_breakdown([e for e in entries if datetime.strptime(e.in_punch, DATE_FORMAT).weekday() == 4])
-
-        print(f'Saturday:  {_convert_float_to_time(week_hours[5])}')
-        show_day_breakdown([e for e in entries if datetime.strptime(e.in_punch, DATE_FORMAT).weekday() == 5])
-        print(DIVIDER)
-        print(f'Total:     {_convert_float_to_time(total_hours)}')
-        print(f'{show_total_breakdown(entries)}')
+        print(output)  # Remove last newline
 
 
-def show_total_breakdown(entries: list[punch_clock.Entry]) -> str:
+def _convert_float_to_time(hours: float) -> str:
+    h = int(abs(hours))
+    m = int(round((abs(hours) - h) * 60, 0))
+
+    return f"{h:02d}:{m:02d}"
+
+
+def _show_total_breakdown(entries: list[punch_clock.Entry]) -> str:
     output = ""
     task_dict: dict[str, float] = {}
 
@@ -146,43 +156,28 @@ def show_total_breakdown(entries: list[punch_clock.Entry]) -> str:
     return output
 
 
-def show_state():
-    state = punch_clock.State()
-    session_total: float = 0.0
+def _show_punch(punch: punch_clock.Punch):
+    """
+    comment, date
+    """
+    temp = datetime.strptime(f'{punch.time_stamp}', DATE_FORMAT)
+    formatted = temp.strftime(DATE_TIME_FORMAT)
 
-    if state.last_punch.id != -1:
-        print("**STATE**:", state.last_punch.type.value)
-
-        if  state.last_punch.type == PunchType.IN:
-            session_total: float = state.get_punched_in_for()
-
-            show_punch(state.last_punch)
-            print('')
-            print(f'Session: {_convert_float_to_time(session_total)}')
-        else:
-            show_entry(state.last_entry)
-            print('')
-
-        print(f'Day:     {_convert_float_to_time(session_total + state.get_day_total())}')
-        print(f'Week:    {_convert_float_to_time(session_total + state.get_week_total())}')
-    else:
-        print(Res.NO_DB.value)
+    print(f"{punch.comment}, {formatted}")
 
 
-def show_day_breakdown(entries: list[punch_clock.Entry]) -> None:
-    if entries:
-        tasks = {}
-        for entry in entries:
-            tasks[entry.title] = tasks.get(entry.title, 0.0) + entry.total_time
+def _show_entry(entry: punch_clock.Entry):
+    """
+    {total}  (in out)
+    title
+    comment
+    """
+    temp = datetime.strptime(f'{entry.in_punch}', DATE_FORMAT)
+    in_formatted = temp.strftime(DATE_TIME_FORMAT)
 
-        output = ""
-        for name, amount in tasks.items():
-            output += f"* {name:<8} {_convert_float_to_time(amount)}\n"
+    temp = datetime.strptime(f'{entry.out_punch}', DATE_FORMAT)
+    out_formatted = temp.strftime(TIME_FORMAT)
 
-        print(output)  # Remove last newline
-
-def _convert_float_to_time(hours: float) -> str:
-    h = int(abs(hours))
-    m = int(round((abs(hours) - h) * 60, 0))
-
-    return f"{h:02d}:{m:02d}"
+    print(f"{round(entry.total_time, 2)}  {in_formatted} - {out_formatted}")
+    print(f"*{entry.title}*")
+    print(entry.comment)
