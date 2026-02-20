@@ -57,6 +57,7 @@ SQL = {
         'MONTH':              ROOT + "/SqlScripts/GetMonthEntry.sql",
         'LAST_ENTRY':         ROOT + "/SqlScripts/GetLastEntry.sql",
         'SHOW_ENTRIES':       ROOT + "/SqlScripts/ShowEntries.sql",
+        'GET_ENTRIES':        ROOT + "/SqlScripts/get_entries_with_range.sql"
 
 }
 
