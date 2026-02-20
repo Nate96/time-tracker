@@ -115,7 +115,7 @@ def get_entries(duration: str) -> list[Entry]:
         start, end = _get_week_date_range()
         res = cur.execute(_sql_script(SQL['GET_ENTRIES']), 
                           (
-                              (str(end - timedelta(days=-7))),
+                              (str(end - timedelta(days=7))),
                               str(end))
                           ).fetchall()
     else:

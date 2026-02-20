@@ -91,11 +91,10 @@ def show_last_entry(): show_entry(time_sheet.get_last_entry())
 
 
 def report(duration: str) -> None:
-    # Just doing weeks for now
-    if not duration: duration = "week"
+    if duration == "last": duration = "last week"
 
     entries = time_sheet.get_entries(duration)
-    
+
     if not entries:
         print(MESSAGES[Res.NO_PUNCH])
     else:
