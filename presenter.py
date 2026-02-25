@@ -39,6 +39,7 @@ def show_state():
 
 def report(duration: str) -> None:
     if duration == "last": duration = "last week"
+    else: duration = "week"
 
     entries = time_sheet.get_entries(duration)
 

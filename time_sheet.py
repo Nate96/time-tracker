@@ -99,11 +99,11 @@ def get_entries(duration: str) -> list[Entry]:
     if duration == "day":
         res = cur.execute(_sql_script(SQL['TODAY'])).fetchall()
     elif duration == "week":
-        start, end = _get_week_date_range()
+        today, start_of_week = _get_week_date_range()
         res = cur.execute(_sql_script(SQL['GET_ENTRIES']), 
                           (
-                              start,
-                              end)
+                              start_of_week,
+                              today)
                           ).fetchall()
     elif duration == "last":
         return [get_last_entry()]
@@ -112,11 +112,11 @@ def get_entries(duration: str) -> list[Entry]:
     elif duration == "all":
         res = cur.execute("SELECT * FROM Entry;").fetchall()
     elif duration == "last week":
-        start, end = _get_week_date_range()
+        today, start_of_week = _get_week_date_range()
         res = cur.execute(_sql_script(SQL['GET_ENTRIES']), 
                           (
-                              (str(end - timedelta(days=7))),
-                              str(end))
+                              (str(start_of_week - timedelta(days=7))),
+                              str(start_of_week))
                           ).fetchall()
     else:
 
