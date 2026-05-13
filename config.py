@@ -7,7 +7,7 @@ load_dotenv()
 DATE_FORMAT = "%Y-%m-%d %H:%M:%S"
 
 ROOT:     str = str(os.getenv("ROOT")) if not None else "./"
-DATABASE: str = ROOT + "/timesheet.db"
+DATABASE: str = str(os.getenv("DATABASE")) if not None else "./"
 
 class Res(Enum):
     NO_DB           = 0
