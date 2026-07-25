@@ -5,7 +5,6 @@ import presenter
 import punch_clock
 
 from config import Res, MESSAGES
-from time_sheet import Punch
 
 if __name__ == '__main__':
     args = None
