@@ -119,7 +119,7 @@ def get_entries(duration: str) -> list[Entry]:
                               str(start_of_week))
                           ).fetchall()
     else:
-        # New eunction that will pass in string to query
+        # New function that will pass in string to query
         res = cur.execute(
                     _sql_script(SQL['GET_BY_TASK_NAME']),
                     duration
