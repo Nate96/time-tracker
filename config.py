@@ -6,8 +6,8 @@ load_dotenv()
 
 DATE_FORMAT = "%Y-%m-%d %H:%M:%S"
 
-ROOT:     str = str(os.getenv("ROOT")) 
-DATABASE: str = str(os.getenv("DATABASE")) 
+ROOT:     str | None = os.getenv("ROOT")
+DATABASE: str | None = os.getenv("DATABASE")
 
 class Res(Enum):
     NO_DB           = 0

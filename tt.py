@@ -1,5 +1,3 @@
-#!/user/bin/env Python3
-
 import argparse
 import presenter
 import punch_clock
@@ -7,7 +5,7 @@ import punch_clock
 from config import Res, MESSAGES, DATABASE
 
 if __name__ == '__main__':
-    if DATABASE:
+    if DATABASE is None:
         print(MESSAGES[Res.NO_DB])
         exit(1)
 
