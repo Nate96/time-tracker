@@ -4,9 +4,13 @@ import argparse
 import presenter
 import punch_clock
 
-from config import Res, MESSAGES
+from config import Res, MESSAGES, DATABASE
 
 if __name__ == '__main__':
+    if DATABASE:
+        print(MESSAGES[Res.NO_DB])
+        exit(1)
+
     args = None
     punch_clock = punch_clock
 

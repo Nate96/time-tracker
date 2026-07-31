@@ -6,8 +6,8 @@ load_dotenv()
 
 DATE_FORMAT = "%Y-%m-%d %H:%M:%S"
 
-ROOT:     str = str(os.getenv("ROOT")) if not None else "./"
-DATABASE: str = str(os.getenv("DATABASE")) if not None else "./"
+ROOT:     str = str(os.getenv("ROOT")) 
+DATABASE: str = str(os.getenv("DATABASE")) 
 
 class Res(Enum):
     NO_DB           = 0
@@ -26,7 +26,7 @@ MESSAGES = {
         Res.OUT:             "Already Punched out",
         Res.NO_PUNCH:        "No punches",
         Res.INVALID_COMMAND: "Invlaid command, please refer to the REAMD.md",
-        # "NO_DB": "No Database Defined, please define DATABASE .env",
+        Res.NO_DB:           "No Database, please define DATABASE in .env",
         # "PUNCHOUT_SUCCESS": "Seccessfully punched out",
         # "ENTRY_SUCCESS":    "Seccessfully added Entry",
         # "ENTRY_FAIL":       "Entry was NOT added",
