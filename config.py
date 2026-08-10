@@ -6,8 +6,8 @@ load_dotenv()
 
 DATE_FORMAT = "%Y-%m-%d %H:%M:%S"
 
-ROOT:     str = str(os.getenv("ROOT")) if not None else "./"
-DATABASE: str = str(os.getenv("DATABASE")) if not None else "./"
+ROOT:     str | None = os.getenv("ROOT")
+DATABASE: str | None = os.getenv("DATABASE")
 
 class Res(Enum):
     NO_DB           = 0
@@ -20,13 +20,13 @@ class Res(Enum):
     INVALID_COMMAND = 7
 
 MESSAGES = {
+        Res.NO_DB:           "No Database, please define DATABASE in .env",
         Res.SEC_IN:          "Seccessfully punched in",
         Res.IN:              "Already Punched in",
         Res.SEC_OUT:         "Seccessfully punched out",
         Res.OUT:             "Already Punched out",
         Res.NO_PUNCH:        "No punches",
         Res.INVALID_COMMAND: "Invlaid command, please refer to the REAMD.md",
-        # "NO_DB": "No Database Defined, please define DATABASE .env",
         # "PUNCHOUT_SUCCESS": "Seccessfully punched out",
         # "ENTRY_SUCCESS":    "Seccessfully added Entry",
         # "ENTRY_FAIL":       "Entry was NOT added",
@@ -57,7 +57,8 @@ SQL = {
         'MONTH':              ROOT + "/SqlScripts/GetMonthEntry.sql",
         'LAST_ENTRY':         ROOT + "/SqlScripts/GetLastEntry.sql",
         'SHOW_ENTRIES':       ROOT + "/SqlScripts/ShowEntries.sql",
-        'GET_ENTRIES':        ROOT + "/SqlScripts/get_entries_with_range.sql"
+        'GET_ENTRIES':        ROOT + "/SqlScripts/get_entries_with_range.sql",
+        'GET_BY_TASK_NAME':   ROOT + "/SqlScripts/GetEntriesByTaskName.sql"
 
 }
 
