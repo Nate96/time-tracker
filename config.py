@@ -20,13 +20,13 @@ class Res(Enum):
     INVALID_COMMAND = 7
 
 MESSAGES = {
+        Res.NO_DB:           "No Database, please define DATABASE in .env",
         Res.SEC_IN:          "Seccessfully punched in",
         Res.IN:              "Already Punched in",
         Res.SEC_OUT:         "Seccessfully punched out",
         Res.OUT:             "Already Punched out",
         Res.NO_PUNCH:        "No punches",
         Res.INVALID_COMMAND: "Invlaid command, please refer to the REAMD.md",
-        Res.NO_DB:           "No Database, please define DATABASE in .env",
         # "PUNCHOUT_SUCCESS": "Seccessfully punched out",
         # "ENTRY_SUCCESS":    "Seccessfully added Entry",
         # "ENTRY_FAIL":       "Entry was NOT added",
