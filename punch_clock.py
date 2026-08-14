@@ -40,3 +40,9 @@ def punch(comment: str) -> Punch | Entry:
     else:
         return time_sheet.add_punch(comment, PunchType.IN)
 
+def add_lunch(comment: str):
+    duration = -30 / 60  # Default lunch duration in minutes
+    if comment.isdigit():
+        duration = (int(comment) * -1 ) / 60
+
+    time_sheet.add_lunch(duration)

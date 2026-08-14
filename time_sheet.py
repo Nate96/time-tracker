@@ -161,3 +161,12 @@ def _get_week_date_range(today = date.today()) -> tuple[date, date]:
     start_of_week = today - timedelta(days=day_of_week_sunday_0)
 
     return (today, start_of_week)
+
+def add_lunch(duration: float):
+    _create_tables()
+
+    con = sqlite3.connect(f'{DATABASE}')
+    con.cursor().execute(_sql_script(SQL['INSERT_LUNCH']),
+                         (duration,))
+    con.commit()
+    con.close()

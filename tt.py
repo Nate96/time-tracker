@@ -40,4 +40,7 @@ Actions:
     elif args.action == "show": presenter.show_entries(args.comment)
     elif args.action == "status": presenter.show_state()
     elif args.action == "report": presenter.report(args.comment)
+    elif args.action == "lunch": 
+        punch_clock.add_lunch(args.comment)
+        print(f"Lunch break added: {args.comment if args.comment else 30} minutes.")
     else: print(MESSAGES[Res.INVALID_COMMAND])

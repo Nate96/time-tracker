@@ -58,7 +58,8 @@ SQL = {
         'LAST_ENTRY':         ROOT + "/SqlScripts/GetLastEntry.sql",
         'SHOW_ENTRIES':       ROOT + "/SqlScripts/ShowEntries.sql",
         'GET_ENTRIES':        ROOT + "/SqlScripts/get_entries_with_range.sql",
-        'GET_BY_TASK_NAME':   ROOT + "/SqlScripts/GetEntriesByTaskName.sql"
+        'GET_BY_TASK_NAME':   ROOT + "/SqlScripts/GetEntriesByTaskName.sql",
+        'INSERT_LUNCH':       ROOT + "/SqlScripts/InsertLunch.sql"
 
 }
 
