@@ -10,3 +10,4 @@ timesheet.db
 .coverage
 time_tracker.egg-info/
 uv.lock
+.sql
